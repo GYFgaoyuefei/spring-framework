@@ -126,9 +126,16 @@ management:
 
 #安全配置
 #oauth2配置
-security: 
+security:
   oauth2:
     resource:
-     filter-order: 3
-#  basic:
-#    enabled: false
+      user-info-uri: http://${custom.oauth.ip}/AuthService/user #获取当前Token的用户信息
+    client:
+      clientId: ${custom.oauth.clientId}
+      clientSecret: ${custom.oauth.clientSecret}
+      accessTokenUri: http://${custom.oauth.ip}/AuthService/oauth/token #获取Token
+      user-authorization-uri: http://${custom.oauth.ip}/AuthService/oauth/authorize
+      grant-type: client_credentials,password,authorization_code,implicit,refresh_token
+      pre-established-redirect-uri: http://baidu.com
+      scope: all
+      ignoreUrl: /actuator/**
