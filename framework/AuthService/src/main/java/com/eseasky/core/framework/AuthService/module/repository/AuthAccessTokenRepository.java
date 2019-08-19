@@ -7,5 +7,6 @@ import com.eseasky.core.framework.AuthService.module.model.ServUserInfo;
 import com.eseasky.core.framework.AuthService.protocol.dto.ServUserInfoDTO;
 
 public interface AuthAccessTokenRepository extends CrudRepository<AuthAccessToken, Long>{
-	void deleteByUserName(String  userName);
+	void deleteByUserName(String  user_name);
+	AuthAccessToken findByUserName(String  user_name);
 }

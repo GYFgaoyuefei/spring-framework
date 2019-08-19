@@ -14,7 +14,7 @@ public interface ServUserInfoService {
 	ServUserInfo findByUserName(String userName);
 	
 	ServUserInfoVO addUserInfo(ServUserInfoDTO servUserInfoDTO);
-	
+
 	Page<ServUserInfo> queryUserInfo(ServUserInfoDTO servUserInfoDTO);
 
     ServUserInfoVO findById(ServUserInfoDTO servUserInfoDTO);

@@ -11,6 +11,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import com.eseasky.core.framework.AuthService.module.model.AuthAccessToken;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -38,7 +39,7 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 	ServUserInfoRepository servUserInfoRepository;
 	@Autowired
 	AuthAccessTokenRepository authAccessTokenRepository;
-	
+
 	@Override
 	public ServUserInfo findByUserName(String userName) {
 		// TODO Auto-generated method stub
@@ -139,9 +140,9 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 		BeanUtils.copyProperties(servUserInfoDTO, servUserInfo);
 		Pageable pageable = PageRequest.of(servUserInfoDTO.getPage(),servUserInfoDTO.getSize(),Sort.by(Direction.DESC, "id"));
 		return servUserInfoRepository.findAll(new Specification<ServUserInfo>() {
-			
+
 			/**
-			 * 
+			 *
 			 */
 			private static final long serialVersionUID = 1L;
 
@@ -149,7 +150,7 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 			public Predicate toPredicate(Root<ServUserInfo> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
 				// TODO Auto-generated method stub
 				List<Predicate> predicates = new ArrayList<>();
-				
+
 				if (servUserInfo.getUserName() != null && !"".equals(servUserInfo.getUserName())) {
 					predicates.add(criteriaBuilder.like(root.get("userName"),"%" + servUserInfo.getUserName() + "%"));
 				}
@@ -161,10 +162,10 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 				}
 
 				return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
-				
+
 			}
 		}, pageable);
-	
+
 		
 	}
 
@@ -177,8 +178,14 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
         if (servUserInfo.getId() != null) {
         	
             Optional<ServUserInfo> userInfo = servUserInfoRepository.findById(servUserInfo.getId());
-            if (userInfo.isPresent() && userInfo.get() != null)
-                BeanUtils.copyProperties(userInfo.get(), servUserInfoVO);
+            if (userInfo.isPresent() && userInfo.get() != null){
+				BeanUtils.copyProperties(userInfo.get(), servUserInfoVO);
+				AuthAccessToken authAccessToken = authAccessTokenRepository.findByUserName(userInfo.get().getUserName());
+				if (authAccessToken==null)
+					servUserInfoVO.setState("0");
+				else
+					servUserInfoVO.setState("1");
+			}
         }
         return servUserInfoVO;
     }

@@ -19,4 +19,6 @@ public class ServUserInfoVO implements Serializable {
     private String passWord;
     @ApiModelProperty(value = "用户联系方式")
     private String mobile;
+    @ApiModelProperty(value = "用户状态 0-下线 1-上线")
+    private String state;
 }

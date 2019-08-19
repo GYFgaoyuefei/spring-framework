@@ -4,6 +4,8 @@ import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.eseasky.core.framework.AuthService.module.model.AuthAccessToken;
+import com.eseasky.core.framework.AuthService.module.repository.AuthAccessTokenRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -44,6 +46,9 @@ public class UserController {
     
     @Autowired
 	private ServUserInfoService servUserInfoService;
+
+    @Autowired
+    AuthAccessTokenRepository authAccessTokenRepository;
 	
 	 @ApiOperation(value = "新建用户", httpMethod = "POST")
 	    @PostMapping(value = "/add")
@@ -62,14 +67,19 @@ public class UserController {
 	    @PostMapping(value = "/query")
 	    public ResultModel<List<ServUserInfoVO>> queryUserInfo(@RequestBody ServUserInfoDTO servUserInfoDTO) {
 	    	
-	    	ResultModel<List<ServUserInfoVO>> msgReturn = new ResultModel<>();	
-	    	Page<ServUserInfo> page = servUserInfoService.queryUserInfo(servUserInfoDTO);	
+	    	ResultModel<List<ServUserInfoVO>> msgReturn = new ResultModel<>();
+	    	Page<ServUserInfo> page = servUserInfoService.queryUserInfo(servUserInfoDTO);
 	    	List<ServUserInfoVO> list  = page.stream().map(item ->{
 	    		ServUserInfoVO servUserInfoVO = new ServUserInfoVO();
 	    		BeanUtils.copyProperties(item, servUserInfoVO);
+                AuthAccessToken tokenUser = authAccessTokenRepository.findByUserName(item.getUserName());
+                if (tokenUser!=null)
+                    servUserInfoVO.setState("0");
+                else
+                    servUserInfoVO.setState("1");
 	    		return servUserInfoVO;
 	    	}).collect(Collectors.toList());
-	    	
+
 	        log.info(JSONObject.toJSONString(list));
 	        msgReturn.setData(list,MsgPageInfo.loadFromPageable(page));
 	       

@@ -18,35 +18,35 @@ import lombok.Data;
 @Entity
 @Data
 @Table(name = "oauth_access_token", indexes= {
-		@Index(name="token_id_index", columnList="token_id"),
-		@Index(name="authentication_id_index", columnList="authentication_id"),
-		@Index(name="user_name_index", columnList="user_name"),
-		@Index(name="client_id_index", columnList="client_id"),
-		@Index(name="refresh_token_index", columnList="refresh_token")
+		@Index(name="token_id_index", columnList="tokenId"),
+		@Index(name="authentication_id_index", columnList="authenticationId"),
+		@Index(name="user_name_index", columnList="userName"),
+		@Index(name="client_id_index", columnList="clientId"),
+		@Index(name="refresh_token_index", columnList="refreshToken")
 })
 public class AuthAccessToken {
 	
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-	private String token_id;
+	private String tokenId;
 	
-	private Timestamp create_time;
+	private Timestamp createTime;
 	
 	@Lob
 	@Basic(fetch = FetchType.LAZY)
 	@Column(length=100000)
 	private byte[] token;
 	
-	private String authentication_id;
+	private String authenticationId;
 	
-	private String user_name;
+	private String userName;
 	
-	private String client_id;
+	private String clientId;
 	
 	@Lob
 	@Basic(fetch = FetchType.LAZY)
 	@Column(length=100000)
 	private byte[] authentication;
 	
-	private String refresh_token;
+	private String refreshToken;
 }
