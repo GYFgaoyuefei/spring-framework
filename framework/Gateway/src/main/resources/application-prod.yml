@@ -1,0 +1,70 @@
+custom:
+  app:
+    token:
+      timeout: 86400
+  nosql:
+    redis:
+      host: 10.10.214.67
+      port: 6379
+    rabbitmq:
+      addresses: 10.10.214.67
+      port: 5672
+      username: mnet
+      password: mnet
+  db:
+    url: jdbc:mysql://10.10.214.67:3306/mnet?useUnicode=true&characterEncoding=UTF-8
+    username: mnet_business
+    password: mnet@123
+    driver-class-name: com.mysql.jdbc.Driver
+    database-platform: org.hibernate.dialect.MySQL5Dialect
+  db1:
+    url: jdbc:mysql://10.10.214.67:3306/mnet?useUnicode=true&characterEncoding=UTF-8
+    username: mnet_business
+    password: mnet@123
+    driver-class-name: com.mysql.jdbc.Driver
+    database-platform: org.hibernate.dialect.MySQL5Dialect
+  es:
+  web:
+
+
+eurekaserver:
+  ip: 10.10.214.68
+  port: 9709
+
+
+upload:
+  prefix: /images/**
+  absolute-path: /home/imusic/montnets/images
+  local-path: ${server.servlet.context-path}/images
+
+
+logging:
+  level:
+    com.suoju.montnets.common.dao:  DEBUG
+
+token:
+  ip: 192.168.1.233
+  expire:
+    seconds: 3000
+
+remote:
+  server:
+    #appid: 101179037
+    appid: 101080723
+    accept: application/json
+    contentType: application/json
+    #baseUrl: https://lfa2ptest03.hwcloudtest.cn:38443/dev-napi
+    baseUrl: http://10.10.214.78:8099
+    #clientSecret: ddd7ed1aa6a77fc814fd6c43b89dafd2dc68e73f5e03e3c08391fd707df29594
+    clientSecret: 24043e04d9a087b7ade2ecaa826f8471
+    grantType: client_credentials
+    #tokenUrl: http://logintestlf.hwcloudtest.cn:8000/oauth2/v2/token
+    tokenUrl: http://10.10.214.78:8099/oauth2/v2/token
+
+
+swagger:
+  enable: true
+
+exclude:
+  check:
+    token:  /loginservice/**,/error/**,/images/**,/webjars/**,/**/doc.html,/**/swagger-resources,/v2/**

@@ -1,0 +1,42 @@
+# Compiled class file
+*.class
+
+# Log file
+*.log
+
+# BlueJ files
+*.ctxt
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+target/*
+bin/*
+**/bin/*
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+.settings
+.project
+.apt_generated
+target
+.classpath
+.factorypath
+.project
+logs
+.temp
+/webapp/analysis/analysis-task/.apt_generated_tests
+/webapp/analysis/adapter/.apt_generated_tests
+/webapp/baseline/starters/com.eseasky.starter.svn/.apt_generated_tests
+/webapp/baseline/starters/com.eseasky.starters.datasource/.apt_generated_tests
+/webapp/container/src/main/resources/static
+/framework/Gateway/.apt_generated_tests
+/framework/Gateway/springlogs
+/framework/Registry/springlogs
