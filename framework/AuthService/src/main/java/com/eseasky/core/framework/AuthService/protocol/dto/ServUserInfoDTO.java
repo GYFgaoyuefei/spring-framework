@@ -8,6 +8,7 @@ public class ServUserInfoDTO {
 	    private String userName;
 	    private String passWord;
 	    private String mobile;
+	    private String state;
 		
 		private Integer page=0;
 		private Integer size=10;
