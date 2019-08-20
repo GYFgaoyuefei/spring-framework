@@ -40,3 +40,4 @@ logs
 /framework/Gateway/.apt_generated_tests
 /framework/Gateway/springlogs
 /framework/Registry/springlogs
+/framework/springlogs

@@ -76,8 +76,6 @@
 			    <groupId>com.eseasky.core.starters</groupId>
 		  		<artifactId>auth-server</artifactId>
 			</dependency>
-        
-
   </dependencies>
   
       <!-- 打包 -->
