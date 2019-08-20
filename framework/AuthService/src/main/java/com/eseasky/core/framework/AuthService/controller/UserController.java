@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
@@ -27,24 +28,24 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.log4j.Log4j2;
 
 /**
- * 用户信息控制器
- */
-@Api(value = "用户管理", tags = "用户管理服务")
+*  用户信息控制器
+*/
+@Api(value = "用户管理",tags = "用户管理服务")
 @RestController
+@RequestMapping("/UserInfoManage")
 @Log4j2
 public class UserController {
 
     /**
      * 获取授权用户的信息
-     *
      * @param user 当前用户
      * @return 授权信息
      */
     @GetMapping("/user")
-    public Principal user(Principal user) {
+    public Principal user(Principal user){
         return user;
     }
-
+    
     @Autowired
     private ServUserInfoService servUserInfoService;
 
@@ -80,34 +81,35 @@ public class UserController {
             return servUserInfoVO;
         }).collect(Collectors.toList());
 
-        log.info(JSONObject.toJSONString(list));
-        msgReturn.setData(list, MsgPageInfo.loadFromPageable(page));
+	        log.info(JSONObject.toJSONString(list));
+	        msgReturn.setData(list,MsgPageInfo.loadFromPageable(page));
+	       
+	        return msgReturn;
+	    }
 
+	
+
+    @ApiOperation(value = "修改用户",httpMethod = "POST")
+    @PostMapping(value = "/updateUserInfo", consumes="application/json")
+    public ResultModel<ServUserInfoVO> updateUserInfo(@RequestBody ServUserInfoDTO servUserInfoDTO)  {
+    	ResultModel<ServUserInfoVO> msgReturn = new ResultModel<>();
+    	ServUserInfoVO servUserInfoVO = servUserInfoService.updateServUserInfo(servUserInfoDTO);
+		msgReturn.setData(servUserInfoVO);
         return msgReturn;
     }
 
-
-    @ApiOperation(value = "修改用户", httpMethod = "POST")
-    @PostMapping(value = "/updateUserInfo", consumes = "application/json")
-    public ResultModel<ServUserInfoVO> updateUserInfo(@RequestBody ServUserInfoDTO servUserInfoDTO) {
-        ResultModel<ServUserInfoVO> msgReturn = new ResultModel<>();
-        ServUserInfoVO servUserInfoVO = servUserInfoService.updateServUserInfo(servUserInfoDTO);
-        msgReturn.setData(servUserInfoVO);
-        return msgReturn;
-    }
-
-    @ApiOperation(value = "根据id删除用户", httpMethod = "POST")
-    @PostMapping(value = "/delUserInfoById", consumes = "application/json")
-    public ResultModel<ServUserInfoVO> delUserInfoById(@RequestBody ServUserInfoDTO servUserInfoDTO) {
-        ResultModel<ServUserInfoVO> msgReturn = new ResultModel<>();
-        ServUserInfoVO servUserInfoVO = servUserInfoService.deleteServUserInfoById(servUserInfoDTO);
-        msgReturn.setData(servUserInfoVO);
+    @ApiOperation(value = "根据id删除用户",httpMethod = "POST")
+    @PostMapping(value = "/delUserInfoById", consumes="application/json")
+    public ResultModel<ServUserInfoVO> delUserInfoById(@RequestBody ServUserInfoDTO servUserInfoDTO)  {
+    	ResultModel<ServUserInfoVO> msgReturn = new ResultModel<>();
+    	ServUserInfoVO servUserInfoVO = servUserInfoService.deleteServUserInfoById(servUserInfoDTO);
+		msgReturn.setData(servUserInfoVO);
         return msgReturn;
     }
 
     @ApiOperation(value = "更换密码", httpMethod = "POST")
     @PostMapping(value = "/changepwd")
-    public ResultModel<ServUserInfoVO> changePwd(@RequestBody ServUserInfoDTO servUserInfoDTO) {
+    public ResultModel<ServUserInfoVO> changePwd(@RequestBody ServUserInfoDTO servUserInfoDTO){
         ResultModel<ServUserInfoVO> msgReturn = new ResultModel<>();
         ServUserInfoVO userInfoVO = servUserInfoService.updatePwd(servUserInfoDTO);
 
@@ -118,20 +120,19 @@ public class UserController {
 
     @ApiOperation(value = "查看用户", httpMethod = "POST")
     @PostMapping(value = "/getuserinfo")
-    public ResultModel<ServUserInfoVO> getUserInfo(@RequestBody ServUserInfoDTO servUserInfoDTO) {
+    public  ResultModel<ServUserInfoVO> getUserInfo(@RequestBody ServUserInfoDTO servUserInfoDTO){
         ResultModel<ServUserInfoVO> msgReturn = new ResultModel<>();
         ServUserInfoVO servUserInfoVO = servUserInfoService.findById(servUserInfoDTO);
         msgReturn.setData(servUserInfoVO);
         return msgReturn;
     }
-
     @ApiOperation(value = "强制下线", httpMethod = "POST")
     @PostMapping(value = "/forceOffLine")
-    public ResultModel<ServUserInfoVO> forceOffLine(@RequestBody ServUserInfoDTO servUserInfoDTO) {
+    public  ResultModel<ServUserInfoVO> forceOffLine(@RequestBody ServUserInfoDTO servUserInfoDTO){
         ResultModel<ServUserInfoVO> msgReturn = new ResultModel<>();
         ServUserInfoVO servUserInfoVO = servUserInfoService.forceOffLine(servUserInfoDTO);
         msgReturn.setData(servUserInfoVO);
         return msgReturn;
     }
-
+    
 }
