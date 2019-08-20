@@ -1,7 +1,5 @@
 package com.eseasky.core.framework.AuthService.module.service.impl;
 
-import static org.hamcrest.CoreMatchers.nullValue;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -138,9 +136,7 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 		// TODO Auto-generated method stub
 		ServUserInfo servUserInfo = new ServUserInfo();
 		BeanUtils.copyProperties(servUserInfoDTO, servUserInfo);
-		
 		Pageable pageable = PageRequest.of(servUserInfoDTO.getPage(),servUserInfoDTO.getSize(),Sort.by(Direction.DESC, "id"));
-		
 		return servUserInfoRepository.findAll(new Specification<ServUserInfo>() {
 
 			/**
@@ -178,16 +174,16 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
         ServUserInfo servUserInfo = new ServUserInfo();
         BeanUtils.copyProperties(servUserInfoDTO, servUserInfo);
         if (servUserInfo.getId() != null) {
-        	
+
             Optional<ServUserInfo> userInfo = servUserInfoRepository.findById(servUserInfo.getId());
-            if (userInfo.isPresent() && userInfo.get() != null){
-				BeanUtils.copyProperties(userInfo.get(), servUserInfoVO);
-				AuthAccessToken authAccessToken = authAccessTokenRepository.findByUserName(userInfo.get().getUserName());
-				if (authAccessToken==null)
-					servUserInfoVO.setState("0");
-				else
-					servUserInfoVO.setState("1");
-			}
+            if (userInfo.isPresent() && userInfo.get() != null) {
+                BeanUtils.copyProperties(userInfo.get(), servUserInfoVO);
+                List<AuthAccessToken> authAccessToken = authAccessTokenRepository.findByUserName(userInfo.get().getUserName());
+                if (authAccessToken == null)
+                    servUserInfoVO.setState("0");
+                else
+                    servUserInfoVO.setState("1");
+            }
         }
         return servUserInfoVO;
     }
