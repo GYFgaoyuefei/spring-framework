@@ -138,7 +138,9 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 		// TODO Auto-generated method stub
 		ServUserInfo servUserInfo = new ServUserInfo();
 		BeanUtils.copyProperties(servUserInfoDTO, servUserInfo);
+		
 		Pageable pageable = PageRequest.of(servUserInfoDTO.getPage(),servUserInfoDTO.getSize(),Sort.by(Direction.DESC, "id"));
+		
 		return servUserInfoRepository.findAll(new Specification<ServUserInfo>() {
 
 			/**
