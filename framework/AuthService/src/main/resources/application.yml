@@ -123,3 +123,12 @@ management:
   endpoint:
       health:
         show-details: ALWAYS
+        
+#安全配置
+#oauth2配置
+security: 
+  oauth2:
+    resource:
+     filter-order: 3
+#  basic:
+#    enabled: false
