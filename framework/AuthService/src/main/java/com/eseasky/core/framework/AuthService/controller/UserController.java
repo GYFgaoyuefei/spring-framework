@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
@@ -31,6 +32,7 @@ import lombok.extern.log4j.Log4j2;
 */
 @Api(value = "用户管理",tags = "用户管理服务")
 @RestController
+@RequestMapping("/UserInfoManage")
 @Log4j2
 public class UserController {
 
@@ -54,8 +56,6 @@ public class UserController {
 	    @PostMapping(value = "/add")
 	    public ResultModel<ServUserInfoVO> addUserInfo(@RequestBody ServUserInfoDTO servUserInfoDTO) {
 		 
-		 
-	    	
 	    	ResultModel<ServUserInfoVO> msgReturn = new ResultModel<>();	
 	    	ServUserInfoVO servUserInfoVO = servUserInfoService.addUserInfo(servUserInfoDTO);	
 	        log.info(JSONObject.toJSONString(servUserInfoVO));
@@ -115,7 +115,6 @@ public class UserController {
         msgReturn.setData(userInfoVO);
         return msgReturn;
     }
-
 
     @ApiOperation(value = "查看用户", httpMethod = "POST")
     @PostMapping(value = "/getuserinfo")
