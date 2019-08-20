@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
@@ -130,12 +131,31 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 			 //throw new BusiException(BusiEnum.USERNAME_REPEATABLE);
 		}
 	}
+	
+
+	
 
 	@Override
 	public Page<ServUserInfo> queryUserInfo(ServUserInfoDTO servUserInfoDTO) {
 		// TODO Auto-generated method stub
+		
+		
+		
 		ServUserInfo servUserInfo = new ServUserInfo();
 		BeanUtils.copyProperties(servUserInfoDTO, servUserInfo);
+		
+		if (servUserInfo.getState() != null && !"".equals(servUserInfo.getState())) {
+			Iterable<AuthAccessToken> allToken = authAccessTokenRepository.findAll();
+			for (AuthAccessToken authAccessToken : allToken) {
+				Optional<ServUserInfo> optional = servUserInfoRepository.findByUserName(authAccessToken.getUserName());
+				if (optional.isPresent()) {
+					ServUserInfo userInfo = optional.get();
+					userInfo.setState("1");
+					servUserInfoRepository.save(userInfo);
+				}
+			}
+		}
+
 		Pageable pageable = PageRequest.of(servUserInfoDTO.getPage(),servUserInfoDTO.getSize(),Sort.by(Direction.DESC, "id"));
 		return servUserInfoRepository.findAll(new Specification<ServUserInfo>() {
 
@@ -157,6 +177,12 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 				}
 				if (servUserInfo.getMobile() != null && !"".equals(servUserInfo.getMobile())) {
 					predicates.add(criteriaBuilder.like(root.get("mobile"),"%" + servUserInfo.getMobile() + "%"));
+				}
+				if (servUserInfo.getState() != null && "1".equals(servUserInfo.getState())) {
+					predicates.add(criteriaBuilder.equal(root.get("state"),"1"));
+				}
+				if (servUserInfo.getState() != null && "0".equals(servUserInfo.getState())) {
+					predicates.add(criteriaBuilder.isNull(root.get("state")));
 				}
 
 				return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
