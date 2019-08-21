@@ -13,9 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
-import com.eseasky.core.framework.AuthService.module.model.AuthAccessToken;
 import com.eseasky.core.framework.AuthService.module.model.ServUserInfo;
-import com.eseasky.core.framework.AuthService.module.repository.AuthAccessTokenRepository;
 import com.eseasky.core.framework.AuthService.module.service.ServUserInfoService;
 import com.eseasky.core.framework.AuthService.protocol.dto.ServUserInfoDTO;
 import com.eseasky.core.framework.AuthService.protocol.vo.ServUserInfoVO;
@@ -33,9 +31,6 @@ import lombok.extern.log4j.Log4j2;
 public class UserInfoController {
     @Autowired
     private ServUserInfoService servUserInfoService;
-
-    @Autowired
-    AuthAccessTokenRepository authAccessTokenRepository;
 
     @ApiOperation(value = "新建用户", httpMethod = "POST")
     @PostMapping(value = "/add")
@@ -57,11 +52,6 @@ public class UserInfoController {
         List<ServUserInfoVO> list = page.stream().map(item -> {
             ServUserInfoVO servUserInfoVO = new ServUserInfoVO();
             BeanUtils.copyProperties(item, servUserInfoVO);
-            List<AuthAccessToken> tokenUser = authAccessTokenRepository.findByUserName(item.getUserName());
-            if (tokenUser.size() == 0)
-                servUserInfoVO.setState("0");
-            else
-                servUserInfoVO.setState("1");
             return servUserInfoVO;
         }).collect(Collectors.toList());
 
