@@ -10,6 +10,8 @@ import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import com.eseasky.core.framework.AuthService.exception.BusiException.BusiEnum;
+import com.eseasky.core.framework.AuthService.exception.BusiException.BusiException;
 import com.eseasky.core.framework.AuthService.module.model.AuthAccessToken;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,16 +75,16 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
                 		servUserInfo = servUserInfoRepository.save(servUserInfo);
                 		BeanUtils.copyProperties(servUserInfo, servUserInfoVO);
             		}else {
-            			//throw new BusiException(BusiEnum.USERNAME_REPEATABLE);
+            				throw new BusiException(BusiEnum.USERNAME_REPEATABLE);
             		}
             	}
 				
 			}else {
-				//throw new BusiException(BusiEnum.NOT_FOUND_USER);
+					throw new BusiException(BusiEnum.NOT_FOUND_USER);
 			}
 			
 		}else {
-			//throw new BusiException(BusiEnum.USERINFO_NOID);
+				throw new BusiException(BusiEnum.USERINFO_NOID);
 		}
 		return servUserInfoVO;
 	}
@@ -100,7 +102,7 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 			 
 			 BeanUtils.copyProperties(servUserInfo,servUserInfoVO);
 		}else {
-			//throw new BusiException(BusiEnum.USERINFO_IDNOTNULL);
+				throw new BusiException(BusiEnum.USERINFO_IDNOTNULL);
 		}
 		return servUserInfoVO;
 	}
@@ -117,7 +119,7 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 		if (servUserInfo.getId() == null) {
 			savedServUserInfo = servUserInfoRepository.save(servUserInfo);
 		}else {
-			//throw new BusiException(BusiEnum.USERINFO_NOID);
+				throw new BusiException(BusiEnum.USERINFO_NOID);
 		}
 		ServUserInfoVO servUserInfoVO = new ServUserInfoVO();
 		BeanUtils.copyProperties(savedServUserInfo, servUserInfoVO);
@@ -128,7 +130,7 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 	private void ckeckUserName(ServUserInfo servUserInfo) {
 		
 		if (servUserInfoRepository.findByUserName(servUserInfo.getUserName()).isPresent()) {
-			 //throw new BusiException(BusiEnum.USERNAME_REPEATABLE);
+			 throw new BusiException(BusiEnum.USERNAME_REPEATABLE);
 		}
 	}
 	
@@ -260,7 +262,7 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 			 
 			 BeanUtils.copyProperties(servUserInfo,servUserInfoVO);
 		}else {
-			//throw new BusiException(BusiEnum.USERINFO_IDNOTNULL);
+				throw new BusiException(BusiEnum.USERINFO_IDNOTNULL);
 		}
 		return servUserInfoVO;
 	}
