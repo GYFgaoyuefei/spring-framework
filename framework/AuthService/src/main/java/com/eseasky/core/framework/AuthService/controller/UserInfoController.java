@@ -52,8 +52,6 @@ public class UserInfoController {
         List<ServUserInfoVO> list = page.stream().map(item -> {
             ServUserInfoVO servUserInfoVO = new ServUserInfoVO();
             BeanUtils.copyProperties(item, servUserInfoVO);
-            if (item.getState()==null)
-                servUserInfoVO.setState("0");
             return servUserInfoVO;
         }).collect(Collectors.toList());
 
