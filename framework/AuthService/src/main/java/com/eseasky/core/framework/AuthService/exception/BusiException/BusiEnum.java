@@ -14,7 +14,11 @@ public enum  BusiEnum {
 	
 	USERNAME_REPEATABLE(500,"系统提示：用户名重复"), 
 	
-	USERINFO_IDNOTNULL(500,"系统提示：id不能为null");
+	USERINFO_IDNOTNULL(500,"系统提示：id不能为null"),
+
+    USER_INVALID(500,"用户失效"),
+
+    NOTDELETE(500,"管理员不可删除");
 
     private Integer code;
 

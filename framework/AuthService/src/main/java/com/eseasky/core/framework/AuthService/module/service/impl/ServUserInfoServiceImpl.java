@@ -7,7 +7,6 @@ import java.util.Optional;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
@@ -16,7 +15,6 @@ import com.eseasky.core.framework.AuthService.exception.BusiException.BusiExcept
 import com.eseasky.core.framework.AuthService.module.model.AuthAccessToken;
 import com.eseasky.global.entity.ReflexEntity;
 import com.eseasky.global.utils.ReflexUtils;
-import org.apache.catalina.util.ServerInfo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -35,6 +33,8 @@ import com.eseasky.core.framework.AuthService.module.repository.ServUserInfoRepo
 import com.eseasky.core.framework.AuthService.module.service.ServUserInfoService;
 import com.eseasky.core.framework.AuthService.protocol.dto.ServUserInfoDTO;
 import com.eseasky.core.framework.AuthService.protocol.vo.ServUserInfoVO;
+
+import static com.eseasky.core.framework.AuthService.exception.BusiException.BusiEnum.NOT_FOUND_USER;
 
 
 @Service
@@ -86,7 +86,7 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
                 }
 
             } else {
-                throw new BusiException(BusiEnum.NOT_FOUND_USER);
+                throw new BusiException(NOT_FOUND_USER);
             }
 
         } else {
@@ -101,12 +101,13 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
         ServUserInfoVO servUserInfoVO = new ServUserInfoVO();
         if (servUserInfoDTO.getId() != null) {
 
-            ServUserInfo servUserInfo = new ServUserInfo();
-
-            BeanUtils.copyProperties(servUserInfoDTO, servUserInfo);
-            servUserInfoRepository.deleteById(servUserInfo.getId());
-
-            BeanUtils.copyProperties(servUserInfo, servUserInfoVO);
+            Optional<ServUserInfo> userInfo = servUserInfoRepository.findByUserName(servUserInfoDTO.getUserName());
+            if (userInfo.isPresent()){
+                servUserInfoRepository.deleteById(userInfo.get().getId());
+                BeanUtils.copyProperties(userInfo.get(), servUserInfoVO);
+            }else {
+                throw new BusiException(BusiEnum.NOT_FOUND_USER);
+            }
         } else {
             throw new BusiException(BusiEnum.USERINFO_IDNOTNULL);
         }
@@ -254,18 +255,22 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
         ServUserInfoVO servUserInfoVO = new ServUserInfoVO();
         if (servUserInfoDTO.getUserName() != null && !"".equals(servUserInfoDTO.getUserName())) {
 
-            ServUserInfo servUserInfo = new ServUserInfo();
+            List<AuthAccessToken> authUser = authAccessTokenRepository.findByUserName(servUserInfoDTO.getUserName());
+            if (authUser.size()==0)
+                throw new BusiException(BusiEnum.USER_INVALID);
+            else if (authUser.size()==1)
+                authAccessTokenRepository.deleteById(authUser.get(0).getTokenId());
+            else
+                throw new BusiException(BusiEnum.NOTDELETE);
 
-            BeanUtils.copyProperties(servUserInfoDTO, servUserInfo);
-            authAccessTokenRepository.deleteByUserName(servUserInfo.getUserName());
-            Optional<ServUserInfo> userInfo = servUserInfoRepository.findByUserName(servUserInfo.getUserName());
+            Optional<ServUserInfo> userInfo = servUserInfoRepository.findByUserName(servUserInfoDTO.getUserName());
             if (userInfo.isPresent()) {
                 ServUserInfo info = userInfo.get();
                 info.setState("0");
                 servUserInfoRepository.save(info);
             }
 
-            BeanUtils.copyProperties(servUserInfo, servUserInfoVO);
+            BeanUtils.copyProperties(userInfo.get(), servUserInfoVO);
         } else {
             throw new BusiException(BusiEnum.USERINFO_IDNOTNULL);
         }

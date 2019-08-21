@@ -8,7 +8,7 @@ import com.eseasky.core.framework.AuthService.protocol.dto.ServUserInfoDTO;
 
 import java.util.List;
 
-public interface AuthAccessTokenRepository extends CrudRepository<AuthAccessToken, Long>{
+public interface AuthAccessTokenRepository extends CrudRepository<AuthAccessToken, String>{
 	void deleteByUserName(String  user_name);
 	List<AuthAccessToken> findByUserName(String  user_name);
 }
