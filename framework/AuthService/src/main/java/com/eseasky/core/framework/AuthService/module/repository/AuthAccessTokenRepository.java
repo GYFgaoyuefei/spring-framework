@@ -1,12 +1,10 @@
 package com.eseasky.core.framework.AuthService.module.repository;
 
+import java.util.List;
+
 import org.springframework.data.repository.CrudRepository;
 
 import com.eseasky.core.framework.AuthService.module.model.AuthAccessToken;
-import com.eseasky.core.framework.AuthService.module.model.ServUserInfo;
-import com.eseasky.core.framework.AuthService.protocol.dto.ServUserInfoDTO;
-
-import java.util.List;
 
 public interface AuthAccessTokenRepository extends CrudRepository<AuthAccessToken, String>{
 	void deleteByUserName(String  user_name);
