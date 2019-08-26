@@ -32,11 +32,7 @@ target
 .project
 logs
 .temp
-/webapp/analysis/analysis-task/.apt_generated_tests
-/webapp/analysis/adapter/.apt_generated_tests
-/webapp/baseline/starters/com.eseasky.starter.svn/.apt_generated_tests
-/webapp/baseline/starters/com.eseasky.starters.datasource/.apt_generated_tests
-/webapp/container/src/main/resources/static
-/framework/Gateway/.apt_generated_tests
-/framework/Gateway/springlogs
-/framework/Registry/springlogs
+springlogs
+.apt_generated_tests
+*.iml
+.idea

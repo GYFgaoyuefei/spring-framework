@@ -1,12 +1,16 @@
 package com.eseasky.core.framework.AuthService.controller;
 
 import java.security.Principal;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import io.swagger.annotations.Api;
 
 /**
 *  用户信息控制器
 */
+@Api(value = "用户管理",tags = "用户管理服务")
 @RestController
 public class UserController {
 
@@ -19,4 +23,5 @@ public class UserController {
     public Principal user(Principal user){
         return user;
     }
+
 }

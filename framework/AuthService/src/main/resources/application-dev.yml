@@ -24,7 +24,7 @@ custom:
     driver-class-name: com.mysql.jdbc.Driver
     database-platform: org.hibernate.dialect.MySQL5Dialect
   oauth:
-    ip: 192.168.1.233:9710
+    ip: localhost:9710
     clientId: test
     clientSecret: 123456
   #文件上传配置，保存的路径
@@ -35,9 +35,12 @@ custom:
 
 
 eurekaserver:
-  ip: 192.168.1.233
+  ip: localhost
   port: 9709
-
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
 
 logging:
   level:

@@ -126,9 +126,7 @@ management:
 
 #安全配置
 #oauth2配置
-security: 
+security:
   oauth2:
     resource:
-     filter-order: 3
-#  basic:
-#    enabled: false
+      filter-order: 3
