@@ -101,7 +101,7 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
         ServUserInfoVO servUserInfoVO = new ServUserInfoVO();
         if (servUserInfoDTO.getId() != null) {
 
-            Optional<ServUserInfo> userInfo = servUserInfoRepository.findByUserName(servUserInfoDTO.getUserName());
+            Optional<ServUserInfo> userInfo = servUserInfoRepository.findById(servUserInfoDTO.getId());
             if (userInfo.isPresent()){
                 servUserInfoRepository.deleteById(userInfo.get().getId());
                 BeanUtils.copyProperties(userInfo.get(), servUserInfoVO);
