@@ -29,42 +29,10 @@
         <optional>true</optional>
     </dependency>
     
-    <dependency>
-         <groupId>org.springframework.boot</groupId>
-         <artifactId>spring-boot-starter-data-jpa</artifactId>
-         <exclusions>
-            <exclusion>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-logging</artifactId>
-            </exclusion>
-         </exclusions>
+        <dependency>
+        <groupId>com.eseasky.core.starters</groupId>
+        <artifactId>datasource</artifactId>
     </dependency>
-    
-    <dependency>
-        <groupId>mysql</groupId>
-        <artifactId>mysql-connector-java</artifactId>
-        <scope>runtime</scope>
-    </dependency>
-    
-    <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-jdbc</artifactId>
-    </dependency>
-    
-    <dependency>
-        <groupId>commons-dbcp</groupId>
-        <artifactId>commons-dbcp</artifactId>
-    </dependency>
-    
-     <dependency>
-          <groupId>io.shardingsphere</groupId>
-          <artifactId>sharding-jdbc-spring-boot-starter</artifactId>
-      </dependency>
-
-      <dependency>
-          <groupId>io.shardingsphere</groupId>
-          <artifactId>sharding-jdbc-spring-namespace</artifactId>
-      </dependency>
       
       <dependency>
             <groupId>com.eseasky.core.starters</groupId>
