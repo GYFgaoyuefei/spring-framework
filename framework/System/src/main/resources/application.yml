@@ -6,7 +6,7 @@ server:
 
 logging: 
   config: classpath:log4j2.yml   # 配置log4j2读取的配置文件
-  file: ../springlogs/loggerservice.log 
+  file: ../springlogs/systemservice.log 
 
 spring:
   servlet:
