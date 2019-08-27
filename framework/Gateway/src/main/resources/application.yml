@@ -100,6 +100,10 @@ spring:
         uri: lb://LOGGERSERVICE
         predicates:
         - Path=/LoggerService/**
+      - id: SystemService
+        uri: lb://SYSTEMSERVICE
+        predicates:
+        - Path=/SystemService/**
     
 eureka:
   client:

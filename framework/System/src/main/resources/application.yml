@@ -1,7 +1,7 @@
 server:
   port: 9717
   servlet:
-    context-path: /LoggerService
+    context-path: /SystemService
 
 
 logging: 
