@@ -47,7 +47,10 @@ token:
   expire:
     seconds: 86400
 
-
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
 
 swagger:
   enable: true

@@ -111,8 +111,8 @@ public class SystemManagerServiceImpl implements SystemManagerService {
 	@Override
 	@CacheEvict(value = "sys_dictionary", allEntries = true)
 	public Dictionary addItemToGroup(Long dict_id, List<DictItem> dictItems) throws GeneralException {
-		Dictionary dictionary = dictionaryRepository.getOne(dict_id);
-		return addItemToGroup(dictionary, dictItems);
+		Optional<Dictionary> dictionary = dictionaryRepository.findById(dict_id);
+		return addItemToGroup(dictionary.get(), dictItems);
 	}
 
 	@Override
@@ -133,11 +133,13 @@ public class SystemManagerServiceImpl implements SystemManagerService {
 		}
 		for (DictItem dictItem: dictItems) {
 			for (DictItem dItem: dItems) {
-				if(dItem.getKey().length()>255||dItem.getName().length()>255||dItem.getValue().length()>4096) {
-					throw new GeneralException(ExceptionType.SYSTEFieldTooLong);
-				}
-				if (dictItem.getKey().equals(dItem.getKey())) {
-					throw new GeneralException(ExceptionType.SYSTEMHASSAMEDICTITEM);
+				if (dItem != null) {
+					if(dItem.getKey().length()>255||dItem.getName().length()>255||dItem.getValue().length()>4096) {
+						throw new GeneralException(ExceptionType.SYSTEFieldTooLong);
+					}
+					if (dictItem.getKey().equals(dItem.getKey())) {
+						throw new GeneralException(ExceptionType.SYSTEMHASSAMEDICTITEM);
+					}
 				}
 			}
 			dictItem.setDictionary(dictionary);
