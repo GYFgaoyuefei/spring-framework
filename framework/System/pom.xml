@@ -30,9 +30,9 @@
     </dependency>
     
         <dependency>
-        <groupId>com.eseasky.core.starters</groupId>
-        <artifactId>datasource</artifactId>
-    </dependency>
+            <groupId>com.eseasky.core.starters</groupId>
+            <artifactId>dictionary</artifactId>
+        </dependency>
       
       <dependency>
             <groupId>com.eseasky.core.starters</groupId>

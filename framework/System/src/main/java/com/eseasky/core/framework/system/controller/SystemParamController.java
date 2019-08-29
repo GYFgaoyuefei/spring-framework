@@ -13,10 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.eseasky.core.framework.system.exception.GeneralException;
-import com.eseasky.core.framework.system.models.entity.DictItem;
-import com.eseasky.core.framework.system.models.entity.Dictionary;
 import com.eseasky.core.framework.system.protocol.SystemParamPro;
 import com.eseasky.core.framework.system.protocol.dto.DictiCondiDTO;
 import com.eseasky.core.framework.system.protocol.dto.DictionaryDTO;
@@ -26,6 +22,10 @@ import com.eseasky.core.framework.system.service.SystemDictService;
 import com.eseasky.global.entity.MsgPageInfo;
 import com.eseasky.global.entity.MsgReturn;
 import com.eseasky.global.utils.CheckUtils;
+import com.eseasky.starter.dictionary.exception.GeneralException;
+import com.eseasky.starter.dictionary.module.model.DictItem;
+import com.eseasky.starter.dictionary.module.model.Dictionary;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;

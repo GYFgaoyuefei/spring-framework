@@ -5,14 +5,13 @@ import java.util.Map;
 
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
-
-import com.eseasky.core.framework.system.exception.GeneralException;
-import com.eseasky.core.framework.system.models.entity.DictItem;
-import com.eseasky.core.framework.system.models.entity.Dictionary;
 import com.eseasky.core.framework.system.protocol.dto.DictItemDTO;
 import com.eseasky.core.framework.system.protocol.dto.DictiCondiDTO;
 import com.eseasky.core.framework.system.protocol.dto.DictionaryDTO;
 import com.eseasky.core.framework.system.protocol.vo.DictionaryVO;
+import com.eseasky.starter.dictionary.exception.GeneralException;
+import com.eseasky.starter.dictionary.module.model.DictItem;
+import com.eseasky.starter.dictionary.module.model.Dictionary;
 
 
 @Service
