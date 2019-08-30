@@ -104,10 +104,10 @@ spring:
         uri: lb://SYSTEMSERVICE
         predicates:
         - Path=/SystemService/**
-      - id: PictrueServer
-        uri: lb://PICTRUESERVER
+      - id: PictureServer
+        uri: lb://PICTURESERVER
         predicates:
-        - Path=/PictrueServer/**
+        - Path=/PictureServer/**
 
 eureka:
   client:
