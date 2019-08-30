@@ -19,14 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
-import com.eseasky.core.framework.system.exception.ExceptionType;
-import com.eseasky.core.framework.system.exception.GeneralException;
-import com.eseasky.core.framework.system.models.entity.DictItem;
-import com.eseasky.core.framework.system.models.entity.Dictionary;
-import com.eseasky.core.framework.system.models.entity.enums.DictionaryStatus;
-import com.eseasky.core.framework.system.models.entity.local.DictionaryConditions;
-import com.eseasky.core.framework.system.models.service.SystemManagerService;
 import com.eseasky.core.framework.system.protocol.dto.DictItemDTO;
 import com.eseasky.core.framework.system.protocol.dto.DictiCondiDTO;
 import com.eseasky.core.framework.system.protocol.dto.DictionaryDTO;
@@ -34,6 +26,13 @@ import com.eseasky.core.framework.system.protocol.vo.DictItemVO;
 import com.eseasky.core.framework.system.protocol.vo.DictionaryVO;
 import com.eseasky.core.framework.system.service.SystemDictService;
 import com.eseasky.global.utils.CheckUtils;
+import com.eseasky.starter.dictionary.exception.ExceptionType;
+import com.eseasky.starter.dictionary.exception.GeneralException;
+import com.eseasky.starter.dictionary.module.model.DictItem;
+import com.eseasky.starter.dictionary.module.model.Dictionary;
+import com.eseasky.starter.dictionary.module.model.enums.DictionaryStatus;
+import com.eseasky.starter.dictionary.module.model.local.DictionaryConditions;
+import com.eseasky.starter.dictionary.module.service.SystemManagerService;
 
 
 @Service
