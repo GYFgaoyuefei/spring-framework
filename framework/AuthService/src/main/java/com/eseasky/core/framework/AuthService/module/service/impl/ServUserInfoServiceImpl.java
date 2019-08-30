@@ -258,8 +258,11 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
             List<AuthAccessToken> authUser = authAccessTokenRepository.findByUserName(servUserInfoDTO.getUserName());
             if (authUser.size()==0)
                 throw new BusiException(BusiEnum.USER_INVALID);
-            else if (authUser.size()==1)
-                authAccessTokenRepository.deleteById(authUser.get(0).getTokenId());
+            else if (authUser.size()>=1) {
+            	for(int i=0;i<authUser.size();i++) {
+            		authAccessTokenRepository.deleteById(authUser.get(i).getTokenId());
+            	}
+            }               
             else
                 throw new BusiException(BusiEnum.NOTDELETE);
 
