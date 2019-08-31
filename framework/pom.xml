@@ -18,7 +18,7 @@
         <module>Registry</module>
 		<module>Logger</module>
 		<module>AuthService</module>
-		<module>PictureServer</module>
+		<!-- <module>PictureServer</module> -->
         <module>Admin</module>
     <module>System</module>
   </modules>
