@@ -9,6 +9,11 @@ logging:
   file: ../springlogs/systemservice.log 
 
 spring:
+  datasource:
+   initialization-mode: ALWAYS
+   continue-on-error: true
+   data: 
+   - classpath:schema/data.sql
   servlet:
     multipart:
       max-file-size: 10MB
