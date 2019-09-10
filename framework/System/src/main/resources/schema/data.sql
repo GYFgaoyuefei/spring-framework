@@ -7,6 +7,7 @@ INSERT INTO `sys_dictionary` (`id`, `desc`, `editable`, `group`, `name`, `status
 INSERT INTO `sys_dictionary` (`id`, `desc`, `editable`, `group`, `name`, `status`, `type`) VALUES (18, '华为返回码', 'Y', 'RETURN_CODE', '华为返回码', 'valid', 'System');
 INSERT INTO `sys_dictionary` (`id`, `desc`, `editable`, `group`, `name`, `status`, `type`) VALUES (19, '商家类型', 'Y', 'MERCHANT_TYPE', '商家类型', 'valid', 'System');
 INSERT INTO `sys_dictionary` (`id`, `desc`, `editable`, `group`, `name`, `status`, `type`) VALUES (20, '行业分类', 'Y', 'INDUSTRY_TYPE', '行业分类', 'valid', 'System');
+INSERT INTO `sys_dictionary` (`id`, `desc`, `editable`, `group`, `name`, `status`, `type`) VALUES (21, '端口号批量申请最大数量', 'Y', 'PORT_MAX_NUM', '端口号批量申请最大数量', 'valid', 'System');
 
 
 --sys_dict_item
@@ -86,3 +87,4 @@ INSERT INTO `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) 
 INSERT INTO `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) VALUES (95, '9', '新闻阅读', 'valid', '新闻阅读', 20);
 INSERT INTO `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) VALUES (96, '10', '运营商', 'valid', '运营商', 20);
 INSERT INTO `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) VALUES (97, '11', '其他', 'valid', '其他', 20);
+INSERT INTO `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) VALUES (98, '1', '端口号批量申请最大数量', 'valid', '500', 21);
