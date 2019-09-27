@@ -80,8 +80,8 @@ spring:
         uri: lb://SYNCSERVICE
         predicates:
         - Path=/SyncService/**
-        filters:
-        - RewritePath=/SyncService/callback/resource, /adapter/callback/resource
+#        filters:
+#        - RewritePath=/SyncService/callback/resource, /adapter/callback/resource
       - id: AuthService
         uri: lb://AUTHSERVICE
         predicates:
