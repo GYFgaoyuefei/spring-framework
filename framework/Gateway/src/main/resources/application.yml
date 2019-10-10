@@ -112,6 +112,10 @@ spring:
         uri: lb://RESOURCESERVER
         predicates:
         - Path=/ResourceServer/**
+      - id: QuickappService
+        uri: lb://QUICKAPPSERVICE
+        predicates:
+        - Path=/QuickappService/**
 
 eureka:
   client:
