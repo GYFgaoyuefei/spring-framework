@@ -119,7 +119,7 @@
                         <Class-Path></Class-Path>
                     </manifestEntries>
                 </archive>
-                <outputDirectory>../../../../target/business</outputDirectory>
+                <outputDirectory>../../../../target/framework</outputDirectory>
             </configuration>
         </plugin>
  
