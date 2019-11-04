@@ -10,8 +10,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
 import com.eseasky.core.framework.AuthService.UserTools.UserToolsService;
+import com.eseasky.core.framework.AuthService.UserTools.entity.DatabaseEntity;
 import com.eseasky.core.framework.AuthService.UserTools.entity.ExecuteSQLEntity;
 import com.eseasky.global.entity.ResultModel;
+import com.eseasky.starter.core.channel.exception.CommandException;
+import com.eseasky.starter.jsch.JSchException;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -34,6 +37,47 @@ public class UserToolsController {
 			resList = userToolsService.executeSQL(executeSQL);
 	        log.info(JSONObject.toJSONString(resList));
 	        msgReturn.setData(resList);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			msgReturn.setSubCode(500);
+			msgReturn.setMessage(e.getMessage());
+		}
+        return msgReturn;
+    }
+    
+    @ApiOperation(value = "备份数据库", httpMethod = "POST")
+    @PostMapping(value = "/backupDatabase")
+    public ResultModel<String> backupDatabase(@RequestBody DatabaseEntity databaseEntity) {
+    	ResultModel<String> msgReturn = new ResultModel<>();
+        String result = null;
+        try {
+        	result = userToolsService.backupDatabase(databaseEntity);
+            log.info(JSONObject.toJSONString(result));
+            msgReturn.setData(result);
+        } catch (JSchException e) {
+            msgReturn.setSubCode(500);
+            msgReturn.setMessage("用户名密码错误!");
+        }catch (CommandException e){
+            msgReturn.setSubCode(500);
+            msgReturn.setMessage("command命令不合法!");
+        }
+        catch (Exception e){
+            msgReturn.setSubCode(500);
+            msgReturn.setMessage(e.getMessage());
+        }
+        return msgReturn;
+    }
+    
+    @ApiOperation(value = "恢复数据库", httpMethod = "POST")
+    @PostMapping(value = "/restoreDatabase")
+    public ResultModel<String> restoreDatabase(@RequestBody DatabaseEntity databaseEntity) {
+        ResultModel<String> msgReturn = new ResultModel<>();
+        String result = null;
+		try {
+			result = userToolsService.restoreDatabase(databaseEntity);
+	        log.info(JSONObject.toJSONString(result));
+	        msgReturn.setData(result);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

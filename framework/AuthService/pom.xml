@@ -90,6 +90,10 @@
 			<groupId>com.eseasky.core.starters</groupId>
 			<artifactId>encryption</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.eseasky.core.starters</groupId>
+			<artifactId>jsch</artifactId>
+		</dependency>
 	</dependencies>
 
 	<!-- 打包 -->
