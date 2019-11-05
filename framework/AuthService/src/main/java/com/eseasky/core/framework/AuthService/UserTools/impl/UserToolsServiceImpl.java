@@ -11,6 +11,7 @@ import com.eseasky.core.framework.AuthService.UserTools.UserToolsService;
 import com.eseasky.core.framework.AuthService.UserTools.entity.DatabaseEntity;
 import com.eseasky.core.framework.AuthService.UserTools.entity.ExecuteSQLEntity;
 import com.eseasky.core.starters.encryption.noticeking.MA;
+import com.eseasky.starter.core.channel.SessionFactory;
 import com.eseasky.starter.core.channel.SessionProxy;
 import com.eseasky.starter.core.channel.ShellExecReturn;
 import com.eseasky.starter.core.channel.UserInfo;
@@ -86,7 +87,7 @@ public class UserToolsServiceImpl implements UserToolsService {
         userInfo.setIp(databaseEntity.getIp());
         userInfo.setUsername(databaseEntity.getUser());
         userInfo.setPassword(databaseEntity.getPassword());
-        SessionProxy sessionProxy = com.eseasky.starter.core.channel.SessionFactory.getInstance().getCommandOperation(userInfo).getSessionProxy();
+        SessionProxy sessionProxy = SessionFactory.getInstance().getCommandOperation(userInfo).getSessionProxy();
         ShellExecReturn shellExecReturn = sessionProxy.execReturn(sb.toString(), 20 * 1000L);
         log.info("ShellExecReturn为[{}]",shellExecReturn);
         if (shellExecReturn.getStatus() == 0) {// 0 表示线程正常终止。
@@ -134,9 +135,9 @@ public class UserToolsServiceImpl implements UserToolsService {
         userInfo.setIp(databaseEntity.getIp());
         userInfo.setUsername(databaseEntity.getUser());
         userInfo.setPassword(databaseEntity.getPassword());
-        SessionProxy sessionProxy = com.eseasky.starter.core.channel.SessionFactory.getInstance().getCommandOperation(userInfo).getSessionProxy();
+        SessionProxy sessionProxy = SessionFactory.getInstance().getCommandOperation(userInfo).getSessionProxy();
         ShellExecReturn shellExecReturn = sessionProxy.execReturn(sb.toString(), 20 * 1000L);
-        log.info("ShellExecReturn为【{}】",shellExecReturn);
+        log.info("ShellExecReturn为[{}]",shellExecReturn);
         if (shellExecReturn.getStatus() == 0) {// 0 表示线程正常终止。
             return "数据库还原成功";
         }else{
