@@ -9,6 +9,8 @@ INSERT INTO `sys_dictionary` (`id`, `desc`, `editable`, `group`, `name`, `status
 INSERT INTO `sys_dictionary` (`id`, `desc`, `editable`, `group`, `name`, `status`, `type`) VALUES (20, '行业分类', 'Y', 'INDUSTRY_TYPE', '行业分类', 'valid', 'System');
 INSERT INTO `sys_dictionary` (`id`, `desc`, `editable`, `group`, `name`, `status`, `type`) VALUES (21, '端口号批量申请最大数量', 'Y', 'PORT_MAX_NUM', '端口号批量申请最大数量', 'valid', 'System');
 INSERT INTO `sys_dictionary` (`id`, `desc`, `editable`, `group`, `name`, `status`, `type`) VALUES (22, '线程池参数', 'Y', 'POOL_SIZE', '线程池参数', 'valid', 'System');
+INSERT INTO `sys_dictionary` (`id`, `desc`, `editable`, `group`, `name`, `status`, `type`) VALUES (23, '信用代码最多使用商家数', 'Y', 'CREDITNUMBER_MAX', '信用代码最多使用商家数', 'valid', 'System');
+INSERT INTO `sys_dictionary` (`id`, `desc`, `editable`, `group`, `name`, `status`, `type`) VALUES (24, '华为与系统的操作类型映射', 'Y', 'HW_OPERATE_TYPE', '华为与系统的操作类型映射', 'valid', 'HuaWei');
 
 
 --sys_dict_item
@@ -91,3 +93,10 @@ INSERT INTO `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) 
 INSERT INTO `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) VALUES (98, '1', '端口号批量申请最大数量', 'valid', '500', 21);
 INSERT INTO `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) VALUES (100, '1', '核心线程数', 'valid', '5', 22);
 INSERT INTO `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) VALUES (101, '2', '最大线程数', 'valid', '8', 22);
+INSERT INTO `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) VALUES (102, '1', '信用代码最多使用商家数', 'valid', '5', 23);
+INSERT INTO `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) VALUES (103, '1', '创建', 'valid', '1', 24);
+INSERT INTO `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) VALUES (104, '2', '修改', 'valid', '2', 24);
+INSERT INTO `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) VALUES (105, '3', '运营冻结', 'valid', '8', 24);
+INSERT INTO `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) VALUES (106, '4', '运营解冻', 'valid', '9', 24);
+INSERT INTO `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) VALUES (107, '5', '商家冻结', 'valid', '6', 24);
+INSERT INTO `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) VALUES (108, '6', '商家解冻', 'valid', '7', 24);
