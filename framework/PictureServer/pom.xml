@@ -37,6 +37,12 @@
 		<dependency>
 			<groupId>com.eseasky.global</groupId>
 			<artifactId>global</artifactId>
+			<exclusions>
+	        	<exclusion>
+	        		<groupId>com.google.guava</groupId>
+	        		<artifactId>guava</artifactId>
+	        	</exclusion>
+	        </exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.eseasky.core.starters</groupId>
