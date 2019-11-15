@@ -127,17 +127,20 @@ public class PictureResourceServiceImpl implements PictureResourceService {
             }
 
             if (inputStream != null) {
-                // 得到文件大小
-                int i = inputStream.available();
-                byte[] data = new byte[i];
-                // 读数据
-                inputStream.read(data);
                 // 获取文件后缀
                 String prefix = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
                 response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + fileName);
                 response.setContentType(getImageType(prefix));
                 OutputStream outputStream = response.getOutputStream();
-                outputStream.write(data);
+             // 得到文件大小
+//              int i = inputStream.available();
+                int len = 0;  
+                byte[] data = new byte[1024 * 10];
+              // 读数据
+                while ((len = inputStream.read(data)) != -1){  
+                	outputStream.write(data,0,len);  
+                } 
+                outputStream.flush();
                 outputStream.close();
             }
         } catch (IOException e) {
