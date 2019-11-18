@@ -98,13 +98,14 @@ public class UserToolsServiceImpl implements UserToolsService {
 	}
 	
 	private DatabaseEntity backupCheck(DatabaseEntity databaseEntity) {
-      File saveFile = new File(databaseEntity.getSavePath());
-      //创建备份sql文件
-      if (!saveFile.exists()) {
-          saveFile.mkdirs();
-      }
       if (!databaseEntity.getSavePath().endsWith(File.separator)) {
           databaseEntity.setSavePath(databaseEntity.getSavePath() + File.separator);
+      }
+      File saveFile = new File(databaseEntity.getSavePath());
+      //创建备份sql文件
+      if (saveFile .isDirectory()) {
+    	  saveFile.setWritable(true, false);
+          saveFile.mkdirs();
       }
       //后缀统一换成.sql结尾
       String fileName = databaseEntity.getFileName();
@@ -151,7 +152,7 @@ public class UserToolsServiceImpl implements UserToolsService {
             databaseEntity.setSavePath(databaseEntity.getSavePath() + File.separator);
         }
         File sqlFile = new File(databaseEntity.getSavePath()+databaseEntity.getFileName());
-        if (!sqlFile.exists()){
+        if (!sqlFile.isFile()){
             throw new RuntimeException(sqlFile.getPath()+"不存在!");
         }
 		return databaseEntity;
