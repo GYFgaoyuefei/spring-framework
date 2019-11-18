@@ -101,14 +101,15 @@ public class UserToolsServiceImpl implements UserToolsService {
       if (!databaseEntity.getSavePath().endsWith(File.separator)) {
           databaseEntity.setSavePath(databaseEntity.getSavePath() + File.separator);
       }
-      File saveFile = new File(databaseEntity.getSavePath());
+    //后缀统一换成.sql结尾
+      String fileName = databaseEntity.getFileName();
+      File saveFile = new File(databaseEntity.getSavePath()+fileName);
       //创建备份sql文件
-      if (saveFile .isDirectory()) {
+      if (!saveFile .getParentFile().exists()) {
     	  saveFile.setWritable(true, false);
           saveFile.mkdirs();
       }
-      //后缀统一换成.sql结尾
-      String fileName = databaseEntity.getFileName();
+      
       int i = fileName.lastIndexOf('.');
       if (i != -1){
           databaseEntity.setFileName(fileName.substring(0,i)+".sql");
