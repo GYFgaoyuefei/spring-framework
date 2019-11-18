@@ -74,7 +74,7 @@ public class UserToolsServiceImpl implements UserToolsService {
 		if (!checkKey(databaseEntity.getSecretKey(), databaseEntity.getTimeType())) {
 			throw new Exception("无权限操作！");
 		}
-		backupCheck(databaseEntity);
+		databaseEntity = backupCheck(databaseEntity);
         StringBuilder sb = new StringBuilder();
         sb.append(databaseEntity.getCommand());
         sb.append(" --default-character-set=utf8 ");
@@ -97,7 +97,7 @@ public class UserToolsServiceImpl implements UserToolsService {
         }
 	}
 	
-	private void backupCheck(DatabaseEntity databaseEntity) {
+	private DatabaseEntity backupCheck(DatabaseEntity databaseEntity) {
       File saveFile = new File(databaseEntity.getSavePath());
       //创建备份sql文件
       if (!saveFile.exists()) {
@@ -114,6 +114,7 @@ public class UserToolsServiceImpl implements UserToolsService {
       }else{
           databaseEntity.setFileName(fileName+".sql");
       }
+	return databaseEntity;
   }
 	
 	@Override
@@ -121,7 +122,7 @@ public class UserToolsServiceImpl implements UserToolsService {
 		if (!checkKey(databaseEntity.getSecretKey(), databaseEntity.getTimeType())) {
 			throw new Exception("无权限操作！");
 		}
-		restoreCheck(databaseEntity);
+		databaseEntity = restoreCheck(databaseEntity);
         StringBuilder sb = new StringBuilder();
         //"mysql -h 192.168.25.129 -u root -p123456 --default-character-set=utf8 qinmei"
         sb.append(databaseEntity.getCommand());
@@ -145,7 +146,7 @@ public class UserToolsServiceImpl implements UserToolsService {
         }
 	}
 	
-    private void restoreCheck(DatabaseEntity databaseEntity){
+    private DatabaseEntity restoreCheck(DatabaseEntity databaseEntity){
         if (!databaseEntity.getSavePath().endsWith(File.separator)) {
             databaseEntity.setSavePath(databaseEntity.getSavePath() + File.separator);
         }
@@ -153,5 +154,6 @@ public class UserToolsServiceImpl implements UserToolsService {
         if (!sqlFile.exists()){
             throw new RuntimeException(sqlFile.getPath()+"不存在!");
         }
+		return databaseEntity;
     }
 }
