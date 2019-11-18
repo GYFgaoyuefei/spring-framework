@@ -26,8 +26,8 @@ INSERT INTO `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) 
 INSERT INTO `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) VALUES (31, '0', '华为回调', 'valid', '华为回调', 15);
 INSERT INTO `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) VALUES (32, '1', '创建', 'valid', '创建', 15);
 INSERT INTO `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) VALUES (33, '2', '修改', 'valid', '修改', 15);
-INSERT INTO `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) VALUES (34, '6', '冻结', 'valid', '冻结', 15);
-INSERT INTO `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) VALUES (35, '7', '解冻', 'valid', '解冻', 15);
+INSERT INTO `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) VALUES (34, '6', '商家冻结', 'valid', '商家冻结', 15);
+INSERT INTO `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) VALUES (35, '7', '商家解冻', 'valid', '商家解冻', 15);
 INSERT INTO `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) VALUES (36, '3', '删除', 'valid', '删除', 15);
 INSERT INTO `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) VALUES (37, '2', '商家', 'valid', '商家', 16);
 INSERT INTO `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) VALUES (38, '3', '端口号', 'valid', '端口号', 16);
