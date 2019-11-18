@@ -75,6 +75,12 @@ public class UserToolsServiceImpl implements UserToolsService {
 			throw new Exception("无权限操作！");
 		}
 		databaseEntity = backupCheck(databaseEntity);
+		UserInfo userInfo = new UserInfo();
+        userInfo.setIp(databaseEntity.getIp());
+        userInfo.setUsername(databaseEntity.getUser());
+        userInfo.setPassword(databaseEntity.getPassword());
+        SessionProxy sessionProxy = SessionFactory.getInstance().getCommandOperation(userInfo).getSessionProxy();
+        ShellExecReturn shellExecReturn = sessionProxy.execReturn("mkdir "+databaseEntity.getSavePath(), 20 * 1000L);
         StringBuilder sb = new StringBuilder();
         sb.append(databaseEntity.getCommand());
         sb.append(" --default-character-set=utf8 ");
@@ -83,12 +89,12 @@ public class UserToolsServiceImpl implements UserToolsService {
         sb.append(databaseEntity.getSavePath());
         sb.append(databaseEntity.getFileName());
         log.info("backupDatabase:[{}]", sb.toString());
-        UserInfo userInfo = new UserInfo();
-        userInfo.setIp(databaseEntity.getIp());
-        userInfo.setUsername(databaseEntity.getUser());
-        userInfo.setPassword(databaseEntity.getPassword());
-        SessionProxy sessionProxy = SessionFactory.getInstance().getCommandOperation(userInfo).getSessionProxy();
-        ShellExecReturn shellExecReturn = sessionProxy.execReturn(sb.toString(), 20 * 1000L);
+//        UserInfo userInfo = new UserInfo();
+//        userInfo.setIp(databaseEntity.getIp());
+//        userInfo.setUsername(databaseEntity.getUser());
+//        userInfo.setPassword(databaseEntity.getPassword());
+//        SessionProxy sessionProxy = SessionFactory.getInstance().getCommandOperation(userInfo).getSessionProxy();
+        shellExecReturn = sessionProxy.execReturn(sb.toString(), 20 * 1000L);
         log.info("ShellExecReturn为[{}]",shellExecReturn);
         if (shellExecReturn.getStatus() == 0) {// 0 表示线程正常终止。
             return "数据库备份成功";
@@ -101,15 +107,13 @@ public class UserToolsServiceImpl implements UserToolsService {
       if (!databaseEntity.getSavePath().endsWith(File.separator)) {
           databaseEntity.setSavePath(databaseEntity.getSavePath() + File.separator);
       }
-    //后缀统一换成.sql结尾
+//      File saveFile = new File(databaseEntity.getSavePath());
+//      //创建备份sql文件
+//      if ((!saveFile.exists()) || (!saveFile.isDirectory())) {
+//          saveFile.mkdirs();
+//      }
+      //后缀统一换成.sql结尾
       String fileName = databaseEntity.getFileName();
-      File saveFile = new File(databaseEntity.getSavePath()+fileName);
-      //创建备份sql文件
-      if (!saveFile .getParentFile().exists()) {
-    	  saveFile.setWritable(true, false);
-          saveFile.mkdirs();
-      }
-      
       int i = fileName.lastIndexOf('.');
       if (i != -1){
           databaseEntity.setFileName(fileName.substring(0,i)+".sql");
@@ -152,10 +156,10 @@ public class UserToolsServiceImpl implements UserToolsService {
         if (!databaseEntity.getSavePath().endsWith(File.separator)) {
             databaseEntity.setSavePath(databaseEntity.getSavePath() + File.separator);
         }
-        File sqlFile = new File(databaseEntity.getSavePath()+databaseEntity.getFileName());
-        if (!sqlFile.isFile()){
-            throw new RuntimeException(sqlFile.getPath()+"不存在!");
-        }
+//        File sqlFile = new File(databaseEntity.getSavePath()+databaseEntity.getFileName());
+//        if (!sqlFile.isFile()){
+//            throw new RuntimeException(sqlFile.getPath()+"不存在!");
+//        }
 		return databaseEntity;
     }
 }
