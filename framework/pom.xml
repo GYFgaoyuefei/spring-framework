@@ -20,8 +20,8 @@
 		<module>AuthService</module>
 		<module>PictureServer</module>
         <module>Admin</module>
-    <module>System</module>
-    <module>SecurityManage</module>
+    	<module>System</module>
+    	<module>SecurityManage</module>
   </modules>
 
 
