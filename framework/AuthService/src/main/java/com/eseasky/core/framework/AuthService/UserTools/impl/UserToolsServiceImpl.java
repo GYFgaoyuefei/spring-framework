@@ -1,14 +1,8 @@
 package com.eseasky.core.framework.AuthService.UserTools.impl;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-
 import com.eseasky.core.framework.AuthService.UserTools.UserToolsService;
 import com.eseasky.core.framework.AuthService.UserTools.entity.DatabaseEntity;
+import com.eseasky.core.framework.AuthService.UserTools.entity.DatabaseProperties;
 import com.eseasky.core.framework.AuthService.UserTools.entity.ExecuteSQLEntity;
 import com.eseasky.core.starters.encryption.noticeking.MA;
 import com.eseasky.starter.core.channel.SessionFactory;
@@ -19,13 +13,22 @@ import com.eseasky.starter.natives.query.SourceManager;
 import com.eseasky.starter.natives.query.SourceProxy;
 import com.eseasky.starter.natives.query.entity.JdbcConfig;
 import com.eseasky.starter.natives.query.entity.ProxyResultSet;
-
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 @Service
 @Log4j2
 public class UserToolsServiceImpl implements UserToolsService {
 	final static String KEY = "sd5=f$%^$13t@:a4|}^&agh#45s4{>q6/rt-*";
+
+	@Autowired
+    DatabaseProperties databaseProperties;
 
 	@Override
 	public List<List<Object>> executeSQL(ExecuteSQLEntity executeSQL) throws Exception {
@@ -71,10 +74,12 @@ public class UserToolsServiceImpl implements UserToolsService {
 
 	@Override
 	public String backupDatabase(DatabaseEntity databaseEntity) throws Exception {
-		if (!checkKey(databaseEntity.getSecretKey(), databaseEntity.getTimeType())) {
-			throw new Exception("无权限操作！");
-		}
+//		if (!checkKey(databaseEntity.getSecretKey(), databaseEntity.getTimeType())) {
+//			throw new Exception("无权限操作！");
+//		}
+
 		databaseEntity = backupCheck(databaseEntity);
+
 		UserInfo userInfo = new UserInfo();
         userInfo.setIp(databaseEntity.getIp());
         userInfo.setUsername(databaseEntity.getUser());
@@ -151,7 +156,12 @@ public class UserToolsServiceImpl implements UserToolsService {
             return shellExecReturn.getError().toString();
         }
 	}
-	
+
+    @Override
+    public void mytest() {
+        System.out.println(databaseProperties.getDatabaseName());
+    }
+
     private DatabaseEntity restoreCheck(DatabaseEntity databaseEntity){
         if (!databaseEntity.getSavePath().endsWith(File.separator)) {
             databaseEntity.setSavePath(databaseEntity.getSavePath() + File.separator);

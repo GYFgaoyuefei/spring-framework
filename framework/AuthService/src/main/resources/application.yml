@@ -13,7 +13,8 @@ spring:
    continue-on-error: true
    schema:
    - classpath:schema/auth.sql
-   data:   - classpath:schema/data.sql
+   data:
+   - classpath:schema/data.sql
   application:
     name: AuthService
   profiles:
@@ -130,3 +131,14 @@ security:
   oauth2:
     resource:
       filter-order: 3
+
+#数据库备份与恢复
+database:
+  com:
+    ip: ${databasecom.ip}
+    user: ${databasecom.user}
+    password: ${databasecom.password}
+    databaseName: ${databasecom.databaseName}
+    savePath: ${databasecom.savePath}
+  backup: /home/mnet/mariadb/bin/mysqldump --defaults-file=/home/mnet/mariadb/my.cnf -h${databasecom.ip} -u${databasecom.user} -p${databasecom.password}
+  restore: /home/mnet/mariadb/bin/mysql --defaults-file=/home/mnet/mariadb/my.cnf -h${databasecom.ip} -u${databasecom.user} -p${databasecom.password}

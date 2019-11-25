@@ -31,16 +31,14 @@ custom:
   upload:
     #文件保存的路径(服务器主机删的绝对路径，如若没有请新建)
     absolute-path: /home/mnet/montnets/images     
-    
-
 
 eurekaserver:
   ip: localhost
   port: 9709
-eureka:
-  client:
-    register-with-eureka: false
-    fetch-registry: false
+#eureka:
+#  client:
+#    register-with-eureka: false
+#    fetch-registry: false
 
 logging:
   level:
@@ -50,11 +48,17 @@ token:
   expire:
     seconds: 86400
 
-
-
 swagger:
   enable: true
 
 exclude:
   check:
     token:  /loginservice/**,/error/**,/images/**,/webjars/**,/**/doc.html,/**/swagger-resources,/v2/**
+
+#数据库备份
+databasecom:
+  ip: 192.168.1.232
+  user: mnet
+  password: mnet@123
+  databaseName: mnetbak
+  savePath: /home/mnet/mysqlbak

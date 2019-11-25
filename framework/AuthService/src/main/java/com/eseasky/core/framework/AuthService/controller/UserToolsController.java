@@ -1,13 +1,5 @@
 package com.eseasky.core.framework.AuthService.controller;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.alibaba.fastjson.JSONObject;
 import com.eseasky.core.framework.AuthService.UserTools.UserToolsService;
 import com.eseasky.core.framework.AuthService.UserTools.entity.DatabaseEntity;
@@ -15,10 +7,16 @@ import com.eseasky.core.framework.AuthService.UserTools.entity.ExecuteSQLEntity;
 import com.eseasky.global.entity.ResultModel;
 import com.eseasky.starter.core.channel.exception.CommandException;
 import com.eseasky.starter.jsch.JSchException;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @Api(value = "用户工具", tags = "用户工具服务")
 @RestController
@@ -84,6 +82,13 @@ public class UserToolsController {
 			msgReturn.setSubCode(500);
 			msgReturn.setMessage(e.getMessage());
 		}
+        return msgReturn;
+    }
+
+    @PostMapping(value = "/mytest")
+    public ResultModel<String> mytest() {
+        ResultModel<String> msgReturn = new ResultModel<>();
+        userToolsService.mytest();
         return msgReturn;
     }
 }
