@@ -94,6 +94,12 @@
 			<groupId>com.eseasky.core.starters</groupId>
 			<artifactId>jsch</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>com.github.ulisesbocchio</groupId>
+			<artifactId>jasypt-spring-boot-starter</artifactId>
+			<version>2.1.2</version>
+		</dependency>
 	</dependencies>
 
 	<!-- 打包 -->

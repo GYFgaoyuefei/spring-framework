@@ -140,5 +140,5 @@ database:
     password: ${databasecom.password}
     databaseName: ${databasecom.databaseName}
     savePath: ${databasecom.savePath}
-  backup: /home/mnet/mariadb/bin/mysqldump --defaults-file=/home/mnet/mariadb/my.cnf -h${databasecom.ip} -u${databasecom.user} -p${databasecom.password}
-  restore: /home/mnet/mariadb/bin/mysql --defaults-file=/home/mnet/mariadb/my.cnf -h${databasecom.ip} -u${databasecom.user} -p${databasecom.password}
+  backup: ${datasource.backupcmd}
+  restore: ${datasource.restorecmd}
