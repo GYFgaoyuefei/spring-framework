@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.eseasky.core.framework.AuthService.UserTools.UserToolsService;
@@ -65,7 +66,8 @@ public class UserToolsServiceImpl implements UserToolsService {
         if (!checkKey(databaseEntity.getSecretKey(), databaseEntity.getTimeType())) {
             throw new Exception("无权限操作！");
         }
-        return backupscheduledtask();
+        backupscheduledtask();
+        return "备份成功";
     }
 
     private boolean checkKey(String secretKey, String timeType) {
@@ -82,10 +84,10 @@ public class UserToolsServiceImpl implements UserToolsService {
         return false;
     }
 
-    //    @Scheduled(cron = "0 0 2 * * ? ")
-    public String backupscheduledtask() throws Exception {
+    @Scheduled(cron = "0 0 2 * * ? ")
+    public void backupscheduledtask() throws Exception {
         DatabaseEntity databaseEntity = buildDatabaseInfo();
-        return doBackup(databaseEntity);
+        doBackup(databaseEntity);
     }
 
     private String doBackup(DatabaseEntity databaseEntity) throws Exception {
@@ -124,7 +126,6 @@ public class UserToolsServiceImpl implements UserToolsService {
 
     private DatabaseEntity buildDatabaseInfo() {
         DatabaseEntity databaseEntity = new DatabaseEntity();
-        log.info("数据库信息[{}]",databaseEntity);
         databaseEntity.setIp(databaseProperties.getIp());
         databaseEntity.setUser(databaseProperties.getUser());
         databaseEntity.setPassword(databaseProperties.getPassword());
@@ -145,7 +146,6 @@ public class UserToolsServiceImpl implements UserToolsService {
         } else {
             databaseEntity.setFileName(fileName + ".sql");
         }
-        log.info("数据库信息[{}]",databaseEntity);
         return databaseEntity;
     }
 
