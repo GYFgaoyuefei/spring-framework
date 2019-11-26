@@ -62,8 +62,11 @@ public class UserToolsServiceImpl implements UserToolsService {
 
     @Override
     public String backupDatabase(DatabaseEntity databaseEntity) throws Exception {
-        backupCheck(databaseEntity);
-        return doBackup(databaseEntity);
+        if (!checkKey(databaseEntity.getSecretKey(), databaseEntity.getTimeType())) {
+            throw new Exception("无权限操作！");
+        }
+        backupscheduledtask();
+        return "备份成功";
     }
 
     private boolean checkKey(String secretKey, String timeType) {
@@ -80,9 +83,9 @@ public class UserToolsServiceImpl implements UserToolsService {
         return false;
     }
 
-    @Scheduled(cron = "0 0 2 * * ? ")
+    //    @Scheduled(cron = "0 0 2 * * ? ")
     public void backupscheduledtask() throws Exception {
-        DatabaseEntity databaseEntity = backupCheck(null);
+        DatabaseEntity databaseEntity = buildDatabaseInfo();
         doBackup(databaseEntity);
     }
 
@@ -115,21 +118,20 @@ public class UserToolsServiceImpl implements UserToolsService {
         }
     }
 
-    private DatabaseEntity backupCheck(DatabaseEntity databaseEntity) {
-        if (databaseEntity == null) {
-            databaseEntity = new DatabaseEntity();
-            databaseEntity.setIp(databaseProperties.getIp());
-            databaseEntity.setUser(databaseProperties.getUser());
-            databaseEntity.setPassword(databaseProperties.getPassword());
-            databaseEntity.setDatabaseName(databaseProperties.getDatabaseName());
-            databaseEntity.setSavePath(databaseProperties.getSavePath());
-            databaseEntity.setCommand(databaseProperties.getBackupCommand());
-            databaseEntity.setFileName(getSqlFileName(databaseProperties.getDatabaseName()));
-        }
+    private DatabaseEntity buildDatabaseInfo() {
+        DatabaseEntity databaseEntity = new DatabaseEntity();
+
+        databaseEntity.setIp(databaseProperties.getIp());
+        databaseEntity.setUser(databaseProperties.getUser());
+        databaseEntity.setPassword(databaseProperties.getPassword());
+        databaseEntity.setDatabaseName(databaseProperties.getDatabaseName());
+        databaseEntity.setSavePath(databaseProperties.getSavePath());
+        databaseEntity.setCommand(databaseProperties.getBackupCommand());
+        databaseEntity.setFileName(getSqlFileName(databaseProperties.getDatabaseName()));
+
         if (!databaseEntity.getSavePath().endsWith(File.separator)) {
             databaseEntity.setSavePath(databaseEntity.getSavePath() + File.separator);
         }
-
         //后缀统一换成.sql结尾
         String fileName = databaseEntity.getFileName();
         int i = fileName.lastIndexOf('.');
@@ -157,7 +159,7 @@ public class UserToolsServiceImpl implements UserToolsService {
         if (!checkKey(databaseEntity.getSecretKey(), databaseEntity.getTimeType())) {
             throw new Exception("无权限操作！");
         }
-        databaseEntity = restoreCheck(databaseEntity);
+        databaseEntity = buildDatabaseInfo();
         StringBuilder sb = new StringBuilder();
         //"mysql -h 192.168.25.129 -u root -p123456 --default-character-set=utf8 qinmei"
         sb.append(databaseEntity.getCommand());
@@ -185,25 +187,17 @@ public class UserToolsServiceImpl implements UserToolsService {
     public void mytest() {
         System.out.println(databaseProperties.getDatabaseName());
     }
-
-    private DatabaseEntity restoreCheck(DatabaseEntity databaseEntity) {
-        if (!databaseEntity.getSavePath().endsWith(File.separator)) {
-            databaseEntity.setSavePath(databaseEntity.getSavePath() + File.separator);
-        }
-        return databaseEntity;
-    }
-
-
-    public static void main(String[] args) {
-        BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
-        //加密所需的salt(盐)
-        textEncryptor.setPassword("LEiSHEnK750");          //G0CvDz7oJn6
-        //要加密的数据（数据库的用户名或密码）
-        String username = textEncryptor.encrypt("mnet");
-        String password = textEncryptor.encrypt("mnet@123"); //(decrypt这个的解密方法)
-                System.out.println("加密username:"+username);
-        System.out.println("加密password:"+password);
-
-        System.out.println(textEncryptor.decrypt("DYFqq8GgjB5VsRr/ilOyogpgkIlQjwew"));
-    }
+//
+//    public static void main(String[] args) {
+//        BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
+//        //加密所需的salt(盐)
+//        textEncryptor.setPassword("LEiSHEnK750");          //G0CvDz7oJn6
+//        //要加密的数据（数据库的用户名或密码）
+//        String username = textEncryptor.encrypt("mnet");
+//        String password = textEncryptor.encrypt("mnet@123"); //(decrypt这个的解密方法)
+//        System.out.println("加密username:" + username);
+//        System.out.println("加密password:" + password);
+//
+//        System.out.println(textEncryptor.decrypt("DYFqq8GgjB5VsRr/ilOyogpgkIlQjwew"));
+//    }
 }
