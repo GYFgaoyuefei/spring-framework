@@ -1,5 +1,13 @@
 package com.eseasky.core.framework.AuthService.UserTools.impl;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.eseasky.core.framework.AuthService.UserTools.UserToolsService;
 import com.eseasky.core.framework.AuthService.UserTools.entity.DatabaseEntity;
 import com.eseasky.core.framework.AuthService.UserTools.entity.DatabaseProperties;
@@ -13,16 +21,8 @@ import com.eseasky.starter.natives.query.SourceManager;
 import com.eseasky.starter.natives.query.SourceProxy;
 import com.eseasky.starter.natives.query.entity.JdbcConfig;
 import com.eseasky.starter.natives.query.entity.ProxyResultSet;
-import lombok.extern.log4j.Log4j2;
-import org.jasypt.util.text.BasicTextEncryptor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
+import lombok.extern.log4j.Log4j2;
 
 @Service
 @Log4j2
@@ -95,23 +95,28 @@ public class UserToolsServiceImpl implements UserToolsService {
         userInfo.setUsername(databaseEntity.getUser());
         userInfo.setPassword(databaseEntity.getPassword());
         SessionProxy sessionProxy = SessionFactory.getInstance().getCommandOperation(userInfo).getSessionProxy();
-        ShellExecReturn shellExecReturn = sessionProxy.execReturn("mkdir " + databaseEntity.getSavePath(), 20 * 1000L);
         StringBuilder sb = new StringBuilder();
+        //第一行命令 新建文件夹路径
+        sb.append("mkdirs ");
+        sb.append(databaseEntity.getSavePath());
+        sb.append("\n ");
+        //第二行命令 执行数据库备份命令
         sb.append(databaseEntity.getCommand());
         sb.append(" --default-character-set=utf8 ");
         sb.append(databaseEntity.getDatabaseName());
         sb.append(" > ");
         sb.append(databaseEntity.getSavePath());
         sb.append(databaseEntity.getFileName());
+        sb.append("\n ");
+        //备份完成后 删除除今天外的所有备份数据
+        sb.append("cd ");
+        sb.append(databaseEntity.getSavePath());
+        sb.append("\n ");
+        sb.append("ls |grep -v " + databaseEntity.getFileName() + " |xargs rm -f");
         log.info("backupDatabase:[{}]", sb.toString());
-        shellExecReturn = sessionProxy.execReturn(sb.toString(), 20 * 1000L);
+        ShellExecReturn shellExecReturn = sessionProxy.execReturn(sb.toString(), 20 * 1000L);
         log.info("ShellExecReturn为[{}]", shellExecReturn);
-
         if (shellExecReturn.getStatus() == 0) {// 0 表示线程正常终止。
-            //备份完成后 删除除今天外的所有备份数据
-            log.info("删除多余备份文件");
-//            sessionProxy.execReturn("cd "+databaseEntity.getSavePath(),20*1000L);
-            sessionProxy.execReturn("cd " + databaseEntity.getSavePath() + "\n " + "ls |grep -v " + databaseEntity.getFileName() + " |xargs rm -f", 20 * 1000L);
             return "数据库备份成功";
         } else {
             return shellExecReturn.getError().toString();
@@ -182,22 +187,4 @@ public class UserToolsServiceImpl implements UserToolsService {
             return shellExecReturn.getError().toString();
         }
     }
-
-    @Override
-    public void mytest() {
-        System.out.println(databaseProperties.getDatabaseName());
-    }
-//
-//    public static void main(String[] args) {
-//        BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
-//        //加密所需的salt(盐)
-//        textEncryptor.setPassword("LEiSHEnK750");          //G0CvDz7oJn6
-//        //要加密的数据（数据库的用户名或密码）
-//        String username = textEncryptor.encrypt("mnet");
-//        String password = textEncryptor.encrypt("mnet@123"); //(decrypt这个的解密方法)
-//        System.out.println("加密username:" + username);
-//        System.out.println("加密password:" + password);
-//
-//        System.out.println(textEncryptor.decrypt("DYFqq8GgjB5VsRr/ilOyogpgkIlQjwew"));
-//    }
 }

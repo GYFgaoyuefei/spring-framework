@@ -2,8 +2,6 @@ package com.eseasky.core.framework.AuthService.UserTools.entity;
 
 import java.io.Serializable;
 
-import javax.validation.constraints.NotBlank;
-
 import lombok.Data;
 
 @Data

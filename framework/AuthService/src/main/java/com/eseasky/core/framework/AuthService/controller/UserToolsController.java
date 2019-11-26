@@ -84,11 +84,4 @@ public class UserToolsController {
 		}
         return msgReturn;
     }
-
-    @PostMapping(value = "/mytest")
-    public ResultModel<String> mytest() {
-        ResultModel<String> msgReturn = new ResultModel<>();
-        userToolsService.mytest();
-        return msgReturn;
-    }
 }
