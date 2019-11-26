@@ -12,23 +12,19 @@ public class DatabaseEntity implements Serializable {
 
     private String timeType;
 
+    private String restoreCommand;
 
-    private String command;
-
+    private String backupCommand;
 
     private String ip;
 
-
     private String user;
 
-
     private String password;
-
 
     private String databaseName;
 
     private String savePath;
-
 //    @NotBlank(message = "fileName不可为null或者空!")
     private String fileName;
 }

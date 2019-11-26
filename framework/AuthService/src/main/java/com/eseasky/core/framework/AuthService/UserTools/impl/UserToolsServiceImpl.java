@@ -65,8 +65,7 @@ public class UserToolsServiceImpl implements UserToolsService {
         if (!checkKey(databaseEntity.getSecretKey(), databaseEntity.getTimeType())) {
             throw new Exception("无权限操作！");
         }
-        backupscheduledtask();
-        return "备份成功";
+        return backupscheduledtask();
     }
 
     private boolean checkKey(String secretKey, String timeType) {
@@ -84,9 +83,9 @@ public class UserToolsServiceImpl implements UserToolsService {
     }
 
     //    @Scheduled(cron = "0 0 2 * * ? ")
-    public void backupscheduledtask() throws Exception {
+    public String backupscheduledtask() throws Exception {
         DatabaseEntity databaseEntity = buildDatabaseInfo();
-        doBackup(databaseEntity);
+        return doBackup(databaseEntity);
     }
 
     private String doBackup(DatabaseEntity databaseEntity) throws Exception {
@@ -97,11 +96,11 @@ public class UserToolsServiceImpl implements UserToolsService {
         SessionProxy sessionProxy = SessionFactory.getInstance().getCommandOperation(userInfo).getSessionProxy();
         StringBuilder sb = new StringBuilder();
         //第一行命令 新建文件夹路径
-        sb.append("mkdirs ");
+        sb.append("mkdir -p ");
         sb.append(databaseEntity.getSavePath());
         sb.append("\n ");
         //第二行命令 执行数据库备份命令
-        sb.append(databaseEntity.getCommand());
+        sb.append(databaseEntity.getBackupCommand());
         sb.append(" --default-character-set=utf8 ");
         sb.append(databaseEntity.getDatabaseName());
         sb.append(" > ");
@@ -125,13 +124,14 @@ public class UserToolsServiceImpl implements UserToolsService {
 
     private DatabaseEntity buildDatabaseInfo() {
         DatabaseEntity databaseEntity = new DatabaseEntity();
-
+        log.info("数据库信息[{}]",databaseEntity);
         databaseEntity.setIp(databaseProperties.getIp());
         databaseEntity.setUser(databaseProperties.getUser());
         databaseEntity.setPassword(databaseProperties.getPassword());
         databaseEntity.setDatabaseName(databaseProperties.getDatabaseName());
         databaseEntity.setSavePath(databaseProperties.getSavePath());
-        databaseEntity.setCommand(databaseProperties.getBackupCommand());
+        databaseEntity.setRestoreCommand(databaseProperties.getRestoreCommand());
+        databaseEntity.setBackupCommand(databaseProperties.getBackupCommand());
         databaseEntity.setFileName(getSqlFileName(databaseProperties.getDatabaseName()));
 
         if (!databaseEntity.getSavePath().endsWith(File.separator)) {
@@ -145,6 +145,7 @@ public class UserToolsServiceImpl implements UserToolsService {
         } else {
             databaseEntity.setFileName(fileName + ".sql");
         }
+        log.info("数据库信息[{}]",databaseEntity);
         return databaseEntity;
     }
 
@@ -167,7 +168,7 @@ public class UserToolsServiceImpl implements UserToolsService {
         databaseEntity = buildDatabaseInfo();
         StringBuilder sb = new StringBuilder();
         //"mysql -h 192.168.25.129 -u root -p123456 --default-character-set=utf8 qinmei"
-        sb.append(databaseEntity.getCommand());
+        sb.append(databaseEntity.getRestoreCommand());
         sb.append(" --default-character-set=utf8 ");
         sb.append(databaseEntity.getDatabaseName());
         sb.append(" < ");

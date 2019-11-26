@@ -10,15 +10,15 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "database.com")
 public class DatabaseProperties {
 
-    private String ip;
-    private String user;
-    private String password;
-    private String databaseName;
-    private String savePath;
+    private String ip = "192.168.1.232";
+    private String user = "mnet";
+    private String password = "mnet@123";
+    private String databaseName = "mnetbak";
+    private String savePath = "/home/mnet/mysqlbak";
 
     @Value("${database.backup}")
-    private String backupCommand;
+    private String backupCommand = "/home/mnet/mariadb/bin/mysqldump --defaults-file=/home/mnet/mariadb/my.cnf -h192.168.1.232 -umnet_business -p'mnet@123'";
 
     @Value("${database.restore}")
-    private String restoreCommand;
+    private String restoreCommand = "/home/mnet/mariadb/bin/mysql --defaults-file=/home/mnet/mariadb/my.cnf -h192.168.1.232 -umnet_business -p'mnet@123'";
 }
