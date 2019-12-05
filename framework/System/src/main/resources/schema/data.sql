@@ -102,3 +102,5 @@ INSERT INTO `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) 
 INSERT INTO `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) VALUES (108, '6', '商家解冻', 'valid', '7', 24);
 INSERT INTO `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) VALUES ('109', '8', '运营冻结', 'valid', '运营冻结', '15');
 INSERT INTO `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) VALUES ('110', '9', '运营解冻', 'valid', '运营解冻', '15');
+INSERT INTO `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) VALUES (111, '5', '提交预审', 'valid', '提交预审', 14);
+INSERT INTO `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) VALUES (112, '6', '预审驳回', 'valid', '预审驳回', 14);

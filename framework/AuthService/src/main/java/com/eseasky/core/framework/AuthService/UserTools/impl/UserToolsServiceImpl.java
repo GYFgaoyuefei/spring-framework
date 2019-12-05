@@ -94,7 +94,7 @@ public class UserToolsServiceImpl implements UserToolsService {
         SessionProxy sessionProxy = SessionFactory.getInstance().getCommandOperation(userInfo).getSessionProxy();
         ShellExecReturn shellExecReturn = sessionProxy.execReturn("mkdir "+databaseEntity.getSavePath(), 20 * 1000L);
         StringBuilder sb = new StringBuilder();
-        sb.append(databaseEntity.getCommand());
+        sb.append(databaseEntity.getBackupCommand());
         sb.append(" --default-character-set=utf8 ");
         sb.append(databaseEntity.getDatabaseName());
         sb.append(" > ");
@@ -143,7 +143,7 @@ public class UserToolsServiceImpl implements UserToolsService {
 		databaseEntity = restoreCheck(databaseEntity);
         StringBuilder sb = new StringBuilder();
         //"mysql -h 192.168.25.129 -u root -p123456 --default-character-set=utf8 qinmei"
-        sb.append(databaseEntity.getCommand());
+        sb.append(databaseEntity.getRestoreCommand());
         sb.append(" --default-character-set=utf8 ");
         sb.append(databaseEntity.getDatabaseName());
         sb.append(" < ");

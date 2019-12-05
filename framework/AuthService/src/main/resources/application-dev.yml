@@ -59,6 +59,14 @@ exclude:
 databasecom:
   ip: 192.168.1.232
   user: mnet
-  password: mnet@123
+  password: ENC(RMx5+VSDmn6fcprDUX6ygFHpw9SLfSH2)
   databaseName: mnetbak
-  savePath: E:\test\V1.0.0.0\mysql_back
+  savePath: /home/mnet/mysqlbak
+
+jasypt:
+  encryptor:
+    password: LEiSHEnK750
+
+datasource:
+  backupcmd: /home/mnet/mariadb/bin/mysqldump --defaults-file=/home/mnet/mariadb/my.cnf -h192.168.1.232 -umnet_business -p'mnet@123'
+  restorecmd: /home/mnet/mariadb/bin/mysql --defaults-file=/home/mnet/mariadb/my.cnf -h192.168.1.232 -umnet_business -p'mnet@123'
