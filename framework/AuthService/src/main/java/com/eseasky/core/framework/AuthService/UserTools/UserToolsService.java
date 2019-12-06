@@ -14,8 +14,4 @@ public interface UserToolsService {
 	String backupDatabase(DatabaseEntity databaseEntity) throws Exception;
 
 	String restoreDatabase(DatabaseEntity databaseEntity) throws Exception;
-	 void mytest();
-
-	String deleteBackups(DatabaseEntity databaseEntity) throws Exception;
-
 }
