@@ -1,4 +1,4 @@
-package com.eseasky.core.framework.AuthService.UserTools.entity;
+package com.eseasky.core.framework.AuthService.config;
 
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;

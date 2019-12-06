@@ -144,6 +144,6 @@ database:
   restore: ${datasource.restorecmd}
 
 #加密
-jasypt:
-  encryptor:
-    password: LEiSHEnK750
+#jasypt:
+#  encryptor:
+#    password: LEiSHEnK750

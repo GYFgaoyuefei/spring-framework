@@ -6,12 +6,11 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.eseasky.core.framework.AuthService.UserTools.UserToolsService;
 import com.eseasky.core.framework.AuthService.UserTools.entity.DatabaseEntity;
-import com.eseasky.core.framework.AuthService.UserTools.entity.DatabaseProperties;
+import com.eseasky.core.framework.AuthService.config.DatabaseProperties;
 import com.eseasky.core.framework.AuthService.UserTools.entity.ExecuteSQLEntity;
 import com.eseasky.core.starters.encryption.noticeking.MA;
 import com.eseasky.starter.core.channel.SessionFactory;
@@ -84,7 +83,6 @@ public class UserToolsServiceImpl implements UserToolsService {
         return false;
     }
 
-    @Scheduled(cron = "0 0 2 * * ? ")
     public void backupscheduledtask() throws Exception {
         DatabaseEntity databaseEntity = buildDatabaseInfo();
         doBackup(databaseEntity);
