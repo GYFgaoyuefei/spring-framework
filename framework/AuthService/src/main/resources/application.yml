@@ -142,3 +142,8 @@ database:
     savePath: ${databasecom.savePath}
   backup: ${datasource.backupcmd}
   restore: ${datasource.restorecmd}
+
+#加密
+jasypt:
+  encryptor:
+    password: LEiSHEnK750
