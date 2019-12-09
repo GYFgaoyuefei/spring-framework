@@ -2,6 +2,7 @@ package com.eseasky.core.framework.AuthService.module.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
@@ -9,9 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.eseasky.core.framework.AuthService.module.service.GrantService;
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgGrantInfoDTO;
+import com.eseasky.core.framework.AuthService.protocol.dto.OrgGrantInfosDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgQueryGrantDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgSaveDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgUpdateGrantDTO;
@@ -74,17 +77,14 @@ public class GrantServiceImpl implements GrantService {
 			}
 			if (organizeDefineds != null) {
 				List<ResoureQueryVO> resoureQueryVOls = new ArrayList<ResoureQueryVO>();
-				for (OrganizeResourceDefined OrganizeResourceDefineds : organizeDefineds.getContent()) {
+				for (OrganizeResourceDefined organizeResourceDefineds : organizeDefineds.getContent()) {
 					ResoureQueryVO resoureQueryVO = new ResoureQueryVO();
-					BeanUtils.copyProperties(OrganizeResourceDefineds, resoureQueryVO);
+					BeanUtils.copyProperties(organizeResourceDefineds, resoureQueryVO);
 					if (organizeUserGranteds != null) {
 						for (OrganizeUserGranted organizeUserGranted : organizeUserGranteds) {
 							if (resoureQueryVO.getId() == organizeUserGranted.getResource().getId() && resoureQueryDTO.getOrgCode().startsWith(organizeUserGranted.getOrgCode())) {
-								resoureQueryVO.setAction(organizeUserGranted.getAction()|resoureQueryVO.getAction());
-//								resoureQueryVO.setUser(organizeUserGranted.getUser());
-//								resoureQueryVO.setOrgCode(organizeUserGranted.getOrgCode());
-//								resoureQueryVO.setLeavel(organizeUserGranted.getLevel());
-//								break;
+								int action=organizeUserGranted.getAction()|resoureQueryVO.getAction();
+								resoureQueryVO.setActionArr(transToBin(action));
 							}
 						}
 					}
@@ -104,6 +104,7 @@ public class GrantServiceImpl implements GrantService {
 		if (orgGrantInfoDTO != null) {
 			OrgGrantInfo orgGrantInfo = new OrgGrantInfo();
 			BeanUtils.copyProperties(orgGrantInfoDTO, orgGrantInfo);
+			orgGrantInfo.setAction(transToInt(orgGrantInfoDTO.getAction()));
 			OrgUserGranted orgUserGranted = iOrganizeService.grant(orgGrantInfo);
 			if (orgUserGranted != null) {
 				orgGrantInfoVO = new OrgGrantInfoVO();
@@ -194,5 +195,41 @@ public class GrantServiceImpl implements GrantService {
 			}
 		}
 		return orgGrantInfoVO;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public List<OrgGrantInfoVO> grant(OrgGrantInfosDTO orgGrantInfoDTOs) {
+		// TODO Auto-generated method stub
+		List<OrgGrantInfoVO> orgGrantInfoVOs=null;
+		if(orgGrantInfoDTOs!=null && orgGrantInfoDTOs.getOrgGrantInfoDTOs()!=null) {
+			orgGrantInfoVOs=new ArrayList<OrgGrantInfoVO>();
+			for(OrgGrantInfoDTO orgGrantInfoDTO:orgGrantInfoDTOs.getOrgGrantInfoDTOs()) {
+				OrgGrantInfoVO orgGrantInfoVO=grant(orgGrantInfoDTO);
+				if(orgGrantInfoVO!=null)
+					orgGrantInfoVOs.add(orgGrantInfoVO);
+			}
+		}
+		return orgGrantInfoVOs;
+	}
+	
+	private List<String> transToBin(int action) {
+		List<String> actions=new ArrayList<String>();;
+		actions.add(action/8==0?null:"1000");
+		actions.add((action%8)/4==0?null:"0100");
+		actions.add((action%8%4)/2==0?null:"0010");
+		actions.add((action%8%4%2)/1==0?null:"0001");
+		return actions;
+	}
+	
+	private int transToInt(Set<String> actions) {
+		int action=0;
+		if(actions!=null) {
+			for(String temAction:actions) {
+				if(temAction!=null && !temAction.equals(""))
+				action=Integer.parseInt(temAction,2);
+			}
+		}
+		return action;
 	}
 }

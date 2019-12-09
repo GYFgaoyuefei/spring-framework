@@ -1,6 +1,7 @@
 package com.eseasky.core.framework.AuthService.protocol.vo;
 
 import java.io.Serializable;
+import java.util.List;
 
 import lombok.Data;
 @Data
@@ -19,11 +20,7 @@ public class ResoureQueryVO implements Serializable {
     
     private int status;
     
-//    private String user;
-
     private int action;
     
-//    private String orgCode;
-//    
-//    private Integer leavel;
+    private List<String> actionArr;
 }
