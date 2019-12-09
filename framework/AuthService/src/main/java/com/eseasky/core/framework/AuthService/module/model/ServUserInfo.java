@@ -24,5 +24,7 @@ public class ServUserInfo {
     private String passWord;
     private String mobile;
     private String state;
+    private String orgCode;
+    private String orgName;
 
 }

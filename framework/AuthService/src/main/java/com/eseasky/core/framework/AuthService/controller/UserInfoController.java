@@ -60,8 +60,7 @@ public class UserInfoController {
 
         return msgReturn;
     }
-
-
+    
     @ApiOperation(value = "修改用户", httpMethod = "POST")
     @PostMapping(value = "/updateUserInfo", consumes = "application/json")
     public ResultModel<ServUserInfoVO> updateUserInfo(@RequestBody ServUserInfoDTO servUserInfoDTO) {

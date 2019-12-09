@@ -5,19 +5,21 @@ import java.io.Serializable;
 import lombok.Data;
 
 @Data
-public class ServUserInfoDTO implements Serializable{
+public class ServUserInfoAddDTO implements Serializable{
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private Long id;
+	
+
 	private String userName;
+	
 	private String passWord;
+	
 	private String mobile;
+	
 	private String state;
-	private String orgCode;
-	private String orgName;
-	private Integer page = 0;
-	private Integer size = 10;
+	
+	private String[] orgCode;
 
 }

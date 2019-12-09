@@ -21,4 +21,8 @@ public class ServUserInfoVO implements Serializable {
     private String mobile;
     @ApiModelProperty(value = "用户状态 0-下线 1-上线")
     private String state;
+    @ApiModelProperty(value = "组织编码")
+    private String orgCode;
+    @ApiModelProperty(value = "组织编码")
+    private String orgName;
 }
