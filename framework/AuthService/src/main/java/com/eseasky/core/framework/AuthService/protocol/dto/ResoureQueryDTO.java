@@ -10,7 +10,7 @@ public class ResoureQueryDTO implements Serializable {
     
     private int page = 0;
     
-    private int pageSize = 10;
+    private int size = 10;
     
     private Long resId;
     
@@ -19,4 +19,10 @@ public class ResoureQueryDTO implements Serializable {
     private String keywords;
     
     private Integer status;
+    
+    private int[] resIds;
+    
+    private String user;
+    
+    private String orgCode;
 }

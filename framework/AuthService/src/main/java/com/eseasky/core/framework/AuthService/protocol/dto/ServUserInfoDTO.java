@@ -15,6 +15,7 @@ public class ServUserInfoDTO implements Serializable{
 	private String passWord;
 	private String mobile;
 	private String state;
+	private String[] orgNameForSave;
 	private String orgCode;
 	private String orgName;
 	private Integer page = 0;

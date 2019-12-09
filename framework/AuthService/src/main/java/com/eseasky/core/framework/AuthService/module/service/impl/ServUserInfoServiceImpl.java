@@ -14,6 +14,7 @@ import com.eseasky.core.framework.AuthService.exception.BusiException.BusiExcept
 import com.eseasky.core.framework.AuthService.module.model.AuthAccessToken;
 import com.google.common.base.Strings;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -61,7 +62,8 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 		// TODO Auto-generated method stub
 		ServUserInfoVO servUserInfoVO = new ServUserInfoVO();
 		if (servUserInfoDTO.getId() != null) {
-
+			if(servUserInfoDTO.getOrgNameForSave()!=null)
+				servUserInfoDTO.setOrgName(StringUtils.join(servUserInfoDTO.getOrgNameForSave(),">"));
 			Optional<ServUserInfo> optional = servUserInfoRepository.findById(servUserInfoDTO.getId());
 			if (optional.isPresent()) {
 				if (!CheckUsername(servUserInfoDTO)) {
@@ -69,6 +71,8 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 					ServUserInfo servUserInfo = optional.get();
 					BeanUtils.copyProperties(servUserInfoDTO, servUserInfo);
 					servUserInfo = servUserInfoRepository.save(servUserInfo);
+					
+					
 					BeanUtils.copyProperties(servUserInfo, servUserInfoVO);
 				} else {
 					if (servUserInfoDTO.getUserName().equals(optional.get().getUserName())) {
@@ -119,6 +123,7 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 			ServUserInfo servUserInfo = new ServUserInfo();
 			BeanUtils.copyProperties(servUserInfoDTO, servUserInfo);
 			checkUserName(servUserInfo);
+			servUserInfo.setOrgName(StringUtils.join(servUserInfoDTO.getOrgNameForSave(),">"));
 			servUserInfo = servUserInfoRepository.save(servUserInfo);
 			if (servUserInfo != null) {
 				servUserInfoVO = new ServUserInfoVO();

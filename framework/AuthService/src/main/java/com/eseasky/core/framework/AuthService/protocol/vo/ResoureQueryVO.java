@@ -18,4 +18,12 @@ public class ResoureQueryVO implements Serializable {
     private String note;
     
     private int status;
+    
+//    private String user;
+
+    private int action;
+    
+//    private String orgCode;
+//    
+//    private Integer leavel;
 }

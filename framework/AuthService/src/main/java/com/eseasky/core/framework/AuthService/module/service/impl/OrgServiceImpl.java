@@ -31,6 +31,8 @@ public class OrgServiceImpl implements OrgService {
 		if(orgQueryDTO!=null) {
 			OrganizeQuery organizeQuery=new OrganizeQuery();
 			BeanUtils.copyProperties(orgQueryDTO, organizeQuery);
+			if(orgQueryDTO.getSize()!=0)
+				organizeQuery.setPageSize(orgQueryDTO.getSize());
 			Page<OrganizeDefined> organizeDefineds=iOrganizeService.queryOrganize(organizeQuery);
 			if(organizeDefineds!=null) {
 				List<OrgQueryVO> orgQueryVOls=organizeDefineds.stream().map(item->{

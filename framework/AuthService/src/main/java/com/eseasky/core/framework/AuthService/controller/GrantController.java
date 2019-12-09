@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
-import com.eseasky.core.framework.AuthService.module.service.RoleService;
+import com.eseasky.core.framework.AuthService.module.service.GrantService;
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgGrantInfoDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgQueryGrantDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgUpdateGrantDTO;
@@ -30,11 +30,11 @@ import lombok.extern.log4j.Log4j2;
 @Api(value = "角色管理", tags = "角色管理服务")
 @RestController
 @Log4j2
-@RequestMapping("/RoleManage")
-public class RoleController {
+@RequestMapping("/GrantManage")
+public class GrantController {
 
 	@Autowired
-	private RoleService roleService;
+	private GrantService roleService;
 	
 	@ApiOperation(value = "查询授权资源", httpMethod = "POST")
     @PostMapping(value = "/queryResoureItem")

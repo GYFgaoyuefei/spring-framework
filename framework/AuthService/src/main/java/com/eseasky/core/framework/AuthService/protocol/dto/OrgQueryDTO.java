@@ -23,5 +23,5 @@ public class OrgQueryDTO implements Serializable {
     
     private int page = 0;
     
-    private int pageSize = 10000;
+    private int size = 10000;
 }

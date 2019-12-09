@@ -22,7 +22,7 @@ public class OrgQueryGrantDTO implements Serializable {
     
     private String type = "mysql";
     
-    private int pageSize = 10;
+    private int size = 10;
     
     private int page = 0;
 }

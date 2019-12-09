@@ -11,7 +11,7 @@ import com.eseasky.core.framework.AuthService.protocol.vo.OrgGrantedItemVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.OrgUserGrantedVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.ResoureQueryVO;
 
-public interface RoleService {
+public interface GrantService {
 
 	Page<ResoureQueryVO> queryResoureItem(ResoureQueryDTO resoureQueryDTO);
 
