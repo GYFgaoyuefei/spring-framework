@@ -2,7 +2,6 @@ package com.eseasky.core.framework.AuthService.module.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
@@ -13,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.eseasky.core.framework.AuthService.module.service.GrantService;
+import com.eseasky.core.framework.AuthService.module.service.OrgService;
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgGrantInfoDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgGrantInfosDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgQueryGrantDTO;
@@ -24,12 +24,13 @@ import com.eseasky.core.framework.AuthService.protocol.vo.OrgGrantedItemVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.OrgSaveVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.OrgUserGrantedVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.ResoureQueryVO;
+import com.eseasky.core.framework.AuthService.utils.BinOrListUtil;
 import com.eseasky.core.starters.organization.persistence.IOrganizeService;
 import com.eseasky.core.starters.organization.persistence.entity.OrgGrantInfo;
 import com.eseasky.core.starters.organization.persistence.entity.OrgGrantedItem;
 import com.eseasky.core.starters.organization.persistence.entity.OrgGrantedQuery;
+import com.eseasky.core.starters.organization.persistence.entity.OrgGrantedUpdateInfo;
 import com.eseasky.core.starters.organization.persistence.entity.OrgInsertInfo;
-import com.eseasky.core.starters.organization.persistence.entity.OrgUpdateInfo;
 import com.eseasky.core.starters.organization.persistence.entity.OrgUserGranted;
 import com.eseasky.core.starters.organization.persistence.entity.ResourceQuery;
 import com.eseasky.core.starters.organization.persistence.model.OrganizeDefined;
@@ -40,6 +41,9 @@ import com.eseasky.core.starters.organization.persistence.model.OrganizeUserGran
 public class GrantServiceImpl implements GrantService {
 	@Autowired
 	private IOrganizeService iOrganizeService;
+
+	@Autowired
+	private OrgService orgService;
 
 	public OrgSaveVO saveOrg(OrgSaveDTO orgSaveDTO) {
 		OrgSaveVO orgSaveVO = null;
@@ -67,32 +71,9 @@ public class GrantServiceImpl implements GrantService {
 			List<OrganizeUserGranted> organizeUserGranteds = null;
 			Page<OrganizeResourceDefined> organizeDefineds = iOrganizeService.getResourceItems(resourceQuery);
 			if (resoureQueryDTO.getUser() != null && resoureQueryDTO.getOrgCode() != null) {
-				OrgGrantedQuery orgGrantedQuery = new OrgGrantedQuery();
-				orgGrantedQuery.setUser(resoureQueryDTO.getUser());
-//				orgGrantedQuery.setOrgCode(resoureQueryDTO.getOrgCode());
-				// 目前只有分页接口，所有默认某组织用户权限少于100000，后期有接口再改
-				orgGrantedQuery.setPageSize(100000);
-				Page<OrganizeUserGranted> orgGrantedItems = iOrganizeService.queryOrgUserGranted(orgGrantedQuery);
-				organizeUserGranteds = orgGrantedItems == null ? null : orgGrantedItems.getContent();
+				organizeUserGranteds=queryGrantByUser(resoureQueryDTO.getUser());
 			}
-			if (organizeDefineds != null) {
-				List<ResoureQueryVO> resoureQueryVOls = new ArrayList<ResoureQueryVO>();
-				for (OrganizeResourceDefined organizeResourceDefineds : organizeDefineds.getContent()) {
-					ResoureQueryVO resoureQueryVO = new ResoureQueryVO();
-					BeanUtils.copyProperties(organizeResourceDefineds, resoureQueryVO);
-					if (organizeUserGranteds != null) {
-						for (OrganizeUserGranted organizeUserGranted : organizeUserGranteds) {
-							if (resoureQueryVO.getId() == organizeUserGranted.getResource().getId() && resoureQueryDTO.getOrgCode().startsWith(organizeUserGranted.getOrgCode())) {
-								int action=organizeUserGranted.getAction()|resoureQueryVO.getAction();
-								resoureQueryVO.setActionArr(transToBin(action));
-							}
-						}
-					}
-					resoureQueryVOls.add(resoureQueryVO);
-				}
-				resoureQueryVOs = new PageImpl<ResoureQueryVO>(resoureQueryVOls, organizeDefineds.getPageable(),
-						organizeDefineds.getTotalElements());
-			}
+			resoureQueryVOs=transToResVO(organizeDefineds, organizeUserGranteds, resoureQueryDTO.getOrgCode());
 		}
 		return resoureQueryVOs;
 	}
@@ -102,10 +83,20 @@ public class GrantServiceImpl implements GrantService {
 		// TODO Auto-generated method stub
 		OrgGrantInfoVO orgGrantInfoVO = null;
 		if (orgGrantInfoDTO != null) {
-			OrgGrantInfo orgGrantInfo = new OrgGrantInfo();
-			BeanUtils.copyProperties(orgGrantInfoDTO, orgGrantInfo);
-			orgGrantInfo.setAction(transToInt(orgGrantInfoDTO.getAction()));
-			OrgUserGranted orgUserGranted = iOrganizeService.grant(orgGrantInfo);
+			OrgUserGranted orgUserGranted = null;
+			if (orgGrantInfoDTO.getGrantId() != null) {
+				OrgGrantedUpdateInfo orgGrantedUpdateInfo = new OrgGrantedUpdateInfo();
+				orgGrantedUpdateInfo.setOrgCode(orgGrantInfoDTO.getOrgCode());
+				orgGrantedUpdateInfo.setAction(BinOrListUtil.transToInt(orgGrantInfoDTO.getAction()));
+				orgGrantedUpdateInfo.setId(orgGrantInfoDTO.getGrantId());
+//				if(orgGrantedUpdateInfo.getAction()==null || orgGrantedUpdateInfo.getAction()==0 ||)
+				orgUserGranted = iOrganizeService.deleteGranted(orgGrantedUpdateInfo);
+			} 
+				OrgGrantInfo orgGrantInfo = new OrgGrantInfo();
+				BeanUtils.copyProperties(orgGrantInfoDTO, orgGrantInfo);
+				orgGrantInfo.setAction(BinOrListUtil.transToInt(orgGrantInfoDTO.getAction()));
+				if(orgGrantInfo.getAction()!=null && orgGrantInfo.getAction()!=0)
+				orgUserGranted = iOrganizeService.grant(orgGrantInfo);
 			if (orgUserGranted != null) {
 				orgGrantInfoVO = new OrgGrantInfoVO();
 				BeanUtils.copyProperties(orgUserGranted, orgGrantInfoVO);
@@ -118,15 +109,15 @@ public class GrantServiceImpl implements GrantService {
 	public OrgGrantInfoVO updateGrant(OrgUpdateGrantDTO orgUpdateGrantDTO) {
 		// TODO Auto-generated method stub
 		OrgGrantInfoVO orgGrantInfoVO = null;
-		if (orgUpdateGrantDTO != null) {
-			OrgUpdateInfo orgUpdateInfo = new OrgUpdateInfo();
-			BeanUtils.copyProperties(orgUpdateGrantDTO, orgUpdateInfo);
-			OrgUserGranted orgUserGranted = iOrganizeService.updateGranted(orgUpdateInfo);
-			if (orgUserGranted != null) {
-				orgGrantInfoVO = new OrgGrantInfoVO();
-				BeanUtils.copyProperties(orgUserGranted, orgGrantInfoVO);
-			}
-		}
+//		if (orgUpdateGrantDTO != null) {
+//			OrgUpdateInfo orgUpdateInfo = new OrgUpdateInfo();
+//			BeanUtils.copyProperties(orgUpdateGrantDTO, orgUpdateInfo);
+//			OrgUserGranted orgUserGranted = iOrganizeService.updateGranted(orgUpdateInfo);
+//			if (orgUserGranted != null) {
+//				orgGrantInfoVO = new OrgGrantInfoVO();
+//				BeanUtils.copyProperties(orgUserGranted, orgGrantInfoVO);
+//			}
+//		}
 		return orgGrantInfoVO;
 	}
 
@@ -185,15 +176,15 @@ public class GrantServiceImpl implements GrantService {
 	public OrgGrantInfoVO deleteGrant(OrgUpdateGrantDTO orgUpdateGrantDTO) {
 		// TODO Auto-generated method stub
 		OrgGrantInfoVO orgGrantInfoVO = null;
-		if (orgUpdateGrantDTO != null) {
-			OrgUpdateInfo orgUpdateInfo = new OrgUpdateInfo();
-			BeanUtils.copyProperties(orgUpdateGrantDTO, orgUpdateInfo);
-			OrgUserGranted orgUserGranted = iOrganizeService.deleteGranted(orgUpdateInfo);
-			if (orgUserGranted != null) {
-				orgGrantInfoVO = new OrgGrantInfoVO();
-				BeanUtils.copyProperties(orgUserGranted, orgGrantInfoVO);
-			}
-		}
+//		if (orgUpdateGrantDTO != null) {
+//			OrgUpdateInfo orgUpdateInfo = new OrgUpdateInfo();
+//			BeanUtils.copyProperties(orgUpdateGrantDTO, orgUpdateInfo);
+//			OrgUserGranted orgUserGranted = iOrganizeService.deleteGranted(orgUpdateInfo);
+//			if (orgUserGranted != null) {
+//				orgGrantInfoVO = new OrgGrantInfoVO();
+//				BeanUtils.copyProperties(orgUserGranted, orgGrantInfoVO);
+//			}
+//		}
 		return orgGrantInfoVO;
 	}
 
@@ -201,35 +192,77 @@ public class GrantServiceImpl implements GrantService {
 	@Transactional(rollbackFor = Exception.class)
 	public List<OrgGrantInfoVO> grant(OrgGrantInfosDTO orgGrantInfoDTOs) {
 		// TODO Auto-generated method stub
-		List<OrgGrantInfoVO> orgGrantInfoVOs=null;
-		if(orgGrantInfoDTOs!=null && orgGrantInfoDTOs.getOrgGrantInfoDTOs()!=null) {
-			orgGrantInfoVOs=new ArrayList<OrgGrantInfoVO>();
-			for(OrgGrantInfoDTO orgGrantInfoDTO:orgGrantInfoDTOs.getOrgGrantInfoDTOs()) {
-				OrgGrantInfoVO orgGrantInfoVO=grant(orgGrantInfoDTO);
-				if(orgGrantInfoVO!=null)
+		List<OrgGrantInfoVO> orgGrantInfoVOs = null;
+		if (orgGrantInfoDTOs != null && orgGrantInfoDTOs.getOrgGrantInfoDTOs() != null) {
+			orgGrantInfoVOs = new ArrayList<OrgGrantInfoVO>();
+			for (OrgGrantInfoDTO orgGrantInfoDTO : orgGrantInfoDTOs.getOrgGrantInfoDTOs()) {
+				OrgGrantInfoVO orgGrantInfoVO = grant(orgGrantInfoDTO);
+				if (orgGrantInfoVO != null)
 					orgGrantInfoVOs.add(orgGrantInfoVO);
 			}
 		}
 		return orgGrantInfoVOs;
 	}
-	
-	private List<String> transToBin(int action) {
-		List<String> actions=new ArrayList<String>();;
-		actions.add(action/8==0?null:"1000");
-		actions.add((action%8)/4==0?null:"0100");
-		actions.add((action%8%4)/2==0?null:"0010");
-		actions.add((action%8%4%2)/1==0?null:"0001");
-		return actions;
-	}
-	
-	private int transToInt(Set<String> actions) {
-		int action=0;
-		if(actions!=null) {
-			for(String temAction:actions) {
-				if(temAction!=null && !temAction.equals(""))
-				action=Integer.parseInt(temAction,2);
+
+
+	private List<OrganizeUserGranted> queryGrantByUser(String user) {
+		List<OrganizeUserGranted> organizeUserGranteds = null;
+		if (user != null) {
+			OrgGrantedQuery orgGrantedQuery = new OrgGrantedQuery();
+			orgGrantedQuery.setUser(user);
+			int page = 0;
+			while (true) {
+				orgGrantedQuery.setPage(page);
+				orgGrantedQuery.setPageSize(50);
+				Page<OrganizeUserGranted> orgGrantedItems = iOrganizeService.queryOrgUserGranted(orgGrantedQuery);
+				if (orgGrantedItems == null || orgGrantedItems.getContent() == null || orgGrantedItems.getContent().size()==0)
+					break;
+				if (organizeUserGranteds == null)
+					organizeUserGranteds = orgGrantedItems.getContent();
+				else
+					organizeUserGranteds.addAll(orgGrantedItems.getContent());
+				page++;
 			}
 		}
-		return action;
+		return organizeUserGranteds;
+	}
+	
+	private Page<ResoureQueryVO>  transToResVO(Page<OrganizeResourceDefined> organizeDefineds,List<OrganizeUserGranted> organizeUserGranteds,String orgCode) {
+		Page<ResoureQueryVO> resoureQueryVOs=null;
+		if (organizeDefineds != null&& orgCode!=null) {
+			String temOrgCode=orgCode;
+			List<ResoureQueryVO> resoureQueryVOls = new ArrayList<ResoureQueryVO>();
+			for (OrganizeResourceDefined organizeResourceDefineds : organizeDefineds.getContent()) {
+				ResoureQueryVO resoureQueryVO = new ResoureQueryVO();
+				BeanUtils.copyProperties(organizeResourceDefineds, resoureQueryVO);
+				if (organizeUserGranteds != null ) {
+					for (OrganizeUserGranted organizeUserGranted : organizeUserGranteds) {
+						if (resoureQueryVO.getId() == organizeUserGranted.getResource().getId()
+								&& orgCode.startsWith(organizeUserGranted.getOrgCode())) {
+							if (organizeUserGranted.getAction() > resoureQueryVO.getAction()) {
+								int action = organizeUserGranted.getAction();
+								resoureQueryVO.setActionArr(BinOrListUtil.transToBin(action));
+								resoureQueryVO.setGrantId(organizeUserGranted.getId());
+								temOrgCode=organizeUserGranted.getOrgCode();
+//								resoureQueryVO.setOrgCode(organizeUserGranted.getOrgCode());
+//								OrgSaveVO orgSaveVO = orgService
+//										.getOrgNameByOrgCode(organizeUserGranted.getOrgCode());
+//								if (orgSaveVO != null)
+//									resoureQueryVO.setOrgName(orgSaveVO.getName());
+							}
+						}
+					}
+				}
+				resoureQueryVO.setOrgCode(temOrgCode);
+				OrgSaveVO orgSaveVO = orgService
+						.getOrgNameByOrgCode(temOrgCode);
+				if (orgSaveVO != null)
+					resoureQueryVO.setOrgName(orgSaveVO.getName());
+				resoureQueryVOls.add(resoureQueryVO);
+			}
+				resoureQueryVOs = new PageImpl<ResoureQueryVO>(resoureQueryVOls, organizeDefineds.getPageable(),
+						organizeDefineds.getTotalElements());
+			}
+		return resoureQueryVOs;
 	}
 }

@@ -18,7 +18,9 @@ public enum  BusiEnum {
 
     USER_INVALID(500,"用户失效"),
 
-    NOTDELETE(500,"管理员不可删除");
+    NOTDELETE(500,"管理员不可删除"),
+	
+	GROUP_NOID(500, "系统提示：授权分组id为空");
 
     private Integer code;
 

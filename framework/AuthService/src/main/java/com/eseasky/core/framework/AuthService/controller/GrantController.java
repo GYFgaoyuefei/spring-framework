@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
 import com.eseasky.core.framework.AuthService.module.service.GrantService;
+import com.eseasky.core.framework.AuthService.protocol.dto.OrgGrantInfoDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgGrantInfosDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgQueryGrantDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgUpdateGrantDTO;
@@ -50,19 +51,19 @@ public class GrantController {
         return msgReturn;
     }
 	
-//	@ApiOperation(value = "授权", httpMethod = "POST")
-//    @PostMapping(value = "/grant")
-//    public ResultModel<OrgGrantInfoVO> grant(@RequestBody @Validated OrgGrantInfoDTO orgGrantInfoDTO) {
-//
-//        ResultModel<OrgGrantInfoVO> msgReturn = new ResultModel<OrgGrantInfoVO>();
-//        OrgGrantInfoVO orgGrantInfoVO = roleService.grant(orgGrantInfoDTO);
-//        log.info(JSONObject.toJSONString(orgGrantInfoVO));
-//        msgReturn.setData(orgGrantInfoVO);
-//        return msgReturn;
-//    }
-	
 	@ApiOperation(value = "授权", httpMethod = "POST")
     @PostMapping(value = "/grant")
+    public ResultModel<OrgGrantInfoVO> grant(@RequestBody @Validated OrgGrantInfoDTO orgGrantInfoDTO) {
+
+        ResultModel<OrgGrantInfoVO> msgReturn = new ResultModel<OrgGrantInfoVO>();
+        OrgGrantInfoVO orgGrantInfoVO = roleService.grant(orgGrantInfoDTO);
+        log.info(JSONObject.toJSONString(orgGrantInfoVO));
+        msgReturn.setData(orgGrantInfoVO);
+        return msgReturn;
+    }
+	
+	@ApiOperation(value = "授权", httpMethod = "POST")
+    @PostMapping(value = "/grantMore")
     public ResultModel<List<OrgGrantInfoVO>> grant(@Valid @RequestBody OrgGrantInfosDTO orgGrantInfoDTOs) {
         ResultModel<List<OrgGrantInfoVO>> msgReturn = new ResultModel<List<OrgGrantInfoVO>>();
         List<OrgGrantInfoVO> orgGrantInfoVOs = roleService.grant(orgGrantInfoDTOs);

@@ -23,4 +23,12 @@ public class ResoureQueryVO implements Serializable {
     private int action;
     
     private List<String> actionArr;
+    
+    private String orgCode;
+    
+    private String orgName;
+    
+    private Long grantId;
+    
+    private Long groupItemId;
 }

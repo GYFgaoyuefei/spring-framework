@@ -7,14 +7,16 @@ import javax.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class OrgUpdateGrantDTO implements Serializable {
+public class OrgUpdateDTO implements Serializable {
     private static final long serialVersionUID = 1L;
-    
-    @NotNull(message = "id不能为空")
+    @NotNull(
+        message = "组织id不能为空"
+    )
     private Long id;
     
-    private Integer action;
+    private String name;
     
-    private String orgCode;
+    private String note;
     
+    private Integer status;
 }

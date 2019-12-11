@@ -25,4 +25,6 @@ public class ResoureQueryDTO implements Serializable {
     private String user;
     
     private String orgCode;
+    
+    private Long groupId;
 }

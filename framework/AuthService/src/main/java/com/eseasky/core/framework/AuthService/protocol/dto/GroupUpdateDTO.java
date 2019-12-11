@@ -1,0 +1,28 @@
+package com.eseasky.core.framework.AuthService.protocol.dto;
+
+import java.io.Serializable;
+import java.util.List;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
+import com.eseasky.core.starters.organization.persistence.entity.PowerGroupCreateItem;
+
+import lombok.Data;
+
+@Data
+public class GroupUpdateDTO implements Serializable {
+    private static final long serialVersionUID = 1L;
+    
+    @NotNull(
+        message = "权限分组id不能为空"
+    )
+    private Long groupId;
+    
+    private String groupName;
+    
+    private String note;
+    
+    @Valid
+    private List<PowerGroupCreateItemDTO> items;
+}

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +14,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.eseasky.core.framework.AuthService.module.service.OrgService;
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgQueryDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgSaveDTO;
+import com.eseasky.core.framework.AuthService.protocol.dto.OrgUpdateDTO;
 import com.eseasky.core.framework.AuthService.protocol.vo.OrgQueryVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.OrgSaveVO;
 import com.eseasky.global.entity.MsgPageInfo;
@@ -52,5 +54,37 @@ public class OrgController {
 		msgReturn.setData(orgSaveVO);
 		return msgReturn;
 	}
+	
+	@ApiOperation(value = "更新组织", httpMethod = "POST")
+	@PostMapping(value = "/updateOrg")
+	public ResultModel<OrgSaveVO> updateOrg(@RequestBody @Validated OrgUpdateDTO orgUpdateDTO) {
 
+		ResultModel<OrgSaveVO> msgReturn = new ResultModel<OrgSaveVO>();
+		OrgSaveVO orgSaveVO = orgService.updateOrg(orgUpdateDTO);
+		log.info(JSONObject.toJSONString(orgSaveVO));
+		msgReturn.setData(orgSaveVO);
+		return msgReturn;
+	}
+	
+	@ApiOperation(value = "禁用组织", httpMethod = "POST")
+	@PostMapping(value = "/disableOrg")
+	public ResultModel<OrgSaveVO> disableOrg(@RequestBody @Validated OrgUpdateDTO orgUpdateDTO) {
+
+		ResultModel<OrgSaveVO> msgReturn = new ResultModel<OrgSaveVO>();
+		OrgSaveVO orgSaveVO = orgService.disableOrg(orgUpdateDTO);
+		log.info(JSONObject.toJSONString(orgSaveVO));
+		msgReturn.setData(orgSaveVO);
+		return msgReturn;
+	}
+
+	@ApiOperation(value = "打开组织", httpMethod = "POST")
+	@PostMapping(value = "/openOrg")
+	public ResultModel<OrgSaveVO> openOrg(@RequestBody  @Validated OrgUpdateDTO orgUpdateDTO) {
+
+		ResultModel<OrgSaveVO> msgReturn = new ResultModel<OrgSaveVO>();
+		OrgSaveVO orgSaveVO = orgService.openOrg(orgUpdateDTO);
+		log.info(JSONObject.toJSONString(orgSaveVO));
+		msgReturn.setData(orgSaveVO);
+		return msgReturn;
+	}
 }
