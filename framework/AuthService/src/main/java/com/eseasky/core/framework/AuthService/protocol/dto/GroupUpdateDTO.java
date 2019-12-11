@@ -4,9 +4,8 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-
-import com.eseasky.core.starters.organization.persistence.entity.PowerGroupCreateItem;
 
 import lombok.Data;
 
@@ -24,5 +23,8 @@ public class GroupUpdateDTO implements Serializable {
     private String note;
     
     @Valid
+    @NotEmpty(
+            message = "items不能为空"
+        )
     private List<PowerGroupCreateItemDTO> items;
 }

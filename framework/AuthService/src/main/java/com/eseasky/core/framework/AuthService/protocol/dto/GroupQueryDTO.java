@@ -15,7 +15,7 @@ public class GroupQueryDTO implements Serializable {
     
     private Integer status;
     
-    private int page;
+    private int page=0;
     
-    private int size;
+    private int size=10;
 }

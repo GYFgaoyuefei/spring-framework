@@ -68,12 +68,22 @@ public class GrantServiceImpl implements GrantService {
 			BeanUtils.copyProperties(resoureQueryDTO, resourceQuery);
 			if (resoureQueryDTO.getSize() != 0)
 				resourceQuery.setPageSize(resoureQueryDTO.getSize());
-			List<OrganizeUserGranted> organizeUserGranteds = null;
+//			List<OrganizeUserGranted> organizeUserGranteds = null;
 			Page<OrganizeResourceDefined> organizeDefineds = iOrganizeService.getResourceItems(resourceQuery);
-			if (resoureQueryDTO.getUser() != null && resoureQueryDTO.getOrgCode() != null) {
-				organizeUserGranteds=queryGrantByUser(resoureQueryDTO.getUser());
+			if(organizeDefineds!=null) {
+				List<ResoureQueryVO> temResoureQueryVOs=organizeDefineds.stream().map(item->{
+					ResoureQueryVO temResoureQueryVO=new ResoureQueryVO();
+					BeanUtils.copyProperties(item, temResoureQueryVO,"orgCode");
+					return temResoureQueryVO;
+				}).collect(Collectors.toList());
+				if(temResoureQueryVOs!=null)
+				resoureQueryVOs=new PageImpl<ResoureQueryVO>(temResoureQueryVOs, organizeDefineds.getPageable(),
+						organizeDefineds.getTotalElements());
 			}
-			resoureQueryVOs=transToResVO(organizeDefineds, organizeUserGranteds, resoureQueryDTO.getOrgCode());
+//			if (resoureQueryDTO.getUser() != null && resoureQueryDTO.getOrgCode() != null) {
+//				organizeUserGranteds=queryGrantByUser(resoureQueryDTO.getUser());
+//			}
+//			resoureQueryVOs=transToResVO(organizeDefineds, organizeUserGranteds, resoureQueryDTO.getOrgCode());
 		}
 		return resoureQueryVOs;
 	}
@@ -90,13 +100,14 @@ public class GrantServiceImpl implements GrantService {
 				orgGrantedUpdateInfo.setAction(BinOrListUtil.transToInt(orgGrantInfoDTO.getAction()));
 				orgGrantedUpdateInfo.setId(orgGrantInfoDTO.getGrantId());
 //				if(orgGrantedUpdateInfo.getAction()==null || orgGrantedUpdateInfo.getAction()==0 ||)
-				orgUserGranted = iOrganizeService.deleteGranted(orgGrantedUpdateInfo);
-			} 
+				orgUserGranted = iOrganizeService.updateGranted(orgGrantedUpdateInfo);
+			} else {
 				OrgGrantInfo orgGrantInfo = new OrgGrantInfo();
 				BeanUtils.copyProperties(orgGrantInfoDTO, orgGrantInfo);
 				orgGrantInfo.setAction(BinOrListUtil.transToInt(orgGrantInfoDTO.getAction()));
 				if(orgGrantInfo.getAction()!=null && orgGrantInfo.getAction()!=0)
 				orgUserGranted = iOrganizeService.grant(orgGrantInfo);
+			}			
 			if (orgUserGranted != null) {
 				orgGrantInfoVO = new OrgGrantInfoVO();
 				BeanUtils.copyProperties(orgUserGranted, orgGrantInfoVO);
@@ -161,6 +172,9 @@ public class GrantServiceImpl implements GrantService {
 					if (item.getResource() != null) {
 						ResoureQueryVO resource = new ResoureQueryVO();
 						BeanUtils.copyProperties(item.getResource(), resource);
+						resource.setOrgCode(item.getOrgCode());
+						resource.setOrgName(orgService.getOrgNameByOrgCode(item.getOrgCode()).getName());
+						resource.setActionArr(BinOrListUtil.transToBin(item.getAction()));
 						orgGrantedItemVO.setResource(resource);
 					}
 					return orgGrantedItemVO;
@@ -205,64 +219,64 @@ public class GrantServiceImpl implements GrantService {
 	}
 
 
-	private List<OrganizeUserGranted> queryGrantByUser(String user) {
-		List<OrganizeUserGranted> organizeUserGranteds = null;
-		if (user != null) {
-			OrgGrantedQuery orgGrantedQuery = new OrgGrantedQuery();
-			orgGrantedQuery.setUser(user);
-			int page = 0;
-			while (true) {
-				orgGrantedQuery.setPage(page);
-				orgGrantedQuery.setPageSize(50);
-				Page<OrganizeUserGranted> orgGrantedItems = iOrganizeService.queryOrgUserGranted(orgGrantedQuery);
-				if (orgGrantedItems == null || orgGrantedItems.getContent() == null || orgGrantedItems.getContent().size()==0)
-					break;
-				if (organizeUserGranteds == null)
-					organizeUserGranteds = orgGrantedItems.getContent();
-				else
-					organizeUserGranteds.addAll(orgGrantedItems.getContent());
-				page++;
-			}
-		}
-		return organizeUserGranteds;
-	}
+//	private List<OrganizeUserGranted> queryGrantByUser(String user) {
+//		List<OrganizeUserGranted> organizeUserGranteds = null;
+//		if (user != null) {
+//			OrgGrantedQuery orgGrantedQuery = new OrgGrantedQuery();
+//			orgGrantedQuery.setUser(user);
+//			int page = 0;
+//			while (true) {
+//				orgGrantedQuery.setPage(page);
+//				orgGrantedQuery.setPageSize(50);
+//				Page<OrganizeUserGranted> orgGrantedItems = iOrganizeService.queryOrgUserGranted(orgGrantedQuery);
+//				if (orgGrantedItems == null || orgGrantedItems.getContent() == null || orgGrantedItems.getContent().size()==0)
+//					break;
+//				if (organizeUserGranteds == null)
+//					organizeUserGranteds = orgGrantedItems.getContent();
+//				else
+//					organizeUserGranteds.addAll(orgGrantedItems.getContent());
+//				page++;
+//			}
+//		}
+//		return organizeUserGranteds;
+//	}
 	
-	private Page<ResoureQueryVO>  transToResVO(Page<OrganizeResourceDefined> organizeDefineds,List<OrganizeUserGranted> organizeUserGranteds,String orgCode) {
-		Page<ResoureQueryVO> resoureQueryVOs=null;
-		if (organizeDefineds != null&& orgCode!=null) {
-			String temOrgCode=orgCode;
-			List<ResoureQueryVO> resoureQueryVOls = new ArrayList<ResoureQueryVO>();
-			for (OrganizeResourceDefined organizeResourceDefineds : organizeDefineds.getContent()) {
-				ResoureQueryVO resoureQueryVO = new ResoureQueryVO();
-				BeanUtils.copyProperties(organizeResourceDefineds, resoureQueryVO);
-				if (organizeUserGranteds != null ) {
-					for (OrganizeUserGranted organizeUserGranted : organizeUserGranteds) {
-						if (resoureQueryVO.getId() == organizeUserGranted.getResource().getId()
-								&& orgCode.startsWith(organizeUserGranted.getOrgCode())) {
-							if (organizeUserGranted.getAction() > resoureQueryVO.getAction()) {
-								int action = organizeUserGranted.getAction();
-								resoureQueryVO.setActionArr(BinOrListUtil.transToBin(action));
-								resoureQueryVO.setGrantId(organizeUserGranted.getId());
-								temOrgCode=organizeUserGranted.getOrgCode();
-//								resoureQueryVO.setOrgCode(organizeUserGranted.getOrgCode());
-//								OrgSaveVO orgSaveVO = orgService
-//										.getOrgNameByOrgCode(organizeUserGranted.getOrgCode());
-//								if (orgSaveVO != null)
-//									resoureQueryVO.setOrgName(orgSaveVO.getName());
-							}
-						}
-					}
-				}
-				resoureQueryVO.setOrgCode(temOrgCode);
-				OrgSaveVO orgSaveVO = orgService
-						.getOrgNameByOrgCode(temOrgCode);
-				if (orgSaveVO != null)
-					resoureQueryVO.setOrgName(orgSaveVO.getName());
-				resoureQueryVOls.add(resoureQueryVO);
-			}
-				resoureQueryVOs = new PageImpl<ResoureQueryVO>(resoureQueryVOls, organizeDefineds.getPageable(),
-						organizeDefineds.getTotalElements());
-			}
-		return resoureQueryVOs;
-	}
+//	private Page<ResoureQueryVO>  transToResVO(Page<OrganizeResourceDefined> organizeDefineds,List<OrganizeUserGranted> organizeUserGranteds,String orgCode) {
+//		Page<ResoureQueryVO> resoureQueryVOs=null;
+//		if (organizeDefineds != null&& orgCode!=null) {
+//			String temOrgCode=orgCode;
+//			List<ResoureQueryVO> resoureQueryVOls = new ArrayList<ResoureQueryVO>();
+//			for (OrganizeResourceDefined organizeResourceDefineds : organizeDefineds.getContent()) {
+//				ResoureQueryVO resoureQueryVO = new ResoureQueryVO();
+//				BeanUtils.copyProperties(organizeResourceDefineds, resoureQueryVO);
+//				if (organizeUserGranteds != null ) {
+//					for (OrganizeUserGranted organizeUserGranted : organizeUserGranteds) {
+//						if (resoureQueryVO.getId() == organizeUserGranted.getResource().getId()
+//								&& orgCode.startsWith(organizeUserGranted.getOrgCode())) {
+//							if (organizeUserGranted.getAction() > resoureQueryVO.getAction()) {
+//								int action = organizeUserGranted.getAction();
+//								resoureQueryVO.setActionArr(BinOrListUtil.transToBin(action));
+//								resoureQueryVO.setGrantId(organizeUserGranted.getId());
+//								temOrgCode=organizeUserGranted.getOrgCode();
+////								resoureQueryVO.setOrgCode(organizeUserGranted.getOrgCode());
+////								OrgSaveVO orgSaveVO = orgService
+////										.getOrgNameByOrgCode(organizeUserGranted.getOrgCode());
+////								if (orgSaveVO != null)
+////									resoureQueryVO.setOrgName(orgSaveVO.getName());
+//							}
+//						}
+//					}
+//				}
+//				resoureQueryVO.setOrgCode(temOrgCode);
+//				OrgSaveVO orgSaveVO = orgService
+//						.getOrgNameByOrgCode(temOrgCode);
+//				if (orgSaveVO != null)
+//					resoureQueryVO.setOrgName(orgSaveVO.getName());
+//				resoureQueryVOls.add(resoureQueryVO);
+//			}
+//				resoureQueryVOs = new PageImpl<ResoureQueryVO>(resoureQueryVOls, organizeDefineds.getPageable(),
+//						organizeDefineds.getTotalElements());
+//			}
+//		return resoureQueryVOs;
+//	}
 }

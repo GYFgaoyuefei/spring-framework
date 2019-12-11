@@ -16,14 +16,10 @@ import com.eseasky.core.framework.AuthService.protocol.dto.GroupGrantDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.GroupQueryDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.GroupSaveDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.GroupUpdateDTO;
-import com.eseasky.core.framework.AuthService.protocol.dto.OrgQueryDTO;
-import com.eseasky.core.framework.AuthService.protocol.dto.OrgSaveDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.ResoureQueryDTO;
 import com.eseasky.core.framework.AuthService.protocol.vo.GroupQueryVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.GroupSaveVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.OrgGrantInfoVO;
-import com.eseasky.core.framework.AuthService.protocol.vo.OrgQueryVO;
-import com.eseasky.core.framework.AuthService.protocol.vo.OrgSaveVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.ResoureQueryVO;
 import com.eseasky.global.entity.MsgPageInfo;
 import com.eseasky.global.entity.ResultModel;
@@ -99,7 +95,7 @@ public class GroupController {
         Page<ResoureQueryVO> resoureQueryVOs = groupService.queryResoureItem(resoureQueryDTO);
         log.info(JSONObject.toJSONString(resoureQueryVOs));
         if(resoureQueryVOs!=null)
-        msgReturn.setData(resoureQueryVOs.getContent(),MsgPageInfo.loadFromPageable(resoureQueryVOs));
+        	msgReturn.setData(resoureQueryVOs.getContent(),MsgPageInfo.loadFromPageable(resoureQueryVOs));
         return msgReturn;
     }
 

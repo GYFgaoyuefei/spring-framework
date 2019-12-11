@@ -51,6 +51,9 @@ public class GroupServiceImpl implements GroupService{
 		if(groupSaveDTO!=null) {
 			PowerGroupCreate powerGroupCreate=new PowerGroupCreate();
 			BeanUtils.copyProperties(groupSaveDTO, powerGroupCreate);
+			if(groupSaveDTO.getItems()!=null) {
+				powerGroupCreate.setItems(transPowDtoToPow(groupSaveDTO.getItems()));
+			}
 			OrgPowerGroup orgPowerGroup=iOrganizeService.createGroup(powerGroupCreate);
 			if(orgPowerGroup!=null) {
 				groupSaveVO=new GroupSaveVO();
@@ -132,6 +135,7 @@ public class GroupServiceImpl implements GroupService{
 			BeanUtils.copyProperties(groupGrantDTO, userGrantByGroup);
 			OrgUserGranted orgUserGranted=iOrganizeService.grant(userGrantByGroup);
 			if(orgUserGranted!=null) {
+				orgGrantInfoVO=new OrgGrantInfoVO();
 				BeanUtils.copyProperties(orgUserGranted, orgGrantInfoVO);
 			}
 		}

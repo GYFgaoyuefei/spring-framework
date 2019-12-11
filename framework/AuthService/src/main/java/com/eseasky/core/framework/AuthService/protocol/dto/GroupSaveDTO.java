@@ -6,8 +6,6 @@ import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 
-import com.eseasky.core.starters.organization.persistence.entity.PowerGroupCreateItem;
-
 import lombok.Data;
 
 @Data
@@ -23,5 +21,8 @@ public class GroupSaveDTO implements Serializable {
     private String note;
     
     @Valid
-    private List<PowerGroupCreateItem> items;
+    @NotEmpty(
+            message = "权限分组items不能为空"
+        )
+    private List<PowerGroupCreateItemDTO> items;
 }
