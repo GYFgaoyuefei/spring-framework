@@ -84,10 +84,11 @@ public class GroupServiceImpl implements GroupService{
 
 	private List<PowerGroupCreateItem> transPowDtoToPow(List<PowerGroupCreateItemDTO> items) {
 		// TODO Auto-generated method stub
-		List<PowerGroupCreateItem> powerGroupCreateItems=items.stream().map(item->{
+		List<PowerGroupCreateItem> powerGroupCreateItems=items.stream().filter(item->BinOrListUtil.transToInt(item.getAction())!=0).map(item->{
 			PowerGroupCreateItem powerGroupCreateItem=new PowerGroupCreateItem();
 			BeanUtils.copyProperties(item, powerGroupCreateItem);
-			powerGroupCreateItem.setAction(BinOrListUtil.transToInt(item.getAction()));
+			int action=BinOrListUtil.transToInt(item.getAction());
+			powerGroupCreateItem.setAction(action);			
 			return powerGroupCreateItem;
 		}).collect(Collectors.toList());
 		return powerGroupCreateItems;
@@ -150,6 +151,7 @@ public class GroupServiceImpl implements GroupService{
 		if (resoureQueryDTO != null) {
 			ResourceQuery resourceQuery = new ResourceQuery();
 			BeanUtils.copyProperties(resoureQueryDTO, resourceQuery);
+			resoureQueryDTO.setSize(50);
 			if (resoureQueryDTO.getSize() != 0)
 				resourceQuery.setPageSize(resoureQueryDTO.getSize());
 			List<PowerGroupGetItem> powerGroupGetItems = null;
@@ -180,6 +182,7 @@ public class GroupServiceImpl implements GroupService{
 						}
 					}
 				}
+				resoureQueryVO.setOrgCode(null);
 				resoureQueryVOls.add(resoureQueryVO);
 			}
 				resoureQueryVOs = new PageImpl<ResoureQueryVO>(resoureQueryVOls, organizeDefineds.getPageable(),

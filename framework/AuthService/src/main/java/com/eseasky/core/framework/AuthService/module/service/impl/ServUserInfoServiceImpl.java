@@ -29,9 +29,13 @@ import org.springframework.transaction.annotation.Transactional;
 import com.eseasky.core.framework.AuthService.module.model.ServUserInfo;
 import com.eseasky.core.framework.AuthService.module.repository.AuthAccessTokenRepository;
 import com.eseasky.core.framework.AuthService.module.repository.ServUserInfoRepository;
+import com.eseasky.core.framework.AuthService.module.service.GrantService;
 import com.eseasky.core.framework.AuthService.module.service.ServUserInfoService;
 import com.eseasky.core.framework.AuthService.protocol.dto.ServUserInfoDTO;
 import com.eseasky.core.framework.AuthService.protocol.vo.ServUserInfoVO;
+import com.eseasky.core.starters.organization.persistence.IOrganizeService;
+import com.eseasky.core.starters.organization.persistence.entity.OrgUserGranted;
+import com.eseasky.core.starters.organization.persistence.entity.UserGrantByGroup;
 
 import static com.eseasky.core.framework.AuthService.exception.BusiException.BusiEnum.NOT_FOUND_USER;
 
@@ -42,6 +46,12 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 	ServUserInfoRepository servUserInfoRepository;
 	@Autowired
 	AuthAccessTokenRepository authAccessTokenRepository;
+	
+	@Autowired
+	private IOrganizeService iOrganizeService;
+	
+	@Autowired
+	private GrantService roleService;
 
 //	private List<Predicate> predicates;
 //	private List<String> excludes = Arrays.asList(new String[] { "page", "size" });
@@ -69,10 +79,8 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 				if (!CheckUsername(servUserInfoDTO)) {
 					BeanUtils.copyProperties(optional.get(), servUserInfoVO);
 					ServUserInfo servUserInfo = optional.get();
-					BeanUtils.copyProperties(servUserInfoDTO, servUserInfo);
+					BeanUtils.copyProperties(servUserInfoDTO, servUserInfo);					
 					servUserInfo = servUserInfoRepository.save(servUserInfo);
-					
-					
 					BeanUtils.copyProperties(servUserInfo, servUserInfoVO);
 				} else {
 					if (servUserInfoDTO.getUserName().equals(optional.get().getUserName())) {
@@ -85,11 +93,9 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 						throw new BusiException(BusiEnum.USERNAME_REPEATABLE);
 					}
 				}
-
 			} else {
 				throw new BusiException(NOT_FOUND_USER);
 			}
-
 		} else {
 			throw new BusiException(BusiEnum.USERINFO_NOID);
 		}
@@ -101,10 +107,10 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 		// TODO Auto-generated method stub
 		ServUserInfoVO servUserInfoVO = new ServUserInfoVO();
 		if (servUserInfoDTO.getId() != null) {
-
 			Optional<ServUserInfo> userInfo = servUserInfoRepository.findById(servUserInfoDTO.getId());
 			if (userInfo.isPresent()) {
 				servUserInfoRepository.deleteById(userInfo.get().getId());
+				roleService.deleteByUser(userInfo.get().getUserName());
 				BeanUtils.copyProperties(userInfo.get(), servUserInfoVO);
 			} else {
 				throw new BusiException(BusiEnum.NOT_FOUND_USER);
@@ -115,6 +121,7 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 		return servUserInfoVO;
 	}
 
+
 	@Override
 	@Transactional
 	public ServUserInfoVO addUserInfo(ServUserInfoDTO servUserInfoDTO) {
@@ -123,7 +130,10 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 			ServUserInfo servUserInfo = new ServUserInfo();
 			BeanUtils.copyProperties(servUserInfoDTO, servUserInfo);
 			checkUserName(servUserInfo);
+			if(Strings.isNullOrEmpty(servUserInfoDTO.getOrgCode()))
+				throw new BusiException(BusiEnum.USERINFO_ORGIDNOTNULL);
 			servUserInfo.setOrgName(StringUtils.join(servUserInfoDTO.getOrgNameForSave(),">"));
+			grantGroups(servUserInfoDTO);
 			servUserInfo = servUserInfoRepository.save(servUserInfo);
 			if (servUserInfo != null) {
 				servUserInfoVO = new ServUserInfoVO();
@@ -301,4 +311,29 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 		return servUserInfoVO;
 	}
 
+	@Transactional
+	private List<OrgUserGranted> grantGroups(ServUserInfoDTO servUserInfoDTO){
+		List<OrgUserGranted> orgUserGranteds=null;
+		if(servUserInfoDTO!=null&&servUserInfoDTO.getGroupIds()!=null && servUserInfoDTO.getGroupIds().size()>0) {
+			for(Integer groupId:servUserInfoDTO.getGroupIds()) {
+				UserGrantByGroup userGrantByGroup=new UserGrantByGroup();
+				userGrantByGroup.setGroupId(groupId);
+				userGrantByGroup.setCreateUser(servUserInfoDTO.getCreaterUser());
+				userGrantByGroup.setOrgCode(servUserInfoDTO.getOrgCode());
+				userGrantByGroup.setUser(servUserInfoDTO.getUserName());
+				try {
+					OrgUserGranted orgUserGranted=iOrganizeService.grant(userGrantByGroup);
+					if(orgUserGranted!=null) {
+						if(orgUserGranteds==null)
+							orgUserGranteds=new ArrayList<OrgUserGranted>();
+						orgUserGranteds.add(orgUserGranted);
+					}					
+				}catch(Exception e) {
+					throw new BusiException(BusiEnum.USERINFO_GROUPGRANT);
+				}					
+			}		
+		}
+		return orgUserGranteds;
+		
+	}
 }

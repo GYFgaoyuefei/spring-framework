@@ -218,28 +218,45 @@ public class GrantServiceImpl implements GrantService {
 		return orgGrantInfoVOs;
 	}
 
+	
 
-//	private List<OrganizeUserGranted> queryGrantByUser(String user) {
-//		List<OrganizeUserGranted> organizeUserGranteds = null;
-//		if (user != null) {
-//			OrgGrantedQuery orgGrantedQuery = new OrgGrantedQuery();
-//			orgGrantedQuery.setUser(user);
-//			int page = 0;
-//			while (true) {
-//				orgGrantedQuery.setPage(page);
-//				orgGrantedQuery.setPageSize(50);
-//				Page<OrganizeUserGranted> orgGrantedItems = iOrganizeService.queryOrgUserGranted(orgGrantedQuery);
-//				if (orgGrantedItems == null || orgGrantedItems.getContent() == null || orgGrantedItems.getContent().size()==0)
-//					break;
-//				if (organizeUserGranteds == null)
-//					organizeUserGranteds = orgGrantedItems.getContent();
-//				else
-//					organizeUserGranteds.addAll(orgGrantedItems.getContent());
-//				page++;
-//			}
-//		}
-//		return organizeUserGranteds;
-//	}
+	private List<OrganizeUserGranted> queryGrantByUser(String user) {
+		List<OrganizeUserGranted> organizeUserGranteds = null;
+		if (user != null) {
+			OrgGrantedQuery orgGrantedQuery = new OrgGrantedQuery();
+			orgGrantedQuery.setUser(user);
+			int page = 0;
+			while (true) {
+				orgGrantedQuery.setPage(page);
+				orgGrantedQuery.setPageSize(50);
+				Page<OrganizeUserGranted> orgGrantedItems = iOrganizeService.queryOrgUserGranted(orgGrantedQuery);
+				if (orgGrantedItems == null || orgGrantedItems.getContent() == null || orgGrantedItems.getContent().size()==0)
+					break;
+				if (organizeUserGranteds == null)
+					organizeUserGranteds = orgGrantedItems.getContent();
+				else
+					organizeUserGranteds.addAll(orgGrantedItems.getContent());
+				page++;
+			}
+		}
+		return organizeUserGranteds;
+	}
+
+	@Override
+	public void deleteByUser(String userName) {
+		// TODO Auto-generated method stub
+		List<OrganizeUserGranted> organizeUserGranteds=queryGrantByUser(userName);
+		if(organizeUserGranteds!=null) {
+			for(OrganizeUserGranted organizeUserGranted:organizeUserGranteds) {
+				if(organizeUserGranted!=null) {
+					OrgGrantedUpdateInfo orgGrantedUpdateInfo = new OrgGrantedUpdateInfo();
+					orgGrantedUpdateInfo.setId(organizeUserGranted.getId());
+//					if(orgGrantedUpdateInfo.getAction()==null || orgGrantedUpdateInfo.getAction()==0 ||)
+					iOrganizeService.deleteGranted(orgGrantedUpdateInfo);
+				}
+			}
+		}	
+	}
 	
 //	private Page<ResoureQueryVO>  transToResVO(Page<OrganizeResourceDefined> organizeDefineds,List<OrganizeUserGranted> organizeUserGranteds,String orgCode) {
 //		Page<ResoureQueryVO> resoureQueryVOs=null;

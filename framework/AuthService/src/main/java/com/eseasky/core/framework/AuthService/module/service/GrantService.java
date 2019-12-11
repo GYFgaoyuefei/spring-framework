@@ -34,4 +34,6 @@ public interface GrantService {
 
 	List<OrgGrantInfoVO> grant(OrgGrantInfosDTO orgGrantInfoDTOs);
 
+	void deleteByUser(String userName);
+
 }

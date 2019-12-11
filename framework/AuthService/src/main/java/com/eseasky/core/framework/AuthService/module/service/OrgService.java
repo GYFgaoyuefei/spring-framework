@@ -1,10 +1,13 @@
 package com.eseasky.core.framework.AuthService.module.service;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgQueryDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgSaveDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgUpdateDTO;
+import com.eseasky.core.framework.AuthService.protocol.vo.MulOrgsVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.OrgQueryVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.OrgSaveVO;
 
@@ -21,4 +24,6 @@ public interface OrgService {
 	OrgSaveVO openOrg(OrgUpdateDTO orgUpdateDTO);
 	
 	OrgSaveVO getOrgNameByOrgCode(String orgCode);
+
+	List<MulOrgsVO> queryMulOrgs();
 }

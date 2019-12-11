@@ -7,6 +7,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,9 +35,9 @@ public class UserInfoController {
 
     @ApiOperation(value = "新建用户", httpMethod = "POST")
     @PostMapping(value = "/add")
-    public ResultModel<ServUserInfoVO> addUserInfo(@RequestBody ServUserInfoDTO servUserInfoDTO) {
+    public ResultModel<ServUserInfoVO> addUserInfo(@RequestBody @Validated ServUserInfoDTO servUserInfoDTO) {
 
-        ResultModel<ServUserInfoVO> msgReturn = new ResultModel<>();
+        ResultModel<ServUserInfoVO> msgReturn = new ResultModel<ServUserInfoVO>();
         ServUserInfoVO servUserInfoVO = servUserInfoService.addUserInfo(servUserInfoDTO);
         log.info(JSONObject.toJSONString(servUserInfoVO));
         msgReturn.setData(servUserInfoVO);
@@ -47,7 +48,7 @@ public class UserInfoController {
     @PostMapping(value = "/query")
     public ResultModel<List<ServUserInfoVO>> queryUserInfo(@RequestBody ServUserInfoDTO servUserInfoDTO) {
 
-        ResultModel<List<ServUserInfoVO>> msgReturn = new ResultModel<>();
+        ResultModel<List<ServUserInfoVO>> msgReturn = new ResultModel<List<ServUserInfoVO>>();
         Page<ServUserInfo> page = servUserInfoService.queryUserInfo(servUserInfoDTO);
         List<ServUserInfoVO> list = page.stream().map(item -> {
             ServUserInfoVO servUserInfoVO = new ServUserInfoVO();
@@ -63,7 +64,7 @@ public class UserInfoController {
     
     @ApiOperation(value = "修改用户", httpMethod = "POST")
     @PostMapping(value = "/updateUserInfo", consumes = "application/json")
-    public ResultModel<ServUserInfoVO> updateUserInfo(@RequestBody ServUserInfoDTO servUserInfoDTO) {
+    public ResultModel<ServUserInfoVO> updateUserInfo(@RequestBody @Validated ServUserInfoDTO servUserInfoDTO) {
         ResultModel<ServUserInfoVO> msgReturn = new ResultModel<>();
         ServUserInfoVO servUserInfoVO = servUserInfoService.updateServUserInfo(servUserInfoDTO);
         msgReturn.setData(servUserInfoVO);

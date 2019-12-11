@@ -17,6 +17,10 @@ public enum  BusiEnum {
 	USERINFO_IDNOTNULL(500,"系统提示：id不能为null"),
 
     USER_INVALID(500,"用户失效"),
+    
+    USERINFO_ORGIDNOTNULL(500,"组织不能未null"),
+    
+    USERINFO_GROUPGRANT(500,"无法未该用户授权该权限分组下的权限"),
 
     NOTDELETE(500,"管理员不可删除"),
 	

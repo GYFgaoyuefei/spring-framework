@@ -15,6 +15,7 @@ import com.eseasky.core.framework.AuthService.module.service.OrgService;
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgQueryDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgSaveDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgUpdateDTO;
+import com.eseasky.core.framework.AuthService.protocol.vo.MulOrgsVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.OrgQueryVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.OrgSaveVO;
 import com.eseasky.global.entity.MsgPageInfo;
@@ -85,6 +86,17 @@ public class OrgController {
 		OrgSaveVO orgSaveVO = orgService.openOrg(orgUpdateDTO);
 		log.info(JSONObject.toJSONString(orgSaveVO));
 		msgReturn.setData(orgSaveVO);
+		return msgReturn;
+	}
+	
+	@ApiOperation(value = "打开组织", httpMethod = "POST")
+	@PostMapping(value = "/queryMulOrgs")
+	public ResultModel<List<MulOrgsVO>>queryMulOrgs(@RequestBody OrgUpdateDTO orgUpdateDTO) {
+
+		ResultModel<List<MulOrgsVO>> msgReturn = new ResultModel<List<MulOrgsVO>>();
+		List<MulOrgsVO> mulOrgsVOs = orgService.queryMulOrgs();
+		log.info(JSONObject.toJSONString(mulOrgsVOs));
+		msgReturn.setData(mulOrgsVOs);
 		return msgReturn;
 	}
 }
