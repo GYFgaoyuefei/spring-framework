@@ -24,7 +24,6 @@ public class ServUserInfoDTO implements Serializable{
 	private String passWord;
 	private String mobile;
 	private String state;
-	private String[] orgNameForSave;
 	private List<Integer> groupIds;
 	@NotEmpty(
 	        message = "组织不能为空"

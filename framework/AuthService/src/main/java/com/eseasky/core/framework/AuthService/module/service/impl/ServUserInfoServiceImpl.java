@@ -14,7 +14,6 @@ import com.eseasky.core.framework.AuthService.exception.BusiException.BusiExcept
 import com.eseasky.core.framework.AuthService.module.model.AuthAccessToken;
 import com.google.common.base.Strings;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -30,6 +29,7 @@ import com.eseasky.core.framework.AuthService.module.model.ServUserInfo;
 import com.eseasky.core.framework.AuthService.module.repository.AuthAccessTokenRepository;
 import com.eseasky.core.framework.AuthService.module.repository.ServUserInfoRepository;
 import com.eseasky.core.framework.AuthService.module.service.GrantService;
+import com.eseasky.core.framework.AuthService.module.service.OrgService;
 import com.eseasky.core.framework.AuthService.module.service.ServUserInfoService;
 import com.eseasky.core.framework.AuthService.protocol.dto.ServUserInfoDTO;
 import com.eseasky.core.framework.AuthService.protocol.vo.ServUserInfoVO;
@@ -43,9 +43,11 @@ import static com.eseasky.core.framework.AuthService.exception.BusiException.Bus
 public class ServUserInfoServiceImpl implements ServUserInfoService {
 
 	@Autowired
-	ServUserInfoRepository servUserInfoRepository;
+	private ServUserInfoRepository servUserInfoRepository;
 	@Autowired
-	AuthAccessTokenRepository authAccessTokenRepository;
+	private AuthAccessTokenRepository authAccessTokenRepository;
+	@Autowired
+	private OrgService orgService;
 
 	@Autowired
 	private IOrganizeService iOrganizeService;
@@ -77,8 +79,7 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 		if (servUserInfoDTO.getId() != null) {
 			Optional<ServUserInfo> optional = servUserInfoRepository.findById(servUserInfoDTO.getId());
 			if (optional.isPresent()) {
-				if (servUserInfoDTO.getOrgNameForSave() != null)
-					servUserInfoDTO.setOrgName(StringUtils.join(servUserInfoDTO.getOrgNameForSave(), ">"));
+				servUserInfoDTO.setOrgName(orgService.getOrgNameByOrgCode(servUserInfoDTO.getOrgCode()).getName());
 				if (!CheckUsername(servUserInfoDTO)) {
 					ServUserInfo servUserInfo = optional.get();
 					BeanUtils.copyProperties(servUserInfoDTO, servUserInfo);
@@ -142,7 +143,7 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 			checkUserName(servUserInfo);
 			if (Strings.isNullOrEmpty(servUserInfoDTO.getOrgCode()))
 				throw new BusiException(BusiEnum.USERINFO_ORGIDNOTNULL);
-			servUserInfo.setOrgName(StringUtils.join(servUserInfoDTO.getOrgNameForSave(), ">"));
+			servUserInfo.setOrgName(orgService.getOrgNameByOrgCode(servUserInfoDTO.getOrgCode()).getName());
 			grantGroups(servUserInfoDTO);
 			servUserInfo = servUserInfoRepository.save(servUserInfo);
 			if (servUserInfo != null) {
