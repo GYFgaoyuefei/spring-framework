@@ -17,8 +17,8 @@ public class PowerGroupCreateItemDTO implements Serializable {
     )
     private Long resId;
     
-    @NotNull(
-        message = "权限操作不能为空"
-    )
+//    @NotNull(
+//        message = "权限操作不能为空"
+//    )
     private Set<String> action;
 }

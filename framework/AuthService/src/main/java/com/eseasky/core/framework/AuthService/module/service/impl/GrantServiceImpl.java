@@ -185,7 +185,7 @@ public class GrantServiceImpl implements GrantService {
 	}
 
 	@Override
-	@Transactional(rollbackFor = Exception.class)
+//	@Transactional(rollbackFor = Exception.class)
 	public List<OrgGrantInfoVO> grant(OrgGrantInfosDTO orgGrantInfoDTOs) {
 		// TODO Auto-generated method stub
 		List<OrgGrantInfoVO> orgGrantInfoVOs = null;
@@ -240,6 +240,23 @@ public class GrantServiceImpl implements GrantService {
 			}
 		}	
 	}
+	
+//	@Override
+//	@Transactional(rollbackFor = Exception.class)
+//	public void updateByUser(String userName) {
+//		// TODO Auto-generated method stub
+//		List<OrganizeUserGranted> organizeUserGranteds=queryGrantByUser(userName);
+//		if(organizeUserGranteds!=null) {
+//			for(OrganizeUserGranted organizeUserGranted:organizeUserGranteds) {
+//				if(organizeUserGranted!=null) {
+//					OrgGrantedUpdateInfo orgGrantedUpdateInfo = new OrgGrantedUpdateInfo();
+//					BeanUtils.copyProperties(organizeUserGranted, orgGrantedUpdateInfo);
+////					if(orgGrantedUpdateInfo.getAction()==null || orgGrantedUpdateInfo.getAction()==0 ||)
+//					iOrganizeService.updateGranted(orgGrantedUpdateInfo);
+//				}
+//			}
+//		}	
+//	}
 	
 //	private Page<ResoureQueryVO>  transToResVO(Page<OrganizeResourceDefined> organizeDefineds,List<OrganizeUserGranted> organizeUserGranteds,String orgCode) {
 //		Page<ResoureQueryVO> resoureQueryVOs=null;
