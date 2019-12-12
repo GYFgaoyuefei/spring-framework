@@ -7,7 +7,6 @@ import java.util.Set;
 public class BinOrListUtil {
 	public static List<String> transToBin(int action) {
 		List<String> actions = new ArrayList<String>();
-		;
 		actions.add(action / 8 == 0 ? null : "1000");
 		actions.add((action % 8) / 4 == 0 ? null : "0100");
 		actions.add((action % 8 % 4) / 2 == 0 ? null : "0010");

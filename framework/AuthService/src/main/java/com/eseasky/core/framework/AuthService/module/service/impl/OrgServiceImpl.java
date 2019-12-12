@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.eseasky.core.framework.AuthService.module.service.OrgService;
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgQueryDTO;
@@ -55,6 +56,7 @@ public class OrgServiceImpl implements OrgService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public OrgSaveVO saveOrg(OrgSaveDTO orgSaveDTO) {
 		OrgSaveVO orgSaveVO = null;
 		if (orgSaveDTO != null) {
@@ -70,6 +72,7 @@ public class OrgServiceImpl implements OrgService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public OrgSaveVO updateOrg(OrgUpdateDTO orgUpdateDTO) {
 		// TODO Auto-generated method stub
 		OrgSaveVO orgSaveVO = null;
@@ -86,6 +89,7 @@ public class OrgServiceImpl implements OrgService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public OrgSaveVO disableOrg(OrgUpdateDTO orgUpdateDTO) {
 		// TODO Auto-generated method stub
 		OrgSaveVO orgSaveVO = null;
@@ -100,6 +104,7 @@ public class OrgServiceImpl implements OrgService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public OrgSaveVO openOrg(OrgUpdateDTO orgUpdateDTO) {
 		// TODO Auto-generated method stub
 		OrgSaveVO orgSaveVO = null;
@@ -164,8 +169,8 @@ public class OrgServiceImpl implements OrgService {
 				MulOrgsVO mulOrgsVO=null;
 				for(Entry<String, List<OrgQueryVO>> entry:mapOrgsVO.entrySet()) {
 					OrgQueryDTO orgQueryDTO=new OrgQueryDTO();
-					orgQueryDTO.setLevel(2);
-					orgQueryDTO.setParentCode(entry.getKey());
+					orgQueryDTO.setLevel(1);
+					orgQueryDTO.setOrgCode(entry.getKey());
 					Page<OrgQueryVO> orgQueryVOs = queryOrg(orgQueryDTO);
 					if(orgQueryVOs!=null && orgQueryVOs.getNumberOfElements()>0) {
 						OrgQueryVO levelFirOrg=orgQueryVOs.getContent().get(0);

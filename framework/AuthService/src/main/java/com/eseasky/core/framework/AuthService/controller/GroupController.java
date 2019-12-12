@@ -59,10 +59,15 @@ public class GroupController {
 		return msgReturn;
 	}
 	
-	@ApiOperation(value = "更新权限分组", httpMethod = "POST")
+	@ApiOperation(value = "删除权限分组", httpMethod = "POST")
 	@PostMapping(value = "/deleteGroup")
-	public void deleteGroup(@RequestBody GroupUpdateDTO groupUpdateDTO) {
-		groupService.deleteGroup(groupUpdateDTO);
+	public ResultModel<GroupSaveVO> deleteGroup(@RequestBody GroupUpdateDTO groupUpdateDTO) {
+		ResultModel<GroupSaveVO> msgReturn = new ResultModel<GroupSaveVO>();
+		GroupSaveVO groupSaveVO = groupService.deleteGroup(groupUpdateDTO);
+		log.info(JSONObject.toJSONString(groupSaveVO));
+		msgReturn.setData(groupSaveVO);
+		return msgReturn;
+		
 	}
 	
 	@ApiOperation(value = "查询权限分组", httpMethod = "POST")

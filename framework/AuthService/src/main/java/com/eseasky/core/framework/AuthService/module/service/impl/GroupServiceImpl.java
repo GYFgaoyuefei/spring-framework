@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.eseasky.core.framework.AuthService.exception.BusiException.BusiEnum;
 import com.eseasky.core.framework.AuthService.exception.BusiException.BusiException;
@@ -36,6 +37,7 @@ import com.eseasky.core.starters.organization.persistence.entity.ResourceQuery;
 import com.eseasky.core.starters.organization.persistence.entity.UserGrantByGroup;
 import com.eseasky.core.starters.organization.persistence.model.OrgPowerGroup;
 import com.eseasky.core.starters.organization.persistence.model.OrganizeResourceDefined;
+import com.google.common.base.Strings;
 
 
 @Service
@@ -45,6 +47,7 @@ public class GroupServiceImpl implements GroupService{
 	private IOrganizeService iOrganizeService;
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public GroupSaveVO saveGroup(GroupSaveDTO groupSaveDTO) {
 		// TODO Auto-generated method stub
 		GroupSaveVO groupSaveVO=null;
@@ -64,6 +67,7 @@ public class GroupServiceImpl implements GroupService{
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public GroupSaveVO updateGroup(GroupUpdateDTO groupUpdateDTO) {
 		// TODO Auto-generated method stub
 		GroupSaveVO groupSaveVO=null;
@@ -95,14 +99,16 @@ public class GroupServiceImpl implements GroupService{
 	}
 
 	@Override
-	public void deleteGroup(GroupUpdateDTO groupUpdateDTO) {
+	@Transactional(rollbackFor = Exception.class)
+	public GroupSaveVO deleteGroup(GroupUpdateDTO groupUpdateDTO) {
 		// TODO Auto-generated method stub
+		GroupSaveVO groupSaveVO=null;
 		if(groupUpdateDTO!=null && groupUpdateDTO.getGroupId()!=null) {
 			iOrganizeService.deleteGroup(groupUpdateDTO.getGroupId());				
 		}else {
 			throw new BusiException(BusiEnum.GROUP_NOID);
 		}
-		
+		return groupSaveVO;
 	}
 
 	@Override
@@ -114,6 +120,8 @@ public class GroupServiceImpl implements GroupService{
 			BeanUtils.copyProperties(groupQueryDTO, powerGroupQuery);
 			if(groupQueryDTO.getSize()!=0)
 				powerGroupQuery.setPageSize(groupQueryDTO.getSize());
+			if(!Strings.isNullOrEmpty(groupQueryDTO.getGroupName()))
+				powerGroupQuery.setGroupName("%"+groupQueryDTO.getGroupName());
 			Page<PowerGroupInfo> powerGroupInfos=iOrganizeService.queryGroup(powerGroupQuery);
 			if(powerGroupInfos!=null) {
 				List<GroupQueryVO> orgQueryVOls=powerGroupInfos.stream().map(item->{

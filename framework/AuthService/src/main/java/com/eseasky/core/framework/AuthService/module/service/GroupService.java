@@ -20,7 +20,7 @@ public interface GroupService {
 
 	GroupSaveVO updateGroup(GroupUpdateDTO groupUpdateDTO);
 
-	void deleteGroup(GroupUpdateDTO groupUpdateDTO);
+	GroupSaveVO deleteGroup(GroupUpdateDTO groupUpdateDTO);
 
 	Page<GroupQueryVO> queryGroup(GroupQueryDTO groupQueryDTO);
 

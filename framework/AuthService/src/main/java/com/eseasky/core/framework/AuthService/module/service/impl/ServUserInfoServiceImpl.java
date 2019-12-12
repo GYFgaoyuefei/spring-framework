@@ -46,10 +46,10 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 	ServUserInfoRepository servUserInfoRepository;
 	@Autowired
 	AuthAccessTokenRepository authAccessTokenRepository;
-	
+
 	@Autowired
 	private IOrganizeService iOrganizeService;
-	
+
 	@Autowired
 	private GrantService roleService;
 
@@ -59,38 +59,45 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 	@Override
 	public ServUserInfo findByUserName(String userName) {
 		// TODO Auto-generated method stub
-		Optional<ServUserInfo> op = servUserInfoRepository.findByUserName(userName);
-		if (op.isPresent()) {
-			ServUserInfo userInfo = op.get();
-			return userInfo;
+		if (userName != null) {
+			Optional<ServUserInfo> op = servUserInfoRepository.findByUserName(userName);
+			if (op.isPresent()) {
+				ServUserInfo userInfo = op.get();
+				return userInfo;
+			}
 		}
 		return null;
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public ServUserInfoVO updateServUserInfo(ServUserInfoDTO servUserInfoDTO) {
 		// TODO Auto-generated method stub
-		ServUserInfoVO servUserInfoVO = new ServUserInfoVO();
+		ServUserInfoVO servUserInfoVO = null;
 		if (servUserInfoDTO.getId() != null) {
-			if(servUserInfoDTO.getOrgNameForSave()!=null)
-				servUserInfoDTO.setOrgName(StringUtils.join(servUserInfoDTO.getOrgNameForSave(),">"));
 			Optional<ServUserInfo> optional = servUserInfoRepository.findById(servUserInfoDTO.getId());
 			if (optional.isPresent()) {
+				if (servUserInfoDTO.getOrgNameForSave() != null)
+					servUserInfoDTO.setOrgName(StringUtils.join(servUserInfoDTO.getOrgNameForSave(), ">"));
 				if (!CheckUsername(servUserInfoDTO)) {
-					BeanUtils.copyProperties(optional.get(), servUserInfoVO);
 					ServUserInfo servUserInfo = optional.get();
 					BeanUtils.copyProperties(servUserInfoDTO, servUserInfo);
 					grantGroups(servUserInfoDTO);
 					servUserInfo = servUserInfoRepository.save(servUserInfo);
-					BeanUtils.copyProperties(servUserInfo, servUserInfoVO);
+					if (servUserInfo != null) {
+						servUserInfoVO = new ServUserInfoVO();
+						BeanUtils.copyProperties(servUserInfo, servUserInfoVO);
+					}
 				} else {
 					if (servUserInfoDTO.getUserName().equals(optional.get().getUserName())) {
-						BeanUtils.copyProperties(optional.get(), servUserInfoVO);
 						ServUserInfo servUserInfo = optional.get();
 						BeanUtils.copyProperties(servUserInfoDTO, servUserInfo);
 						grantGroups(servUserInfoDTO);
 						servUserInfo = servUserInfoRepository.save(servUserInfo);
-						BeanUtils.copyProperties(servUserInfo, servUserInfoVO);
+						if (servUserInfo != null) {
+							servUserInfoVO = new ServUserInfoVO();
+							BeanUtils.copyProperties(servUserInfo, servUserInfoVO);
+						}
 					} else {
 						throw new BusiException(BusiEnum.USERNAME_REPEATABLE);
 					}
@@ -105,14 +112,16 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public ServUserInfoVO deleteServUserInfoById(ServUserInfoDTO servUserInfoDTO) {
 		// TODO Auto-generated method stub
-		ServUserInfoVO servUserInfoVO = new ServUserInfoVO();
+		ServUserInfoVO servUserInfoVO = null;
 		if (servUserInfoDTO.getId() != null) {
 			Optional<ServUserInfo> userInfo = servUserInfoRepository.findById(servUserInfoDTO.getId());
 			if (userInfo.isPresent()) {
 				servUserInfoRepository.deleteById(userInfo.get().getId());
 				roleService.deleteByUser(userInfo.get().getUserName());
+				servUserInfoVO = new ServUserInfoVO();
 				BeanUtils.copyProperties(userInfo.get(), servUserInfoVO);
 			} else {
 				throw new BusiException(BusiEnum.NOT_FOUND_USER);
@@ -123,18 +132,17 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 		return servUserInfoVO;
 	}
 
-
 	@Override
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	public ServUserInfoVO addUserInfo(ServUserInfoDTO servUserInfoDTO) {
 		ServUserInfoVO servUserInfoVO = null;
 		if (servUserInfoDTO == null || servUserInfoDTO.getId() == null) {
 			ServUserInfo servUserInfo = new ServUserInfo();
 			BeanUtils.copyProperties(servUserInfoDTO, servUserInfo);
 			checkUserName(servUserInfo);
-			if(Strings.isNullOrEmpty(servUserInfoDTO.getOrgCode()))
+			if (Strings.isNullOrEmpty(servUserInfoDTO.getOrgCode()))
 				throw new BusiException(BusiEnum.USERINFO_ORGIDNOTNULL);
-			servUserInfo.setOrgName(StringUtils.join(servUserInfoDTO.getOrgNameForSave(),">"));
+			servUserInfo.setOrgName(StringUtils.join(servUserInfoDTO.getOrgNameForSave(), ">"));
 			grantGroups(servUserInfoDTO);
 			servUserInfo = servUserInfoRepository.save(servUserInfo);
 			if (servUserInfo != null) {
@@ -154,6 +162,7 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 			throw new BusiException(BusiEnum.USERNAME_REPEATABLE);
 		}
 	}
+
 	@Override
 	public Page<ServUserInfo> queryUserInfo(ServUserInfoDTO servUserInfoDTO) {
 		// TODO Auto-generated method stub
@@ -182,26 +191,27 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 //				} catch (IllegalAccessException e) {
 //					e.printStackTrace();
 //				}
-				 List<Predicate> predicates = new ArrayList<Predicate>();
-	                if (!Strings.isNullOrEmpty(servUserInfoDTO.getOrgCode())) {
-	                    predicates.add(criteriaBuilder.like(root.get("orgCode"), servUserInfoDTO.getOrgCode()+"%"));
-	                }	               
-	                if (!Strings.isNullOrEmpty(servUserInfoDTO.getOrgName())) {
-	                    predicates.add(criteriaBuilder.like(root.get("orgName"), "%"+servUserInfoDTO.getOrgName()+"%"));
-	                }
-	                if (!Strings.isNullOrEmpty(servUserInfoDTO.getUserName())) {
-	                    predicates.add(criteriaBuilder.like(root.get("userName"), "%"+servUserInfoDTO.getUserName()+"%"));
-	                }
-	                if (!Strings.isNullOrEmpty(servUserInfoDTO.getMobile())) {
-	                    predicates.add(criteriaBuilder.like(root.get("mobile"), "%"+servUserInfoDTO.getMobile()+"%"));
-	                }
-	                if (servUserInfoDTO.getId()!=null) {
-	                    predicates.add(criteriaBuilder.equal(root.get("id"), servUserInfoDTO.getId()));
-	                }
-	                if (!Strings.isNullOrEmpty(servUserInfoDTO.getState())) {
-	                    predicates.add(criteriaBuilder.equal(root.get("state"), servUserInfoDTO.getState()));
-	                }
-	                
+				List<Predicate> predicates = new ArrayList<Predicate>();
+				if (!Strings.isNullOrEmpty(servUserInfoDTO.getOrgCode())) {
+					predicates.add(criteriaBuilder.like(root.get("orgCode"), servUserInfoDTO.getOrgCode() + "%"));
+				}
+				if (!Strings.isNullOrEmpty(servUserInfoDTO.getOrgName())) {
+					predicates.add(criteriaBuilder.like(root.get("orgName"), "%" + servUserInfoDTO.getOrgName() + "%"));
+				}
+				if (!Strings.isNullOrEmpty(servUserInfoDTO.getUserName())) {
+					predicates
+							.add(criteriaBuilder.like(root.get("userName"), "%" + servUserInfoDTO.getUserName() + "%"));
+				}
+				if (!Strings.isNullOrEmpty(servUserInfoDTO.getMobile())) {
+					predicates.add(criteriaBuilder.like(root.get("mobile"), "%" + servUserInfoDTO.getMobile() + "%"));
+				}
+				if (servUserInfoDTO.getId() != null) {
+					predicates.add(criteriaBuilder.equal(root.get("id"), servUserInfoDTO.getId()));
+				}
+				if (!Strings.isNullOrEmpty(servUserInfoDTO.getState())) {
+					predicates.add(criteriaBuilder.equal(root.get("state"), servUserInfoDTO.getState()));
+				}
+
 				return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
 		}, pageable);
@@ -232,13 +242,13 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 
 	@Override
 	public ServUserInfoVO findById(ServUserInfoDTO servUserInfoDTO) {
-		ServUserInfoVO servUserInfoVO = new ServUserInfoVO();
-		ServUserInfo servUserInfo = new ServUserInfo();
-		BeanUtils.copyProperties(servUserInfoDTO, servUserInfo);
-		if (servUserInfo.getId() != null) {
-
+		ServUserInfoVO servUserInfoVO = null;
+		if (servUserInfoDTO.getId() != null) {
+			ServUserInfo servUserInfo = new ServUserInfo();
+			BeanUtils.copyProperties(servUserInfoDTO, servUserInfo);
 			Optional<ServUserInfo> userInfo = servUserInfoRepository.findById(servUserInfo.getId());
 			if (userInfo.isPresent() && userInfo.get() != null) {
+				servUserInfoVO = new ServUserInfoVO();
 				BeanUtils.copyProperties(userInfo.get(), servUserInfoVO);
 				List<AuthAccessToken> authAccessToken = authAccessTokenRepository
 						.findByUserName(userInfo.get().getUserName());
@@ -252,13 +262,14 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public ServUserInfoVO updatePwd(ServUserInfoDTO servUserInfoDTO) {
-		ServUserInfoVO servUserInfoVO = new ServUserInfoVO();
-		ServUserInfo servUserInfo = new ServUserInfo();
-		BeanUtils.copyProperties(servUserInfoDTO, servUserInfo);
-		if (servUserInfo.getId() != null && servUserInfo.getPassWord() != null) {
+		ServUserInfoVO servUserInfoVO = null;
+		if (servUserInfoDTO.getId() != null && servUserInfoDTO.getPassWord() != null) {
+			ServUserInfo servUserInfo = new ServUserInfo();
+			BeanUtils.copyProperties(servUserInfoDTO, servUserInfo);
 			Optional<ServUserInfo> userInfo = servUserInfoRepository.findById(servUserInfo.getId());
-			ServUserInfo saveInfo;
+			ServUserInfo saveInfo = null;
 			if (userInfo.isPresent() && (saveInfo = userInfo.get()) != null) {
 				saveInfo.setPassWord(servUserInfo.getPassWord());
 				try {
@@ -266,10 +277,10 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+				servUserInfoVO = new ServUserInfoVO();
 				BeanUtils.copyProperties(saveInfo, servUserInfoVO);
 			}
 		}
-
 		return servUserInfoVO;
 	}
 
@@ -284,11 +295,10 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public ServUserInfoVO forceOffLine(ServUserInfoDTO servUserInfoDTO) {
-
-		ServUserInfoVO servUserInfoVO = new ServUserInfoVO();
+		ServUserInfoVO servUserInfoVO = null;
 		if (servUserInfoDTO.getUserName() != null && !"".equals(servUserInfoDTO.getUserName())) {
-
 			List<AuthAccessToken> authUser = authAccessTokenRepository.findByUserName(servUserInfoDTO.getUserName());
 			if (authUser.size() == 0)
 				throw new BusiException(BusiEnum.USER_INVALID);
@@ -304,9 +314,11 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 				ServUserInfo info = userInfo.get();
 				info.setState("0");
 				servUserInfoRepository.save(info);
+				if (info != null) {
+					servUserInfoVO = new ServUserInfoVO();
+					BeanUtils.copyProperties(info, servUserInfoVO);
+				}
 			}
-
-			BeanUtils.copyProperties(userInfo.get(), servUserInfoVO);
 		} else {
 			throw new BusiException(BusiEnum.USERINFO_IDNOTNULL);
 		}
@@ -314,28 +326,29 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 	}
 
 	@Transactional
-	private List<OrgUserGranted> grantGroups(ServUserInfoDTO servUserInfoDTO){
-		List<OrgUserGranted> orgUserGranteds=null;
-		if(servUserInfoDTO!=null&&servUserInfoDTO.getGroupIds()!=null && servUserInfoDTO.getGroupIds().size()>0) {
-			for(Integer groupId:servUserInfoDTO.getGroupIds()) {
-				UserGrantByGroup userGrantByGroup=new UserGrantByGroup();
+	private List<OrgUserGranted> grantGroups(ServUserInfoDTO servUserInfoDTO) {
+		List<OrgUserGranted> orgUserGranteds = null;
+		if (servUserInfoDTO != null && servUserInfoDTO.getGroupIds() != null
+				&& servUserInfoDTO.getGroupIds().size() > 0) {
+			for (Integer groupId : servUserInfoDTO.getGroupIds()) {
+				UserGrantByGroup userGrantByGroup = new UserGrantByGroup();
 				userGrantByGroup.setGroupId(groupId);
 				userGrantByGroup.setCreateUser(servUserInfoDTO.getCreaterUser());
 				userGrantByGroup.setOrgCode(servUserInfoDTO.getOrgCode());
 				userGrantByGroup.setUser(servUserInfoDTO.getUserName());
 				try {
-					OrgUserGranted orgUserGranted=iOrganizeService.grant(userGrantByGroup);
-					if(orgUserGranted!=null) {
-						if(orgUserGranteds==null)
-							orgUserGranteds=new ArrayList<OrgUserGranted>();
+					OrgUserGranted orgUserGranted = iOrganizeService.grant(userGrantByGroup);
+					if (orgUserGranted != null) {
+						if (orgUserGranteds == null)
+							orgUserGranteds = new ArrayList<OrgUserGranted>();
 						orgUserGranteds.add(orgUserGranted);
-					}					
-				}catch(Exception e) {
+					}
+				} catch (Exception e) {
 					throw new BusiException(BusiEnum.USERINFO_GROUPGRANT);
-				}					
-			}		
+				}
+			}
 		}
 		return orgUserGranteds;
-		
+
 	}
 }

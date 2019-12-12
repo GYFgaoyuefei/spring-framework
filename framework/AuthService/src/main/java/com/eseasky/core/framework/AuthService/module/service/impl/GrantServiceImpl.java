@@ -16,12 +16,10 @@ import com.eseasky.core.framework.AuthService.module.service.OrgService;
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgGrantInfoDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgGrantInfosDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgQueryGrantDTO;
-import com.eseasky.core.framework.AuthService.protocol.dto.OrgSaveDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgUpdateGrantDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.ResoureQueryDTO;
 import com.eseasky.core.framework.AuthService.protocol.vo.OrgGrantInfoVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.OrgGrantedItemVO;
-import com.eseasky.core.framework.AuthService.protocol.vo.OrgSaveVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.ResoureQueryVO;
 import com.eseasky.core.framework.AuthService.utils.BinOrListUtil;
 import com.eseasky.core.starters.organization.persistence.IOrganizeService;
@@ -29,10 +27,8 @@ import com.eseasky.core.starters.organization.persistence.entity.OrgGrantInfo;
 import com.eseasky.core.starters.organization.persistence.entity.OrgGrantedItem;
 import com.eseasky.core.starters.organization.persistence.entity.OrgGrantedQuery;
 import com.eseasky.core.starters.organization.persistence.entity.OrgGrantedUpdateInfo;
-import com.eseasky.core.starters.organization.persistence.entity.OrgInsertInfo;
 import com.eseasky.core.starters.organization.persistence.entity.OrgUserGranted;
 import com.eseasky.core.starters.organization.persistence.entity.ResourceQuery;
-import com.eseasky.core.starters.organization.persistence.model.OrganizeDefined;
 import com.eseasky.core.starters.organization.persistence.model.OrganizeResourceDefined;
 import com.eseasky.core.starters.organization.persistence.model.OrganizeUserGranted;
 
@@ -43,20 +39,6 @@ public class GrantServiceImpl implements GrantService {
 
 	@Autowired
 	private OrgService orgService;
-
-	public OrgSaveVO saveOrg(OrgSaveDTO orgSaveDTO) {
-		OrgSaveVO orgSaveVO = null;
-		if (orgSaveDTO != null) {
-			OrgInsertInfo orgInsertInfo = new OrgInsertInfo();
-			BeanUtils.copyProperties(orgSaveDTO, orgInsertInfo);
-			OrganizeDefined organizeDefined = iOrganizeService.addOrganize(orgInsertInfo);
-			if (organizeDefined != null) {
-				orgSaveVO = new OrgSaveVO();
-				BeanUtils.copyProperties(organizeDefined, orgSaveVO);
-			}
-		}
-		return orgSaveVO;
-	}
 
 	@Override
 	public Page<ResoureQueryVO> queryResoureItem(ResoureQueryDTO resoureQueryDTO) {
@@ -88,6 +70,7 @@ public class GrantServiceImpl implements GrantService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public OrgGrantInfoVO grant(OrgGrantInfoDTO orgGrantInfoDTO) {
 		// TODO Auto-generated method stub
 		OrgGrantInfoVO orgGrantInfoVO = null;
@@ -175,7 +158,6 @@ public class GrantServiceImpl implements GrantService {
 						orgGrantedItemVO.setId(item.getResource().getId());
 						orgGrantedItemVO.setResourceName(item.getResource().getResourceName());
 						orgGrantedItemVO.setNote(item.getResource().getNote());
-//						orgGrantedItemVO.set
 					}
 					return orgGrantedItemVO;
 				}).collect(Collectors.toList());
@@ -243,6 +225,7 @@ public class GrantServiceImpl implements GrantService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public void deleteByUser(String userName) {
 		// TODO Auto-generated method stub
 		List<OrganizeUserGranted> organizeUserGranteds=queryGrantByUser(userName);
