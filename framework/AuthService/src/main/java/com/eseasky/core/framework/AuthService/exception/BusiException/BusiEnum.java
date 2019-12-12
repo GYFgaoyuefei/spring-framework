@@ -12,7 +12,9 @@ public enum  BusiEnum {
 	
 	USERINFO_NOID(500, "系统提示：用户id为空"),
 	
-	USERNAME_REPEATABLE(500,"系统提示：用户名重复"), 
+	USERNAME_REPEATABLE(500,"系统提示：用户名重复"),
+	
+	ORGNAME_REPEATABLE(500,"系统提示：同级组织名重复"),
 	
 	USERINFO_IDNOTNULL(500,"系统提示：id不能为null"),
 

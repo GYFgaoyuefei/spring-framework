@@ -198,6 +198,9 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 				if (!Strings.isNullOrEmpty(servUserInfoDTO.getOrgName())) {
 					predicates.add(criteriaBuilder.like(root.get("orgName"), "%" + servUserInfoDTO.getOrgName() + "%"));
 				}
+				if (!Strings.isNullOrEmpty(servUserInfoDTO.getNikeName())) {
+					predicates.add(criteriaBuilder.like(root.get("nikeName"), "%" + servUserInfoDTO.getNikeName() + "%"));
+				}
 				if (!Strings.isNullOrEmpty(servUserInfoDTO.getUserName())) {
 					predicates
 							.add(criteriaBuilder.like(root.get("userName"), "%" + servUserInfoDTO.getUserName() + "%"));

@@ -26,5 +26,5 @@ public class ServUserInfo {
     private String state;
     private String orgCode;
     private String orgName;
-
+    private String nikeName;
 }

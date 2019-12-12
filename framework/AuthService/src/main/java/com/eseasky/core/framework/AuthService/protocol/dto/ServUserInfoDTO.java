@@ -35,6 +35,9 @@ public class ServUserInfoDTO implements Serializable{
 	        message = "授权操作用户不能为空"
 	    )
 	private String createrUser;
+	
+	private String nikeName;
+	
 	private Integer page = 0;
 	private Integer size = 10;
 

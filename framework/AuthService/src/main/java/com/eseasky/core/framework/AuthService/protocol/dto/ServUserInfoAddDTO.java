@@ -21,5 +21,7 @@ public class ServUserInfoAddDTO implements Serializable{
 	private String state;
 	
 	private String[] orgCode;
+	
+	private String nikeName;
 
 }

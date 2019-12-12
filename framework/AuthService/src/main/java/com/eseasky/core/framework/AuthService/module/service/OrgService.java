@@ -26,4 +26,6 @@ public interface OrgService {
 	OrgSaveVO getOrgNameByOrgCode(String orgCode);
 
 	List<MulOrgsVO> queryMulOrgs();
+
+	OrgSaveVO checkOrgName(OrgSaveDTO orgSaveDTO);
 }

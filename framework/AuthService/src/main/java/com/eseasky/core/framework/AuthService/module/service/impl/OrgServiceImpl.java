@@ -13,6 +13,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.eseasky.core.framework.AuthService.exception.BusiException.BusiEnum;
+import com.eseasky.core.framework.AuthService.exception.BusiException.BusiException;
 import com.eseasky.core.framework.AuthService.module.service.OrgService;
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgQueryDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgSaveDTO;
@@ -26,6 +28,7 @@ import com.eseasky.core.starters.organization.persistence.entity.OrganizeQuery;
 import com.eseasky.core.starters.organization.persistence.entity.OrganizeUpdateInfo;
 import com.eseasky.core.starters.organization.persistence.model.OrganizeDefined;
 import com.eseasky.global.utils.SequeceHelper;
+import com.google.common.base.Strings;
 
 @Service
 public class OrgServiceImpl implements OrgService {
@@ -60,6 +63,11 @@ public class OrgServiceImpl implements OrgService {
 	public OrgSaveVO saveOrg(OrgSaveDTO orgSaveDTO) {
 		OrgSaveVO orgSaveVO = null;
 		if (orgSaveDTO != null) {
+			if(orgSaveDTO.getLevel()!=3) {
+				orgSaveVO=checkOrgName(orgSaveDTO);
+				if(orgSaveVO!=null && orgSaveVO.getId()!=null)
+					throw new BusiException(BusiEnum.ORGNAME_REPEATABLE);
+			}
 			OrgInsertInfo orgInsertInfo = new OrgInsertInfo();
 			BeanUtils.copyProperties(orgSaveDTO, orgInsertInfo);
 			OrganizeDefined organizeDefined = iOrganizeService.addOrganize(orgInsertInfo);
@@ -77,6 +85,13 @@ public class OrgServiceImpl implements OrgService {
 		// TODO Auto-generated method stub
 		OrgSaveVO orgSaveVO = null;
 		if (orgUpdateDTO != null) {
+			if(orgUpdateDTO.getName()!=null && orgUpdateDTO.getLevel()!=null && orgUpdateDTO.getLevel()!=3) {
+				OrgSaveDTO orgSaveDTO=new OrgSaveDTO ();
+				BeanUtils.copyProperties(orgUpdateDTO, orgSaveDTO);
+				orgSaveVO=checkOrgName(orgSaveDTO);
+				if(orgSaveVO!=null && orgSaveVO.getId()!=null && orgUpdateDTO.getId()!=orgSaveVO.getId())
+					throw new BusiException(BusiEnum.ORGNAME_REPEATABLE);
+			}
 			OrganizeUpdateInfo orgInsertInfo = new OrganizeUpdateInfo();
 			BeanUtils.copyProperties(orgUpdateDTO, orgInsertInfo);
 			OrganizeDefined organizeDefined = iOrganizeService.updateOrganize(orgInsertInfo);
@@ -185,6 +200,30 @@ public class OrgServiceImpl implements OrgService {
 			}
 		}
 		return mulOrgsVOs;
-
+	}
+	
+	@Override
+	public OrgSaveVO checkOrgName(OrgSaveDTO orgSaveDTO) {
+		OrgSaveVO orgSaveVO = null;
+		if (orgSaveDTO != null) {
+			OrganizeQuery organizeQuery = new OrganizeQuery();
+			BeanUtils.copyProperties(orgSaveDTO, organizeQuery);	
+			if(Strings.isNullOrEmpty(orgSaveDTO.getParentOrgCode())&&orgSaveDTO.getLevel()==null)
+				organizeQuery.setLevel(1);
+			organizeQuery.setPageSize(50);
+			organizeQuery.setKeyWords(orgSaveDTO.getName());
+			Page<OrganizeDefined> organizeDefineds = iOrganizeService.queryOrganize(organizeQuery);
+			if (organizeDefineds != null && organizeDefineds.getContent()!=null && organizeDefineds.getContent().size()>0) {
+				List<OrgSaveVO> orgSaveVOs=organizeDefineds.stream().filter(item->orgSaveDTO.getName().equals(item.getName())).map(item->{
+					OrgSaveVO temOrgSaveVO=new OrgSaveVO();
+					BeanUtils.copyProperties(item,temOrgSaveVO);
+					return temOrgSaveVO;
+				}).collect(Collectors.toList());
+				if(orgSaveVOs!=null && orgSaveVOs.size()>0) {
+					orgSaveVO = orgSaveVOs.get(0);
+				}				
+			}
+		}
+		return orgSaveVO;
 	}
 }

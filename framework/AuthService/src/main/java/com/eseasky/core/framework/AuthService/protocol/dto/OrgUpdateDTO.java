@@ -19,4 +19,11 @@ public class OrgUpdateDTO implements Serializable {
     private String note;
     
     private Integer status;
+    
+    @NotNull(
+            message = "组织级别不能为空"
+        )
+    private Integer level;
+    
+    private String parentOrgCode;
 }
