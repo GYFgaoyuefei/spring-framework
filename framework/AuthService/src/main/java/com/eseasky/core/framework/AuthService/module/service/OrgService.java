@@ -19,9 +19,9 @@ public interface OrgService {
 
 	OrgSaveVO updateOrg(OrgUpdateDTO orgUpdateDTO);
 
-	OrgSaveVO disableOrg(OrgUpdateDTO orgUpdateDTO);
+	OrgSaveVO disableOrg(OrgQueryDTO orgUpdateDTO);
 
-	OrgSaveVO openOrg(OrgUpdateDTO orgUpdateDTO);
+	OrgSaveVO openOrg(OrgQueryDTO orgUpdateDTO);
 	
 	OrgSaveVO getOrgNameByOrgCode(String orgCode);
 

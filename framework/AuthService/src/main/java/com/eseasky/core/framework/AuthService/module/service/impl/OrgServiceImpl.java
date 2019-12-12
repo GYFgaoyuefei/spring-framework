@@ -105,7 +105,7 @@ public class OrgServiceImpl implements OrgService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public OrgSaveVO disableOrg(OrgUpdateDTO orgUpdateDTO) {
+	public OrgSaveVO disableOrg(OrgQueryDTO orgUpdateDTO) {
 		// TODO Auto-generated method stub
 		OrgSaveVO orgSaveVO = null;
 		if (orgUpdateDTO != null && orgUpdateDTO.getId() != null) {
@@ -120,7 +120,7 @@ public class OrgServiceImpl implements OrgService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public OrgSaveVO openOrg(OrgUpdateDTO orgUpdateDTO) {
+	public OrgSaveVO openOrg(OrgQueryDTO orgUpdateDTO) {
 		// TODO Auto-generated method stub
 		OrgSaveVO orgSaveVO = null;
 		if (orgUpdateDTO != null && orgUpdateDTO.getId() != null) {

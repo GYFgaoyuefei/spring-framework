@@ -69,7 +69,7 @@ public class OrgController {
 	
 	@ApiOperation(value = "禁用组织", httpMethod = "POST")
 	@PostMapping(value = "/disableOrg")
-	public ResultModel<OrgSaveVO> disableOrg(@RequestBody @Validated OrgUpdateDTO orgUpdateDTO) {
+	public ResultModel<OrgSaveVO> disableOrg(@RequestBody @Validated OrgQueryDTO orgUpdateDTO) {
 
 		ResultModel<OrgSaveVO> msgReturn = new ResultModel<OrgSaveVO>();
 		OrgSaveVO orgSaveVO = orgService.disableOrg(orgUpdateDTO);
@@ -80,7 +80,7 @@ public class OrgController {
 
 	@ApiOperation(value = "打开组织", httpMethod = "POST")
 	@PostMapping(value = "/openOrg")
-	public ResultModel<OrgSaveVO> openOrg(@RequestBody  @Validated OrgUpdateDTO orgUpdateDTO) {
+	public ResultModel<OrgSaveVO> openOrg(@RequestBody  @Validated OrgQueryDTO orgUpdateDTO) {
 
 		ResultModel<OrgSaveVO> msgReturn = new ResultModel<OrgSaveVO>();
 		OrgSaveVO orgSaveVO = orgService.openOrg(orgUpdateDTO);
