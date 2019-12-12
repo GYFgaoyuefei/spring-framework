@@ -13,7 +13,6 @@ import com.eseasky.core.framework.AuthService.protocol.dto.OrgUpdateGrantDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.ResoureQueryDTO;
 import com.eseasky.core.framework.AuthService.protocol.vo.OrgGrantInfoVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.OrgGrantedItemVO;
-import com.eseasky.core.framework.AuthService.protocol.vo.OrgUserGrantedVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.ResoureQueryVO;
 
 @Valid
@@ -28,7 +27,7 @@ public interface GrantService {
 
 	Page<OrgGrantedItemVO> queryGranted(OrgQueryGrantDTO orgQueryGrantDTO);
 
-	Page<OrgUserGrantedVO> queryOrgUserGranted(OrgQueryGrantDTO orgQueryGrantDTO);
+	Page<ResoureQueryVO> queryOrgUserGranted(OrgQueryGrantDTO orgQueryGrantDTO);
 
 	OrgGrantInfoVO deleteGrant(OrgUpdateGrantDTO orgUpdateGrantDTO);
 

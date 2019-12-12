@@ -79,7 +79,8 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 				if (!CheckUsername(servUserInfoDTO)) {
 					BeanUtils.copyProperties(optional.get(), servUserInfoVO);
 					ServUserInfo servUserInfo = optional.get();
-					BeanUtils.copyProperties(servUserInfoDTO, servUserInfo);					
+					BeanUtils.copyProperties(servUserInfoDTO, servUserInfo);
+					grantGroups(servUserInfoDTO);
 					servUserInfo = servUserInfoRepository.save(servUserInfo);
 					BeanUtils.copyProperties(servUserInfo, servUserInfoVO);
 				} else {
@@ -87,6 +88,7 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 						BeanUtils.copyProperties(optional.get(), servUserInfoVO);
 						ServUserInfo servUserInfo = optional.get();
 						BeanUtils.copyProperties(servUserInfoDTO, servUserInfo);
+						grantGroups(servUserInfoDTO);
 						servUserInfo = servUserInfoRepository.save(servUserInfo);
 						BeanUtils.copyProperties(servUserInfo, servUserInfoVO);
 					} else {

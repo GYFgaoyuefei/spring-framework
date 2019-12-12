@@ -47,7 +47,7 @@ public class OrgController {
 	
 	@ApiOperation(value = "添加组织", httpMethod = "POST")
 	@PostMapping(value = "/saveOrg")
-	public ResultModel<OrgSaveVO> saveOrg(@RequestBody OrgSaveDTO orgSaveDTO) {
+	public ResultModel<OrgSaveVO> saveOrg(@RequestBody @Validated OrgSaveDTO orgSaveDTO) {
 
 		ResultModel<OrgSaveVO> msgReturn = new ResultModel<OrgSaveVO>();
 		OrgSaveVO orgSaveVO = orgService.saveOrg(orgSaveDTO);

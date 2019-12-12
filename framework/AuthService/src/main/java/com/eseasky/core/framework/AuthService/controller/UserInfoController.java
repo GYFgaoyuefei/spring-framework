@@ -46,7 +46,7 @@ public class UserInfoController {
 
     @ApiOperation(value = "查询用户", httpMethod = "POST")
     @PostMapping(value = "/query")
-    public ResultModel<List<ServUserInfoVO>> queryUserInfo(@RequestBody ServUserInfoDTO servUserInfoDTO) {
+    public ResultModel<List<ServUserInfoVO>> queryUserInfo(@RequestBody  @Validated ServUserInfoDTO servUserInfoDTO) {
 
         ResultModel<List<ServUserInfoVO>> msgReturn = new ResultModel<List<ServUserInfoVO>>();
         Page<ServUserInfo> page = servUserInfoService.queryUserInfo(servUserInfoDTO);

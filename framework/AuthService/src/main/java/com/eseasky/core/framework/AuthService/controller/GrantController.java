@@ -21,7 +21,6 @@ import com.eseasky.core.framework.AuthService.protocol.dto.OrgUpdateGrantDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.ResoureQueryDTO;
 import com.eseasky.core.framework.AuthService.protocol.vo.OrgGrantInfoVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.OrgGrantedItemVO;
-import com.eseasky.core.framework.AuthService.protocol.vo.OrgUserGrantedVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.ResoureQueryVO;
 import com.eseasky.global.entity.MsgPageInfo;
 import com.eseasky.global.entity.ResultModel;
@@ -106,12 +105,24 @@ public class GrantController {
         return msgReturn;
     }
 	
+//	@ApiOperation(value = "查询授权", httpMethod = "POST")
+//    @PostMapping(value = "/queryOrgUserGrant")
+//    public ResultModel<List<OrgUserGrantedVO>> queryOrgUserGranted(@RequestBody OrgQueryGrantDTO orgQueryGrantDTO) {
+//
+//        ResultModel<List<OrgUserGrantedVO>> msgReturn = new ResultModel<List<OrgUserGrantedVO>>();
+//        Page<OrgUserGrantedVO> orgGrantedItemVOs = roleService.queryOrgUserGranted(orgQueryGrantDTO);
+//        log.info(JSONObject.toJSONString(orgGrantedItemVOs));
+//        if(orgGrantedItemVOs!=null)
+//        msgReturn.setData(orgGrantedItemVOs.getContent(),MsgPageInfo.loadFromPageable(orgGrantedItemVOs));
+//        return msgReturn;
+//    }
+	
 	@ApiOperation(value = "查询授权", httpMethod = "POST")
     @PostMapping(value = "/queryOrgUserGrant")
-    public ResultModel<List<OrgUserGrantedVO>> queryOrgUserGranted(@RequestBody OrgQueryGrantDTO orgQueryGrantDTO) {
+    public ResultModel<List<ResoureQueryVO>> queryOrgUserGranted(@RequestBody OrgQueryGrantDTO orgQueryGrantDTO) {
 
-        ResultModel<List<OrgUserGrantedVO>> msgReturn = new ResultModel<List<OrgUserGrantedVO>>();
-        Page<OrgUserGrantedVO> orgGrantedItemVOs = roleService.queryOrgUserGranted(orgQueryGrantDTO);
+        ResultModel<List<ResoureQueryVO>> msgReturn = new ResultModel<List<ResoureQueryVO>>();
+        Page<ResoureQueryVO> orgGrantedItemVOs = roleService.queryOrgUserGranted(orgQueryGrantDTO);
         log.info(JSONObject.toJSONString(orgGrantedItemVOs));
         if(orgGrantedItemVOs!=null)
         msgReturn.setData(orgGrantedItemVOs.getContent(),MsgPageInfo.loadFromPageable(orgGrantedItemVOs));

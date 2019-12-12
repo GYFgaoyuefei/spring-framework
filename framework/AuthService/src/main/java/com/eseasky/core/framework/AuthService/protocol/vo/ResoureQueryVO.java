@@ -1,6 +1,7 @@
 package com.eseasky.core.framework.AuthService.protocol.vo;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.List;
 
 import lombok.Data;
@@ -31,4 +32,10 @@ public class ResoureQueryVO implements Serializable {
     private Long grantId;
     
     private Long groupItemId;
+    
+    private String createUser;
+    
+    private String user;
+    
+    private Timestamp createTime;
 }
