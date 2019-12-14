@@ -19,7 +19,7 @@ public class DomainUserDetailsService implements UserService {
 
     @Autowired
     private ServUserInfoService	servUserInfoService;    // 账户数据操作接口
-
+    
 	@Override
 	public UserViews getUserByName(String name) {
 		// TODO Auto-generated method stub
@@ -32,6 +32,19 @@ public class DomainUserDetailsService implements UserService {
 				userViews.setPassword(account.getPassWord());
 				return userViews;
 			}
+		}
+		return null;
+	}
+
+	@Override
+	public UserViews getUserBySms(String phone, String code) {
+		// TODO Auto-generated method stub
+		ServUserInfo account = servUserInfoService.loginByCode(phone, code);
+		if (account != null) {
+			UserViews userViews = new UserViews();
+			userViews.setId(account.getId());
+			userViews.setName(account.getUserName());
+			return userViews;
 		}
 		return null;
 	}

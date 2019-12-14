@@ -25,4 +25,6 @@ public interface ServUserInfoRepository  extends PagingAndSortingRepository<Serv
 
     @Override
     Page<ServUserInfo> findAll(Pageable pageable);
+    
+    Optional<ServUserInfo> findByMobile(String phone);
 }

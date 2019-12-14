@@ -16,10 +16,14 @@ spring:
    data:
    - classpath:schema/data.sql
   application:
-    name: AuthService
+    name: AuthServiceTest
   profiles:
     active: "@profileActive@"
   jpa:
+    properties:
+      hibernate:
+        session_factory:
+          statement_inspector: com.eseasky.core.starters.auth.organize.OrgInspectorHandler
     hibernate:
       ddl-auto: update
     show-sql: false

@@ -1,20 +1,22 @@
 package com.eseasky.core.framework.AuthService.module.model;
 
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.Table;
-
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import lombok.Data;
 
 @Entity
 @Data
-@EntityListeners(AuditingEntityListener.class)
-@Table(name = "serv_user_info")
+@Table(name = "serv_user_info", indexes = {
+		@Index(name="serv_user_info_index_userName", columnList = "userName", unique = true),
+		@Index(name="serv_user_info_index_mobile", columnList = "mobile", unique = true),
+		@Index(name="serv_user_info_index_orgCode", columnList = "orgCode"),
+		@Index(name="serv_user_info_index_nikeName", columnList = "nikeName"),
+})
 public class ServUserInfo {
 
     @Id

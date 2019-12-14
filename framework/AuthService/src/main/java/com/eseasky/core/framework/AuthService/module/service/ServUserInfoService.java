@@ -13,6 +13,12 @@ import com.eseasky.core.framework.AuthService.protocol.vo.ServUserInfoVO;
 public interface ServUserInfoService {
 	ServUserInfo findByUserName(String userName);
 	
+	ServUserInfo findByPhone(String phone);
+	
+	ServUserInfo loginByCode(String phone, String code);
+	
+	void smsLoginCodeSend(String phone);
+	
 	ServUserInfoVO addUserInfo(ServUserInfoDTO servUserInfoDTO);
 
 	Page<ServUserInfo> queryUserInfo(ServUserInfoDTO servUserInfoDTO);

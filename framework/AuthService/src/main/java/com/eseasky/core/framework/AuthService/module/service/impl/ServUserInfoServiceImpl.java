@@ -12,6 +12,7 @@ import javax.persistence.criteria.Root;
 import com.eseasky.core.framework.AuthService.exception.BusiException.BusiEnum;
 import com.eseasky.core.framework.AuthService.exception.BusiException.BusiException;
 import com.eseasky.core.framework.AuthService.module.model.AuthAccessToken;
+import com.eseasky.core.framework.AuthService.module.model.ServLoginCode;
 import com.google.common.base.Strings;
 
 import org.springframework.beans.BeanUtils;
@@ -27,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.eseasky.core.framework.AuthService.module.model.ServUserInfo;
 import com.eseasky.core.framework.AuthService.module.repository.AuthAccessTokenRepository;
+import com.eseasky.core.framework.AuthService.module.repository.LoginCodeRepository;
 import com.eseasky.core.framework.AuthService.module.repository.ServUserInfoRepository;
 import com.eseasky.core.framework.AuthService.module.service.GrantService;
 import com.eseasky.core.framework.AuthService.module.service.OrgService;
@@ -46,6 +48,10 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 	private ServUserInfoRepository servUserInfoRepository;
 	@Autowired
 	private AuthAccessTokenRepository authAccessTokenRepository;
+	
+	@Autowired
+	private LoginCodeRepository loginCodeRepository;
+	
 	@Autowired
 	private OrgService orgService;
 
@@ -354,5 +360,36 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 		}
 		return orgUserGranteds;
 
+	}
+
+	@Override
+	public ServUserInfo findByPhone(String phone) {
+		// TODO Auto-generated method stub
+		Optional<ServUserInfo> info = servUserInfoRepository.findByMobile(phone);
+		if (info.isPresent()) {
+			return info.get();
+		}
+		return null;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public ServUserInfo loginByCode(String phone, String code) {
+		// TODO Auto-generated method stub
+		ServLoginCode record = loginCodeRepository.findByPhone(phone);
+		if (record != null && record.getCode().equals(code)) {
+			loginCodeRepository.deleteById(record.getId());
+			return findByPhone(phone);
+		}
+		return null;
+	}
+
+	@Override
+	public void smsLoginCodeSend(String phone) {
+		// TODO Auto-generated method stub
+		Optional<ServUserInfo> user = servUserInfoRepository.findByMobile(phone);
+		if (user.isPresent()) {
+			// 生成code发送短信
+		}
 	}
 }
