@@ -11,15 +11,18 @@ import com.eseasky.business.mnet.PictureServer.module.model.FileResourceInfo;
 @Service
 public interface PictureResourceService {
 
-	public FileResourceInfo uploadSingle(String resourceType,  MultipartFile file, String organization);
+	public FileResourceInfo uploadSingle(String resourceType,  MultipartFile file, String organization, String published);
 
 	public void getPictureResourceByFilename(String fileName, HttpServletResponse response);
 
 	public void getPictureResourceByFileId(String fileId, HttpServletResponse response);
 	
+
+	public void noLoginAccessByFileId(String fileId, HttpServletResponse response);
+	
 	public NewFileResourceInfo getMultipartFileByFileId(String fileId);
 
-	public FileResourceInfo uploadByfileId(String fileId, String resourceType, MultipartFile file, String organization);
+	public FileResourceInfo uploadByfileId(String fileId, String resourceType, MultipartFile file, String organization, String published);
 
 	public FileResourceInfo getPictureInfoByfileId(String fileId);
 

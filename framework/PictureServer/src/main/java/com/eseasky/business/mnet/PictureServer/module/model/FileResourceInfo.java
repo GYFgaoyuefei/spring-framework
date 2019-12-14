@@ -53,6 +53,8 @@ public class FileResourceInfo implements Serializable{
 	@ApiModelProperty(value="资源路径")
 	private String resourcePath;
 	
+	private String published = "N";
+	
 	@ApiModelProperty(value="组织编码")
 	private String organization;
 	

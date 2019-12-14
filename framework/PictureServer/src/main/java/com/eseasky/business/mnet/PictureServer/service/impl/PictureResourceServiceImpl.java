@@ -7,32 +7,26 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigInteger;
-import java.net.URL;
 import java.security.MessageDigest;
 import java.util.HashMap;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletResponse;
 
-import com.alibaba.fastjson.JSON;
-import com.eseasky.protocol.picture.entity.VO.NewFileResourceInfo;
-import org.apache.catalina.webresources.FileResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.eseasky.business.mnet.PictureServer.module.model.FileResourceInfo;
 import com.eseasky.business.mnet.PictureServer.module.repository.PictureResourceRepository;
 import com.eseasky.business.mnet.PictureServer.service.PictureResourceService;
 import com.eseasky.core.starters.system.exception.errors.BaseHandlerException;
+import com.eseasky.protocol.picture.entity.VO.NewFileResourceInfo;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -47,7 +41,7 @@ public class PictureResourceServiceImpl implements PictureResourceService {
     private String savaPath;
 
     @Override
-    public FileResourceInfo uploadSingle(String resourceType, MultipartFile file, String organization) {
+    public FileResourceInfo uploadSingle(String resourceType, MultipartFile file, String organization, String published) {
         InputStream in = null;
         FileOutputStream out = null;
         try {
@@ -90,6 +84,7 @@ public class PictureResourceServiceImpl implements PictureResourceService {
             pictureResource.setResourceType(resourceType);
             pictureResource.setResourcePath(savaPath);
             pictureResource.setOrganization(organization);
+            pictureResource.setPublished(published);
             return pictureResourceRepository.save(pictureResource);
         } catch (Exception e) {
             e.printStackTrace();
@@ -182,7 +177,7 @@ public class PictureResourceServiceImpl implements PictureResourceService {
     }
 
     @Override
-    public FileResourceInfo uploadByfileId(String fileId, String resourceType, MultipartFile file, String organization) {
+    public FileResourceInfo uploadByfileId(String fileId, String resourceType, MultipartFile file, String organization, String published) {
         InputStream in = null;
         FileOutputStream out = null;
         try {
@@ -230,6 +225,7 @@ public class PictureResourceServiceImpl implements PictureResourceService {
             pictureResource.setResourceType(resourceType);
             pictureResource.setResourcePath(savaPath);
             pictureResource.setOrganization(organization);
+            pictureResource.setPublished(published);
             return pictureResourceRepository.save(pictureResource);
         } catch (Exception e) {
             e.printStackTrace();
@@ -311,6 +307,21 @@ public class PictureResourceServiceImpl implements PictureResourceService {
         return null;
 
     }
+
+	@Override
+	public void noLoginAccessByFileId(String fileId, HttpServletResponse response) {
+		// TODO Auto-generated method stub
+		FileResourceInfo pictureResource = pictureResourceRepository.findByFileId(fileId);
+        if (pictureResource != null && pictureResource.getFileName() != null && !"".equals(pictureResource.getFileName())) {
+        	if ("Y".equals(pictureResource.getPublished())) {
+        		getPictureResourceByFilename(pictureResource.getFileName(), response);
+        	} else {
+        		throw new BaseHandlerException(501, "没有权限访问");
+        	}
+        } else {
+            throw new BaseHandlerException(500, fileId + " not exists");
+        }
+	}
 
 
 }

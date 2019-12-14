@@ -25,11 +25,11 @@ public class PictureServerController {
 
 
     @PostMapping(value = "/uploadSingle")
-    public ResultModel<PictureInfoVO> uploadSingle(@RequestParam String resourceType, @RequestParam String organization, @RequestPart MultipartFile file) {
+    public ResultModel<PictureInfoVO> uploadSingle(@RequestParam String resourceType, @RequestParam String published, @RequestParam String organization, @RequestPart MultipartFile file) {
         ResultModel<PictureInfoVO> msgReturn = new ResultModel<>();
         try {
             log.info("请求参数[resourceType={}, organization={}]", resourceType, organization);
-            FileResourceInfo uploadSingle = pictureResourceService.uploadSingle(resourceType, file, organization);
+            FileResourceInfo uploadSingle = pictureResourceService.uploadSingle(resourceType, file, organization, published);
             if (uploadSingle != null) {
                 log.info("响应参数[{}]", JSON.toJSONString(uploadSingle));
                 PictureInfoVO pictureInfoVO = JSON.parseObject(JSON.toJSONString(uploadSingle), PictureInfoVO.class, Feature.OrderedField);
@@ -48,6 +48,16 @@ public class PictureServerController {
 
     @GetMapping(value = "/getImagesByFileId")
     public void getImagesByFileId(@RequestParam String fileId, HttpServletResponse response) {
+        try {
+            log.info("请求参数[{}]", JSON.toJSONString(fileId));
+            pictureResourceService.getPictureResourceByFileId(fileId, response);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    @GetMapping(value = "/access/image/{fileId}")
+    public void accessImage(@PathVariable String fileId, HttpServletResponse response) {
         try {
             log.info("请求参数[{}]", JSON.toJSONString(fileId));
             pictureResourceService.getPictureResourceByFileId(fileId, response);
@@ -91,12 +101,13 @@ public class PictureServerController {
 
     @PostMapping(value = "/uploadByfileId")
     public ResultModel<PictureInfoVO> uploadByfileId(
+    		@RequestParam String published,
             @RequestParam String fileId, @RequestParam String resourceType,
             @RequestParam String organization, @RequestParam MultipartFile file) {
         ResultModel<PictureInfoVO> msgReturn = new ResultModel<>();
         try {
             log.info("请求参数[fileId={}, resourceType={}, organization={}]", fileId, resourceType, organization);
-            FileResourceInfo uploadSingle = pictureResourceService.uploadByfileId(fileId, resourceType, file, organization);
+            FileResourceInfo uploadSingle = pictureResourceService.uploadByfileId(fileId, resourceType, file, organization, published);
             log.info("响应参数[{}]", JSON.toJSONString(uploadSingle));
             if (uploadSingle != null) {
                 PictureInfoVO pictureInfoVO = JSON.parseObject(JSON.toJSONString(uploadSingle), PictureInfoVO.class, Feature.OrderedField);
@@ -114,7 +125,6 @@ public class PictureServerController {
     }
 
     @PostMapping(value = "/getPictureInfoByfileId")
-
     public ResultModel<PictureInfoVO> getPictureInfoByfileId(@Param("fileId") String fileId) {
         ResultModel<PictureInfoVO> msgReturn = new ResultModel<>();
         try {
