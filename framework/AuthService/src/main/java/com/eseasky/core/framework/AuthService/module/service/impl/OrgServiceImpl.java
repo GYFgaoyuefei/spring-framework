@@ -143,7 +143,10 @@ public class OrgServiceImpl implements OrgService {
 			orgSaveVO.setLevel(level);
 			int length = 0;
 			for (int i = 0; i < level; i++) {
-				length = length + SequeceHelper.SEQUECE_LEVEL_LENGTH[i];
+				if(i>=SequeceHelper.SEQUECE_LEVEL_LENGTH.length)
+					length=length+3;
+				else
+					length = length + SequeceHelper.SEQUECE_LEVEL_LENGTH[i];
 				OrganizeQuery organizeQuery = new OrganizeQuery();
 				organizeQuery.setOrgCode(orgCode.substring(0, length));
 				Page<OrganizeDefined> organizeDefineds = iOrganizeService.queryOrganize(organizeQuery);
