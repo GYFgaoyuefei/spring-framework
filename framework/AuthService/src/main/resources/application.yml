@@ -16,7 +16,7 @@ spring:
    data:
    - classpath:schema/data.sql
   application:
-    name: AuthServiceTest
+    name: AuthService
   profiles:
     active: "@profileActive@"
   jpa:
