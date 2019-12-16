@@ -18,6 +18,7 @@ public class OrgQueryDTO implements Serializable {
     @NotNull(
             message = "组织id不能为空"
         )
+    //这个非空校验是为了在禁用组织接口复用这个dto
     private Long id;
     
     private String orgCode;

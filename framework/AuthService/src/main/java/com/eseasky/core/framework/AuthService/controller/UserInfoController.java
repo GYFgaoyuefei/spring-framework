@@ -98,6 +98,20 @@ public class UserInfoController {
         msgReturn.setData(servUserInfoVO);
         return msgReturn;
     }
+    
+    @ApiOperation(value = "查看用户", httpMethod = "POST")
+    @PostMapping(value = "/getUserInfoByUserName")
+    public ResultModel<ServUserInfoVO> getUserInfoByUserName(@RequestBody ServUserInfoDTO servUserInfoDTO) {
+        ResultModel<ServUserInfoVO> msgReturn = new ResultModel<>();
+        ServUserInfoVO servUserInfoVO=null;
+        ServUserInfo servUserInfo  = servUserInfoService.findByUserName(servUserInfoDTO.getUserName());
+        if(servUserInfo!=null) {
+        	servUserInfoVO=new ServUserInfoVO();
+        	BeanUtils.copyProperties(servUserInfo, servUserInfoVO);
+        }        	
+        msgReturn.setData(servUserInfoVO);
+        return msgReturn;
+    }
 
     @Transactional
     @ApiOperation(value = "强制下线", httpMethod = "POST")

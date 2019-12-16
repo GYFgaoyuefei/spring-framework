@@ -23,6 +23,7 @@ public class OrgUpdateDTO implements Serializable {
     @NotNull(
             message = "组织级别不能为空"
         )
+    //level非空校验是为了方便进行组织名称查重
     private Integer level;
     
     private String parentOrgCode;

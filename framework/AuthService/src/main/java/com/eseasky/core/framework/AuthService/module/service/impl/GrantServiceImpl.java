@@ -81,6 +81,7 @@ public class GrantServiceImpl implements GrantService {
 				orgGrantedUpdateInfo.setOrgCode(orgGrantInfoDTO.getOrgCode());
 				orgGrantedUpdateInfo.setAction(BinOrListUtil.transToInt(orgGrantInfoDTO.getAction()));
 				orgGrantedUpdateInfo.setId(orgGrantInfoDTO.getGrantId());
+				orgGrantedUpdateInfo.setUpdateUser(orgGrantInfoDTO.getCreateUser());
 //				if(orgGrantedUpdateInfo.getAction()==null || orgGrantedUpdateInfo.getAction()==0 ||)
 				orgUserGranted = iOrganizeService.updateGranted(orgGrantedUpdateInfo);
 			} else {
@@ -185,7 +186,7 @@ public class GrantServiceImpl implements GrantService {
 	}
 
 	@Override
-//	@Transactional(rollbackFor = Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public List<OrgGrantInfoVO> grant(OrgGrantInfosDTO orgGrantInfoDTOs) {
 		// TODO Auto-generated method stub
 		List<OrgGrantInfoVO> orgGrantInfoVOs = null;
