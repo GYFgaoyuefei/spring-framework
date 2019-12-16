@@ -52,7 +52,7 @@ public class UserInfoController {
         Page<ServUserInfo> page = servUserInfoService.queryUserInfo(servUserInfoDTO);
         List<ServUserInfoVO> list = page.stream().map(item -> {
             ServUserInfoVO servUserInfoVO = new ServUserInfoVO();
-            BeanUtils.copyProperties(item, servUserInfoVO);
+            BeanUtils.copyProperties(item, servUserInfoVO,"passWord");
             return servUserInfoVO;
         }).collect(Collectors.toList());
 
@@ -107,7 +107,7 @@ public class UserInfoController {
         ServUserInfo servUserInfo  = servUserInfoService.findByUserName(servUserInfoDTO.getUserName());
         if(servUserInfo!=null) {
         	servUserInfoVO=new ServUserInfoVO();
-        	BeanUtils.copyProperties(servUserInfo, servUserInfoVO);
+        	BeanUtils.copyProperties(servUserInfo, servUserInfoVO,"passWord");
         }        	
         msgReturn.setData(servUserInfoVO);
         return msgReturn;
