@@ -150,7 +150,7 @@ public class OrgServiceImpl implements OrgService {
 				OrganizeQuery organizeQuery = new OrganizeQuery();
 				organizeQuery.setOrgCode(orgCode.substring(0, length));
 				Page<OrganizeDefined> organizeDefineds = iOrganizeService.queryOrganize(organizeQuery);
-				if (organizeDefineds != null && organizeDefineds.getContent() != null) {
+				if (organizeDefineds != null && organizeDefineds.getContent() != null && organizeDefineds.getContent().size() >0) {
 					String orgName = orgSaveVO.getName() == null ? organizeDefineds.getContent().get(0).getName()
 							: orgSaveVO.getName() + ">" + organizeDefineds.getContent().get(0).getName();
 					orgSaveVO.setName(orgName);
@@ -210,7 +210,8 @@ public class OrgServiceImpl implements OrgService {
 		OrgSaveVO orgSaveVO = null;
 		if (orgSaveDTO != null) {
 			OrganizeQuery organizeQuery = new OrganizeQuery();
-			BeanUtils.copyProperties(orgSaveDTO, organizeQuery);	
+			BeanUtils.copyProperties(orgSaveDTO, organizeQuery);
+			organizeQuery.setParentCode(orgSaveDTO.getParentOrgCode());;
 			if(Strings.isNullOrEmpty(orgSaveDTO.getParentOrgCode())&&orgSaveDTO.getLevel()==null)
 				organizeQuery.setLevel(1);
 			organizeQuery.setPageSize(50);

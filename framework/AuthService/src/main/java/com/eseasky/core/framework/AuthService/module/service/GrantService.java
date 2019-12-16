@@ -11,6 +11,7 @@ import com.eseasky.core.framework.AuthService.protocol.dto.OrgGrantInfosDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgQueryGrantDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgUpdateGrantDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.ResoureQueryDTO;
+import com.eseasky.core.framework.AuthService.protocol.vo.GrantInfoVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.OrgGrantInfoVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.OrgGrantedItemVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.ResoureQueryVO;
@@ -21,7 +22,7 @@ public interface GrantService {
 	Page<ResoureQueryVO> queryResoureItem(ResoureQueryDTO resoureQueryDTO);
 
 	
-	OrgGrantInfoVO grant(@Valid OrgGrantInfoDTO orgGrantInfoDTO);
+	GrantInfoVO grant(@Valid OrgGrantInfoDTO orgGrantInfoDTO);
 
 	OrgGrantInfoVO updateGrant(OrgUpdateGrantDTO orgUpdateGrantDTO);
 
@@ -31,7 +32,7 @@ public interface GrantService {
 
 	OrgGrantInfoVO deleteGrant(OrgUpdateGrantDTO orgUpdateGrantDTO);
 
-	List<OrgGrantInfoVO> grant(OrgGrantInfosDTO orgGrantInfoDTOs);
+	List<GrantInfoVO> grant(OrgGrantInfosDTO orgGrantInfoDTOs);
 
 	void deleteByUser(String userName);
 

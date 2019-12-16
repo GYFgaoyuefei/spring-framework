@@ -18,6 +18,10 @@ public class OrgGrantInfoDTO implements Serializable {
     @NotEmpty(message = "orgCode不能为空")
     private String orgCode;
     
+    private String orgName;
+    
+    private String resourceName;
+    
     private Set<String> action;
     
     @NotNull(message = "resId不能为空")

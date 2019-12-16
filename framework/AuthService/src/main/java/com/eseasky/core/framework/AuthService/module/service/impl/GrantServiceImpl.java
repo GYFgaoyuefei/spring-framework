@@ -18,10 +18,12 @@ import com.eseasky.core.framework.AuthService.protocol.dto.OrgGrantInfosDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgQueryGrantDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgUpdateGrantDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.ResoureQueryDTO;
+import com.eseasky.core.framework.AuthService.protocol.vo.GrantInfoVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.OrgGrantInfoVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.OrgGrantedItemVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.ResoureQueryVO;
 import com.eseasky.core.framework.AuthService.utils.BinOrListUtil;
+import com.eseasky.core.starters.organization.exception.OrgPersistenceException;
 import com.eseasky.core.starters.organization.persistence.IOrganizeService;
 import com.eseasky.core.starters.organization.persistence.entity.OrgGrantInfo;
 import com.eseasky.core.starters.organization.persistence.entity.OrgGrantedItem;
@@ -70,12 +72,13 @@ public class GrantServiceImpl implements GrantService {
 	}
 
 	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public OrgGrantInfoVO grant(OrgGrantInfoDTO orgGrantInfoDTO) {
+//	@Transactional(rollbackFor = Exception.class)
+	public GrantInfoVO grant(OrgGrantInfoDTO orgGrantInfoDTO) {
 		// TODO Auto-generated method stub
-		OrgGrantInfoVO orgGrantInfoVO = null;
+		GrantInfoVO orgGrantInfoVO = null;
 		if (orgGrantInfoDTO != null) {
 			OrgUserGranted orgUserGranted = null;
+			try {
 			if (orgGrantInfoDTO.getGrantId() != null) {
 				OrgGrantedUpdateInfo orgGrantedUpdateInfo = new OrgGrantedUpdateInfo();
 				orgGrantedUpdateInfo.setOrgCode(orgGrantInfoDTO.getOrgCode());
@@ -90,10 +93,20 @@ public class GrantServiceImpl implements GrantService {
 				orgGrantInfo.setAction(BinOrListUtil.transToInt(orgGrantInfoDTO.getAction()));
 				if(orgGrantInfo.getAction()!=null && orgGrantInfo.getAction()!=0)
 				orgUserGranted = iOrganizeService.grant(orgGrantInfo);
+			}}catch(OrgPersistenceException orgPersistenceException) {
+				if(orgPersistenceException.getCode()==500001) {
+					orgGrantInfoVO = new GrantInfoVO();
+					BeanUtils.copyProperties(orgGrantInfoDTO, orgGrantInfoVO);
+					orgGrantInfoVO.setMessage(orgPersistenceException.getMessage());
+					return orgGrantInfoVO;
+				}				
+				else
+					throw orgPersistenceException;
 			}			
 			if (orgUserGranted != null) {
-				orgGrantInfoVO = new OrgGrantInfoVO();
-				BeanUtils.copyProperties(orgUserGranted, orgGrantInfoVO);
+				orgGrantInfoVO = new GrantInfoVO();
+				BeanUtils.copyProperties(orgGrantInfoDTO, orgGrantInfoVO);
+				orgGrantInfoVO.setMessage("授权成功");
 			}
 		}
 		return orgGrantInfoVO;
@@ -186,14 +199,14 @@ public class GrantServiceImpl implements GrantService {
 	}
 
 	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public List<OrgGrantInfoVO> grant(OrgGrantInfosDTO orgGrantInfoDTOs) {
+//	@Transactional(rollbackFor = Exception.class)
+	public List<GrantInfoVO> grant(OrgGrantInfosDTO orgGrantInfoDTOs) {
 		// TODO Auto-generated method stub
-		List<OrgGrantInfoVO> orgGrantInfoVOs = null;
+		List<GrantInfoVO> orgGrantInfoVOs = null;
 		if (orgGrantInfoDTOs != null && orgGrantInfoDTOs.getOrgGrantInfoDTOs() != null) {
-			orgGrantInfoVOs = new ArrayList<OrgGrantInfoVO>();
+			orgGrantInfoVOs = new ArrayList<GrantInfoVO>();
 			for (OrgGrantInfoDTO orgGrantInfoDTO : orgGrantInfoDTOs.getOrgGrantInfoDTOs()) {
-				OrgGrantInfoVO orgGrantInfoVO = grant(orgGrantInfoDTO);
+				GrantInfoVO orgGrantInfoVO = grant(orgGrantInfoDTO);
 				if (orgGrantInfoVO != null)
 					orgGrantInfoVOs.add(orgGrantInfoVO);
 			}

@@ -19,6 +19,7 @@ import com.eseasky.core.framework.AuthService.protocol.dto.OrgGrantInfosDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgQueryGrantDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgUpdateGrantDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.ResoureQueryDTO;
+import com.eseasky.core.framework.AuthService.protocol.vo.GrantInfoVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.OrgGrantInfoVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.OrgGrantedItemVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.ResoureQueryVO;
@@ -52,10 +53,10 @@ public class GrantController {
 	
 	@ApiOperation(value = "授权", httpMethod = "POST")
     @PostMapping(value = "/grant")
-    public ResultModel<OrgGrantInfoVO> grant(@RequestBody @Validated OrgGrantInfoDTO orgGrantInfoDTO) {
+    public ResultModel<GrantInfoVO> grant(@RequestBody @Validated OrgGrantInfoDTO orgGrantInfoDTO) {
 
-        ResultModel<OrgGrantInfoVO> msgReturn = new ResultModel<OrgGrantInfoVO>();
-        OrgGrantInfoVO orgGrantInfoVO = roleService.grant(orgGrantInfoDTO);
+        ResultModel<GrantInfoVO> msgReturn = new ResultModel<GrantInfoVO>();
+        GrantInfoVO orgGrantInfoVO = roleService.grant(orgGrantInfoDTO);
         log.info(JSONObject.toJSONString(orgGrantInfoVO));
         msgReturn.setData(orgGrantInfoVO);
         return msgReturn;
@@ -63,9 +64,9 @@ public class GrantController {
 	
 	@ApiOperation(value = "授权", httpMethod = "POST")
     @PostMapping(value = "/grantMore")
-    public ResultModel<List<OrgGrantInfoVO>> grant(@Valid @RequestBody OrgGrantInfosDTO orgGrantInfoDTOs) {
-        ResultModel<List<OrgGrantInfoVO>> msgReturn = new ResultModel<List<OrgGrantInfoVO>>();
-        List<OrgGrantInfoVO> orgGrantInfoVOs = roleService.grant(orgGrantInfoDTOs);
+    public ResultModel<List<GrantInfoVO>> grant(@Valid @RequestBody OrgGrantInfosDTO orgGrantInfoDTOs) {
+        ResultModel<List<GrantInfoVO>> msgReturn = new ResultModel<List<GrantInfoVO>>();
+        List<GrantInfoVO> orgGrantInfoVOs = roleService.grant(orgGrantInfoDTOs);
         log.info(JSONObject.toJSONString(orgGrantInfoVOs));
         msgReturn.setData(orgGrantInfoVOs);
         return msgReturn;
