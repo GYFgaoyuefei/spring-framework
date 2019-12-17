@@ -60,11 +60,11 @@ public class OrgServiceImpl implements OrgService {
 	public OrgSaveVO saveOrg(OrgSaveDTO orgSaveDTO) {
 		OrgSaveVO orgSaveVO = null;
 		if (orgSaveDTO != null) {
-			if (orgSaveDTO.getLevel() != 3) {
+//			if (orgSaveDTO.getLevel() != 3) {
 				orgSaveVO = checkOrgName(orgSaveDTO);
 				if (orgSaveVO != null && orgSaveVO.getId() != null)
 					throw new BusiException(BusiEnum.ORGNAME_REPEATABLE);
-			}
+//			}
 			OrgInsertInfo orgInsertInfo = new OrgInsertInfo();
 			BeanUtils.copyProperties(orgSaveDTO, orgInsertInfo);
 			OrganizeDefined organizeDefined = iOrganizeService.addOrganize(orgInsertInfo);
