@@ -171,7 +171,7 @@ public class OrgServiceImpl implements OrgService {
 		if (firOrgVOs != null && firOrgVOs.getContent() != null) {
 			mulOrgsVOs = firOrgVOs.stream().map(item -> {
 				boolean isFir=false;
-				if(Strings.isNullOrEmpty(keyWords)||keyWords.equals(item.getNote())||keyWords.equals(item.getName()))
+				if(Strings.isNullOrEmpty(keyWords)||item.getNote().contains(keyWords)||item.getName().contains(keyWords))
 					isFir=true;
 				List<OrgQueryVO> organizeDefineds = null;
 				int page = 0;
