@@ -2,7 +2,7 @@ server:
   port: 9708
 
 
-logging: 
+logging:
   config: classpath:log4j2.yml   # 配置log4j2读取的配置文件
   file: ../springlogs/gateway.log
 
@@ -93,7 +93,7 @@ spring:
       - id: HWBusinessService
         uri: ${remote.server.baseUrl}
         predicates:
-        - Path=/HWService/** 
+        - Path=/HWService/**
         filters:
         - StripPrefix=1 # 表示在转发时去掉/HWService
       - id: LoggerService
@@ -116,6 +116,14 @@ spring:
         uri: lb://QUICKAPPSERVICE
         predicates:
         - Path=/QuickappService/**
+      - id: WorkFlowService
+        uri: lb://WorkFlowService
+        predicates:
+        - Path=/WorkFlowService/**
+      - id: ECService
+        uri: lb://ECService
+        predicates:
+        - Path=/ECService/**
 
 eureka:
   client:
@@ -124,7 +132,7 @@ eureka:
     serviceUrl:
       defaultZone: http://${eurekaserver.ip}:${eurekaserver.port}/eureka #注册中心
   instance:
-    lease-expiration-duration-in-seconds: 30 
+    lease-expiration-duration-in-seconds: 30
     lease-renewal-interval-in-seconds: 10
     prefer-ip-address: true
     hostname: Gateway
