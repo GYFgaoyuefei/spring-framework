@@ -91,10 +91,10 @@ public class OrgController {
 	
 	@ApiOperation(value = "打开组织", httpMethod = "POST")
 	@PostMapping(value = "/queryMulOrgs")
-	public ResultModel<List<MulOrgsVO>>queryMulOrgs(@RequestBody OrgUpdateDTO orgUpdateDTO) {
+	public ResultModel<List<MulOrgsVO>>queryMulOrgs(@RequestBody OrgQueryDTO orgQueryDTO) {
 
 		ResultModel<List<MulOrgsVO>> msgReturn = new ResultModel<List<MulOrgsVO>>();
-		List<MulOrgsVO> mulOrgsVOs = orgService.queryMulOrgs();
+		List<MulOrgsVO> mulOrgsVOs = orgService.queryMulOrgs(orgQueryDTO);
 		log.info(JSONObject.toJSONString(mulOrgsVOs));
 		msgReturn.setData(mulOrgsVOs);
 		return msgReturn;

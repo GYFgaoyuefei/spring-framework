@@ -23,6 +23,7 @@ import com.eseasky.core.framework.AuthService.protocol.vo.OrgGrantInfoVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.OrgGrantedItemVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.ResoureQueryVO;
 import com.eseasky.core.framework.AuthService.utils.BinOrListUtil;
+import com.eseasky.core.starters.organization.exception.OrgLogicException;
 import com.eseasky.core.starters.organization.exception.OrgPersistenceException;
 import com.eseasky.core.starters.organization.persistence.IOrganizeService;
 import com.eseasky.core.starters.organization.persistence.entity.OrgGrantInfo;
@@ -94,7 +95,7 @@ public class GrantServiceImpl implements GrantService {
 				if(orgGrantInfo.getAction()!=null && orgGrantInfo.getAction()!=0)
 				orgUserGranted = iOrganizeService.grant(orgGrantInfo);
 			}}catch(OrgPersistenceException orgPersistenceException) {
-				if(orgPersistenceException.getCode()==500001) {
+				if(orgPersistenceException.getCode()==OrgLogicException.DUPLICATE_GRANTED) {
 					orgGrantInfoVO = new GrantInfoVO();
 					BeanUtils.copyProperties(orgGrantInfoDTO, orgGrantInfoVO);
 					orgGrantInfoVO.setMessage(orgPersistenceException.getMessage());
@@ -199,7 +200,7 @@ public class GrantServiceImpl implements GrantService {
 	}
 
 	@Override
-//	@Transactional(rollbackFor = Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public List<GrantInfoVO> grant(OrgGrantInfosDTO orgGrantInfoDTOs) {
 		// TODO Auto-generated method stub
 		List<GrantInfoVO> orgGrantInfoVOs = null;

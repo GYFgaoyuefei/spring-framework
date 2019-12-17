@@ -1,9 +1,6 @@
 package com.eseasky.core.framework.AuthService.module.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
@@ -63,9 +60,9 @@ public class OrgServiceImpl implements OrgService {
 	public OrgSaveVO saveOrg(OrgSaveDTO orgSaveDTO) {
 		OrgSaveVO orgSaveVO = null;
 		if (orgSaveDTO != null) {
-			if(orgSaveDTO.getLevel()!=3) {
-				orgSaveVO=checkOrgName(orgSaveDTO);
-				if(orgSaveVO!=null && orgSaveVO.getId()!=null)
+			if (orgSaveDTO.getLevel() != 3) {
+				orgSaveVO = checkOrgName(orgSaveDTO);
+				if (orgSaveVO != null && orgSaveVO.getId() != null)
 					throw new BusiException(BusiEnum.ORGNAME_REPEATABLE);
 			}
 			OrgInsertInfo orgInsertInfo = new OrgInsertInfo();
@@ -85,11 +82,11 @@ public class OrgServiceImpl implements OrgService {
 		// TODO Auto-generated method stub
 		OrgSaveVO orgSaveVO = null;
 		if (orgUpdateDTO != null) {
-			if(orgUpdateDTO.getName()!=null && orgUpdateDTO.getLevel()!=null && orgUpdateDTO.getLevel()!=3) {
-				OrgSaveDTO orgSaveDTO=new OrgSaveDTO ();
+			if (orgUpdateDTO.getName() != null && orgUpdateDTO.getLevel() != null && orgUpdateDTO.getLevel() != 3) {
+				OrgSaveDTO orgSaveDTO = new OrgSaveDTO();
 				BeanUtils.copyProperties(orgUpdateDTO, orgSaveDTO);
-				orgSaveVO=checkOrgName(orgSaveDTO);
-				if(orgSaveVO!=null && orgSaveVO.getId()!=null && orgUpdateDTO.getId()!=orgSaveVO.getId())
+				orgSaveVO = checkOrgName(orgSaveDTO);
+				if (orgSaveVO != null && orgSaveVO.getId() != null && orgUpdateDTO.getId() != orgSaveVO.getId())
 					throw new BusiException(BusiEnum.ORGNAME_REPEATABLE);
 			}
 			OrganizeUpdateInfo orgInsertInfo = new OrganizeUpdateInfo();
@@ -143,14 +140,15 @@ public class OrgServiceImpl implements OrgService {
 			orgSaveVO.setLevel(level);
 			int length = 0;
 			for (int i = 0; i < level; i++) {
-				if(i>=SequeceHelper.SEQUECE_LEVEL_LENGTH.length)
-					length=length+3;
+				if (i >= SequeceHelper.SEQUECE_LEVEL_LENGTH.length)
+					length = length + 3;
 				else
 					length = length + SequeceHelper.SEQUECE_LEVEL_LENGTH[i];
 				OrganizeQuery organizeQuery = new OrganizeQuery();
 				organizeQuery.setOrgCode(orgCode.substring(0, length));
 				Page<OrganizeDefined> organizeDefineds = iOrganizeService.queryOrganize(organizeQuery);
-				if (organizeDefineds != null && organizeDefineds.getContent() != null && organizeDefineds.getContent().size() >0) {
+				if (organizeDefineds != null && organizeDefineds.getContent() != null
+						&& organizeDefineds.getContent().size() > 0) {
 					String orgName = orgSaveVO.getName() == null ? organizeDefineds.getContent().get(0).getName()
 							: orgSaveVO.getName() + ">" + organizeDefineds.getContent().get(0).getName();
 					orgSaveVO.setName(orgName);
@@ -161,71 +159,84 @@ public class OrgServiceImpl implements OrgService {
 	}
 
 	@Override
-	public List<MulOrgsVO> queryMulOrgs() {
+	public List<MulOrgsVO> queryMulOrgs(OrgQueryDTO orgQueryDTO) {
 		// TODO Auto-generated method stub
-		List<MulOrgsVO> mulOrgsVOs=null;
-		List<OrgQueryVO> organizeDefineds = null;
-		int page = 0;
-		while (true) {
-			OrgQueryDTO orgQueryDTO=new OrgQueryDTO();
-			orgQueryDTO.setLevel(2);
-			orgQueryDTO.setPage(page);
-			orgQueryDTO.setSize(50);
-			Page<OrgQueryVO> orgQueryVOs = queryOrg(orgQueryDTO);
-			if (orgQueryVOs == null || orgQueryVOs.getContent() == null
-					|| orgQueryVOs.getContent().size() == 0)
-				break;
-			if (organizeDefineds == null)
-				organizeDefineds = orgQueryVOs.getContent();
-			else
-				organizeDefineds.addAll(orgQueryVOs.getContent());
-			page++;
-		}
-		if(organizeDefineds!=null) {
-			Map<String, List<OrgQueryVO>> mapOrgsVO=organizeDefineds.stream().collect(Collectors.groupingBy(OrgQueryVO::getParentOrgCode));
-			if(mapOrgsVO!=null) {
-				MulOrgsVO mulOrgsVO=null;
-				for(Entry<String, List<OrgQueryVO>> entry:mapOrgsVO.entrySet()) {
-					OrgQueryDTO orgQueryDTO=new OrgQueryDTO();
-					orgQueryDTO.setLevel(1);
-					orgQueryDTO.setOrgCode(entry.getKey());
-					Page<OrgQueryVO> orgQueryVOs = queryOrg(orgQueryDTO);
-					if(orgQueryVOs!=null && orgQueryVOs.getNumberOfElements()>0) {
-						OrgQueryVO levelFirOrg=orgQueryVOs.getContent().get(0);
-						mulOrgsVO=new MulOrgsVO();
-						mulOrgsVO.setLevelFirOrg(levelFirOrg);
-						mulOrgsVO.setLevelSecOrgs(entry.getValue());
-						if(mulOrgsVOs==null)
-							mulOrgsVOs=new ArrayList<MulOrgsVO>(); 
-						mulOrgsVOs.add(mulOrgsVO);					
-					}
+		List<MulOrgsVO> mulOrgsVOs = null;
+		OrgQueryDTO firOrgDTO = new OrgQueryDTO();
+		firOrgDTO.setLevel(1);
+		firOrgDTO.setPage(0);
+		firOrgDTO.setSize(50);
+		String keyWords=orgQueryDTO.getKeyWords();
+		Page<OrgQueryVO> firOrgVOs = queryOrg(firOrgDTO);
+		if (firOrgVOs != null && firOrgVOs.getContent() != null) {
+			mulOrgsVOs = firOrgVOs.stream().map(item -> {
+				boolean isFir=false;
+				if(Strings.isNullOrEmpty(keyWords)||keyWords.equals(item.getNote())||keyWords.equals(item.getName()))
+					isFir=true;
+				List<OrgQueryVO> organizeDefineds = null;
+				int page = 0;
+				while (true) {
+					OrgQueryDTO secOrgQueryDTO = new OrgQueryDTO();
+					secOrgQueryDTO.setLevel(2);
+					secOrgQueryDTO.setParentCode(item.getOrgCode());
+					secOrgQueryDTO.setPage(page);
+					secOrgQueryDTO.setSize(50);
+					if(!isFir)
+						secOrgQueryDTO.setKeyWords(keyWords);
+					Page<OrgQueryVO> orgQueryVOs = queryOrg(secOrgQueryDTO);
+					if (orgQueryVOs == null || orgQueryVOs.getContent() == null || orgQueryVOs.getContent().size() == 0)
+						break;
+					if (organizeDefineds == null)
+						organizeDefineds = orgQueryVOs.getContent();
+					else
+						organizeDefineds.addAll(orgQueryVOs.getContent());
+					page++;
 				}
-			}
+				MulOrgsVO mulOrgsVO = null;
+				if(organizeDefineds!=null||isFir) {
+					mulOrgsVO=new MulOrgsVO();
+					mulOrgsVO.setLevelFirOrg(item);
+				}
+				if(mulOrgsVO!=null && mulOrgsVO.getLevelFirOrg()!=null) {
+					mulOrgsVO.setLevelSecOrgs(organizeDefineds);
+				}			
+				return mulOrgsVO;
+			}).filter(item->item!=null).collect(Collectors.toList());
 		}
 		return mulOrgsVOs;
 	}
-	
+
 	@Override
 	public OrgSaveVO checkOrgName(OrgSaveDTO orgSaveDTO) {
 		OrgSaveVO orgSaveVO = null;
 		if (orgSaveDTO != null) {
-			OrganizeQuery organizeQuery = new OrganizeQuery();
-			BeanUtils.copyProperties(orgSaveDTO, organizeQuery);
-			organizeQuery.setParentCode(orgSaveDTO.getParentOrgCode());;
-			if(Strings.isNullOrEmpty(orgSaveDTO.getParentOrgCode())&&orgSaveDTO.getLevel()==null)
-				organizeQuery.setLevel(1);
-			organizeQuery.setPageSize(50);
-			organizeQuery.setKeyWords(orgSaveDTO.getName());
-			Page<OrganizeDefined> organizeDefineds = iOrganizeService.queryOrganize(organizeQuery);
-			if (organizeDefineds != null && organizeDefineds.getContent()!=null && organizeDefineds.getContent().size()>0) {
-				List<OrgSaveVO> orgSaveVOs=organizeDefineds.stream().filter(item->orgSaveDTO.getName().equals(item.getName())).map(item->{
-					OrgSaveVO temOrgSaveVO=new OrgSaveVO();
-					BeanUtils.copyProperties(item,temOrgSaveVO);
-					return temOrgSaveVO;
-				}).collect(Collectors.toList());
-				if(orgSaveVOs!=null && orgSaveVOs.size()>0) {
-					orgSaveVO = orgSaveVOs.get(0);
-				}				
+			int page = 0;
+			while (true) {
+				OrganizeQuery organizeQuery = new OrganizeQuery();
+				BeanUtils.copyProperties(orgSaveDTO, organizeQuery);
+				organizeQuery.setParentCode(orgSaveDTO.getParentOrgCode());
+				if (Strings.isNullOrEmpty(orgSaveDTO.getParentOrgCode()) && orgSaveDTO.getLevel() == null)
+					organizeQuery.setLevel(1);
+				organizeQuery.setPageSize(50);
+				organizeQuery.setPage(page);
+				organizeQuery.setKeyWords(orgSaveDTO.getName());
+				Page<OrganizeDefined> organizeDefineds = iOrganizeService.queryOrganize(organizeQuery);
+				if (organizeDefineds != null && organizeDefineds.getContent() != null
+						&& organizeDefineds.getContent().size() > 0) {
+					List<OrgSaveVO> orgSaveVOs = organizeDefineds.stream()
+							.filter(item -> orgSaveDTO.getName().equals(item.getName())).map(item -> {
+								OrgSaveVO temOrgSaveVO = new OrgSaveVO();
+								BeanUtils.copyProperties(item, temOrgSaveVO);
+								return temOrgSaveVO;
+							}).collect(Collectors.toList());
+					if (orgSaveVOs != null && orgSaveVOs.size() > 0) {
+						orgSaveVO = orgSaveVOs.get(0);
+						break;
+					}
+				} else {
+					break;
+				}
+				page++;
 			}
 		}
 		return orgSaveVO;

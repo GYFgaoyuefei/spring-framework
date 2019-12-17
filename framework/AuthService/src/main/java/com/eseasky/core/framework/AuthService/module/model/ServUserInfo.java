@@ -7,6 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.Table;
 
+
 import lombok.Data;
 
 @Entity
@@ -17,6 +18,8 @@ import lombok.Data;
 		@Index(name="serv_user_info_index_orgCode", columnList = "orgCode"),
 		@Index(name="serv_user_info_index_nikeName", columnList = "nikeName"),
 })
+//@OrganizeEntity(fieldName = "organ_code", name="organCode")
+//@EntityListeners(value = { OrganizeEntityListener.class })
 public class ServUserInfo {
 
     @Id
@@ -27,6 +30,8 @@ public class ServUserInfo {
     private String mobile;
     private String state;
     private String orgCode;
+//    @Column(columnDefinition="varchar(128) default '000'")
+//    private String organCode="000";
     private String orgName;
     private String nikeName;
 }
