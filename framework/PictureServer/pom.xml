@@ -57,7 +57,7 @@
 			<artifactId>datasource</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.eseasky.protocol</groupId>
+			<groupId>com.eseasky.framework.protocol</groupId>
 			<artifactId>picture-service-protocol</artifactId>
 		</dependency>
 		<dependency>
