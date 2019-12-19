@@ -217,9 +217,12 @@ public class OrgServiceImpl implements OrgService {
 				organizeQuery.setParentCode(orgSaveDTO.getParentOrgCode());
 				if (Strings.isNullOrEmpty(orgSaveDTO.getParentOrgCode()) && orgSaveDTO.getLevel() == null)
 					organizeQuery.setLevel(1);
+				if(organizeQuery.getLevel()==3)
+					organizeQuery.setParentCode(null);
 				organizeQuery.setPageSize(50);
 				organizeQuery.setPage(page);
 				organizeQuery.setKeyWords(orgSaveDTO.getName());
+				organizeQuery.setStatus(0);
 				Page<OrganizeDefined> organizeDefineds = iOrganizeService.queryOrganize(organizeQuery);
 				if (organizeDefineds != null && organizeDefineds.getContent() != null
 						&& organizeDefineds.getContent().size() > 0) {
