@@ -1,4 +1,4 @@
-package com.eseasky.protocol.system.entity;
+package com.eseasky.protocol.system;
 
 import com.eseasky.core.starters.feign.wrapper.FeignClientFactory;
 import com.eseasky.protocol.system.protocol.SystemServiceFeign;
