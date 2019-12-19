@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.eseasky.framework.protocol</groupId>
-    <artifactId>protocol</artifactId>
+    <artifactId>framework-protocol</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
   <artifactId>picture-service-protocol</artifactId>
