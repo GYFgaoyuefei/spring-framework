@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
@@ -268,7 +269,27 @@ public class SystemDictServiceImpl implements SystemDictService {
 	    }
 
 	}
-	
+
+	@Override
+	public DictItemVO queryByKeyAndDictId(DictiCondiDTO dictiCondiDTO) throws Exception {
+		if(StringUtils.isBlank(dictiCondiDTO.getType())||StringUtils.isBlank(dictiCondiDTO.getGroup())||StringUtils.isBlank(dictiCondiDTO.getItemKey())){
+			throw new Exception("字典类型，字典分组，映射Key不能为空");
+		}
+		Dictionary dictionary = systemManagerService.findDictByTypeAndGroup(dictiCondiDTO.getType(), dictiCondiDTO.getGroup());
+		if(dictionary==null ){
+			throw new Exception("字典值不存在");
+		}
+		List<DictItem> dictItems = dictionary.getDictItems();
+		for (DictItem dictItem : dictItems) {
+			if (dictItem.getKey().equals(dictiCondiDTO.getItemKey())){
+				DictItemVO dictItemVO = new DictItemVO();
+				BeanUtils.copyProperties(dictItem, dictItemVO);
+				return  dictItemVO;
+			}
+		}
+		return null;
+	}
+
 	private String getCellValue(Cell cell) {
         String strCell = "";
         if (cell == null) {
