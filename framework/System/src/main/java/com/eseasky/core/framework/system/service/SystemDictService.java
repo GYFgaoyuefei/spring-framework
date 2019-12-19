@@ -3,6 +3,7 @@ package com.eseasky.core.framework.system.service;
 import java.util.List;
 import java.util.Map;
 
+import com.eseasky.core.framework.system.protocol.vo.DictItemVO;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import com.eseasky.core.framework.system.protocol.dto.DictItemDTO;
@@ -172,5 +173,7 @@ public interface SystemDictService {
 	Map<String, List<String>> getDictTypes();
 
 	DictionaryVO updateDictByUploadSingleFile(DictionaryDTO dictionaryDTO) throws Exception ;
+
+	DictItemVO queryByKeyAndDictId(DictiCondiDTO dictiCondiDTO) throws Exception;
 
 }

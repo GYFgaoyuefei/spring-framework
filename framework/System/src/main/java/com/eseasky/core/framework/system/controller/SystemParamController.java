@@ -36,6 +36,7 @@ public class SystemParamController  implements SystemParamPro {
 	@Autowired
 	SystemDictService systemDictService;
 	
+	@Override
 	@ApiOperation(value="根据类型查询有效的字典参数", notes="根据类型查询有效的字典参数")
 	public ResponseEntity<MsgReturn<List<DictionaryVO>>> queryDict(@RequestBody DictionaryDTO dictionaryDTO){
 		MsgReturn<List<DictionaryVO>> msgReturn = new MsgReturn<List<DictionaryVO>>();
@@ -47,6 +48,7 @@ public class SystemParamController  implements SystemParamPro {
 		return new ResponseEntity<MsgReturn<List<DictionaryVO>>>(msgReturn, HttpStatus.OK);
 	}
 	
+	@Override
 	@ApiOperation(value="分页查询字典参数", notes="分页查询字典参数")
 	public ResponseEntity<MsgReturn<List<DictionaryVO>>> queryDictAdvance(@RequestBody DictiCondiDTO dictiCondiDTO) {
 		MsgReturn<List<DictionaryVO>> msgReturn = new MsgReturn<List<DictionaryVO>>();
@@ -97,6 +99,7 @@ public class SystemParamController  implements SystemParamPro {
 		return new ResponseEntity<MsgReturn<List<DictionaryVO>>>(msgReturn, HttpStatus.OK);
 	}
 	
+	@Override
 	@ApiOperation(value="添加字典参数", notes="添加字典参数")
 	public ResponseEntity<MsgReturn<DictionaryVO>> addDict(@RequestBody DictionaryDTO dictionaryDTO){
 		MsgReturn<DictionaryVO> msgReturn = new MsgReturn<DictionaryVO>();
@@ -109,6 +112,7 @@ public class SystemParamController  implements SystemParamPro {
 		return new ResponseEntity<MsgReturn<DictionaryVO>>(msgReturn, HttpStatus.OK);
 	}
 	
+	@Override
 	@ApiOperation(value="更新字典参数", notes="更新字典参数")
 	public ResponseEntity<MsgReturn<DictionaryVO>> updateDict(@RequestBody DictionaryDTO dictionaryDTO){
 		MsgReturn<DictionaryVO> msgReturn = new MsgReturn<DictionaryVO>();
@@ -122,6 +126,7 @@ public class SystemParamController  implements SystemParamPro {
 
 	}
 	
+	@Override
 	@ApiOperation(value="删除字典参数", notes="删除字典参数")
 	public ResponseEntity<MsgReturn<List<Long>>> deleteDict(@RequestBody @ApiParam(value="字典ID列表") List<Long> ids){
 		MsgReturn<List<Long>> msgReturn = new MsgReturn<List<Long>>();
@@ -138,6 +143,7 @@ public class SystemParamController  implements SystemParamPro {
 		return new ResponseEntity<MsgReturn<List<Long>>>(msgReturn, HttpStatus.OK);
 	}
 	
+	@Override
 	@ApiOperation(value="添加字典项", notes="添加字典项")
 	public ResponseEntity<MsgReturn<DictionaryVO>> addDictItem(@RequestBody DictionaryDTO dictionaryDTO){
 		MsgReturn<DictionaryVO> msgReturn = new MsgReturn<DictionaryVO>();
@@ -150,6 +156,7 @@ public class SystemParamController  implements SystemParamPro {
 		return new ResponseEntity<MsgReturn<DictionaryVO>>(msgReturn, HttpStatus.OK);
 	}
 	
+	@Override
 	@ApiOperation(value="根据条件删除字典项", notes="根据条件删除字典项")
 	public ResponseEntity<MsgReturn<DictionaryVO>> removeItemByIds(@RequestBody DictionaryDTO dictionaryDTO){
 		MsgReturn<DictionaryVO> msgReturn = new MsgReturn<DictionaryVO>();
@@ -169,6 +176,7 @@ public class SystemParamController  implements SystemParamPro {
 		return new ResponseEntity<MsgReturn<Map<String, List<String>>>>(msgReturn, HttpStatus.OK);
 	}
 
+	@Override
 	@ApiOperation(value="上传获取excel文件更新字典项", notes="上传获取excel文件更新字典项")
 	public ResponseEntity<MsgReturn<DictionaryVO>> updateDictByUploadSingleFile(DictionaryDTO dictionaryDTO) {
 		MsgReturn<DictionaryVO> msgReturn = new MsgReturn<DictionaryVO>();
@@ -184,7 +192,19 @@ public class SystemParamController  implements SystemParamPro {
 		}
 		return new ResponseEntity<MsgReturn<DictionaryVO>>(msgReturn, HttpStatus.OK);
 	}
-	
+
+	@Override
+	public ResponseEntity<MsgReturn<DictItemVO>> queryByKeyAndDictId(@RequestBody DictiCondiDTO dictiCondiDTO) {
+		MsgReturn<DictItemVO> msgReturn = new MsgReturn<DictItemVO>();
+		try {
+			msgReturn.success(systemDictService.queryByKeyAndDictId(dictiCondiDTO));
+		} catch (Exception e) {
+			e.printStackTrace();
+			msgReturn.fail(e.getMessage());
+		}
+		return new ResponseEntity<MsgReturn<DictItemVO>>(msgReturn, HttpStatus.OK);
+	}
+
 	@Override
 	public ResponseEntity<MsgReturn<DictionaryVO>> queryByTypeAndGroup(@RequestBody DictionaryDTO dictionaryDTO) {
 		MsgReturn<DictionaryVO> msgReturn = new MsgReturn<DictionaryVO>();

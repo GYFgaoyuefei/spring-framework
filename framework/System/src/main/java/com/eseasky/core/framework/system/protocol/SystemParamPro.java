@@ -3,6 +3,7 @@ package com.eseasky.core.framework.system.protocol;
 import java.util.List;
 import java.util.Map;
 
+import com.eseasky.core.framework.system.protocol.vo.DictItemVO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -58,5 +59,9 @@ public interface SystemParamPro {
 	@ApiOperation(value="上传获取excel文件更新字典项", notes="上传获取excel文件更新字典项")
 	@PostMapping(value="/dict/updateDictByUploadSingleFile")
 	public ResponseEntity<MsgReturn<DictionaryVO>> updateDictByUploadSingleFile(DictionaryDTO dictionaryDTO);
-	
+
+	@ApiOperation(value="上传获取excel文件更新字典项", notes="上传获取excel文件更新字典项")
+	@PostMapping(value="/dict/queryByKeyAndDictId")
+	public ResponseEntity<MsgReturn<DictItemVO>> queryByKeyAndDictId(@RequestBody DictiCondiDTO dictiCondiDTO);
+
 }
