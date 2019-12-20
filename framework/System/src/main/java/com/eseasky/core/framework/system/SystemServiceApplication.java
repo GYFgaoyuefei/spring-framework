@@ -11,7 +11,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 
 @SpringBootApplication
-//@EnableEurekaClient
+@EnableEurekaClient
 @EnableJpaAuditing
 @EnableJpaRepositories(basePackages ={"com.eseasky.starter.dictionary.module.**"})
 @EntityScan(basePackages ={"com.eseasky.starter.dictionary.module.**"})
