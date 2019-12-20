@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 
 import com.eseasky.protocol.system.entity.DTO.DictiCondiDTO;
 import com.eseasky.protocol.system.entity.VO.DictItemVO;
+import com.eseasky.protocol.system.entity.VO.DictionaryVO;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -179,6 +181,9 @@ public class SystemParamController  implements SystemParamPro {
 		return new ResponseEntity<MsgReturn<Map<String, List<String>>>>(msgReturn, HttpStatus.OK);
 	}
 
+
+
+
 	@Override
 	@ApiOperation(value="上传获取excel文件更新字典项", notes="上传获取excel文件更新字典项")
 	public ResponseEntity<MsgReturn<DictionaryVo>> updateDictByUploadSingleFile(DictionaryDto dictionaryDTO) {
@@ -215,14 +220,23 @@ public class SystemParamController  implements SystemParamPro {
 	}
 
 	@Override
-	public ResponseEntity<MsgReturn<DictionaryVo>> queryByTypeAndGroup(@RequestBody DictionaryDto dictionaryDTO) {
-		MsgReturn<DictionaryVo> msgReturn = new MsgReturn<DictionaryVo>();
-		if (dictionaryDTO != null && dictionaryDTO.getType() != null && !"".equals(dictionaryDTO.getType()) && dictionaryDTO.getGroup() != null && !"".equals(dictionaryDTO.getGroup())) {
-			String group = dictionaryDTO.getGroup();
-			Dictionary dictionary = systemDictService.findValidDictByTypeAndGroup(dictionaryDTO.getType(), group);
+	public ResponseEntity<MsgReturn<DictionaryVO>> queryByTypeAndGroup(@RequestBody DictiCondiDTO dictionaryDTO) {
+		MsgReturn<DictionaryVO> msgReturn = new MsgReturn<DictionaryVO>();
+		if (!StringUtils.isBlank(dictionaryDTO.getGroup())&&!StringUtils.isBlank(dictionaryDTO.getType())) {
+			Dictionary dictionary = systemDictService.findValidDictByTypeAndGroup(dictionaryDTO.getType(), dictionaryDTO.getGroup());
 			if(dictionary!=null) {
-				DictionaryVo dictionaryVO = new DictionaryVo();
-				BeanUtils.copyProperties(dictionary, dictionaryVO);
+				DictionaryVO dictionaryVO = new DictionaryVO();
+				BeanUtils.copyProperties(dictionary, dictionaryVO,"dictItems");
+				if (dictionary.getDictItems()!=null&&dictionary.getDictItems().size()>0){
+					List<DictItem> dictItems = dictionary.getDictItems();
+					ArrayList<DictItemVO> list = new ArrayList<DictItemVO>();
+					for (DictItem dictItem : dictItems) {
+						DictItemVO dictItemVO = new DictItemVO();
+						BeanUtils.copyProperties(dictItem, dictItemVO);
+						list.add(dictItemVO);
+					}
+					dictionaryVO.setDictItems(list);
+				}
 				msgReturn.success(dictionaryVO);
 			}else {
 				msgReturn.fail("暂无数据");
@@ -230,7 +244,7 @@ public class SystemParamController  implements SystemParamPro {
 		} else {
 			msgReturn.fail("缺少入参type或者group");
 		}
-		return new ResponseEntity<MsgReturn<DictionaryVo>>(msgReturn, HttpStatus.OK);
+		return new ResponseEntity<MsgReturn<DictionaryVO>>(msgReturn, HttpStatus.OK);
 	}
 	
 	@ApiOperation(value="系统参数模块表Model",notes="此接口不使用，只做输出Model数据结构")

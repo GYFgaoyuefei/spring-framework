@@ -3,8 +3,11 @@ package com.eseasky.protocol.system.entity.VO;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class DictItemVO {
+public class DictItemVO implements Serializable {
+    private static final long serialVersionUID = 1L;
 	@ApiModelProperty(value="字典项id")
 	private Long id;
 	

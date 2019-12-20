@@ -1,12 +1,14 @@
 package com.eseasky.core.framework.system.protocol.dto;
 
+import java.io.Serializable;
 import java.util.List;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
-public class DictiCondiDto {
+public class DictiCondiDto implements Serializable {
+	private static final long serialVersionUID = 1L;
 	@ApiModelProperty(value="字典id列表")
 	private List<Long> ids; // 字典id列表
 	@ApiModelProperty(value="字典名称")

@@ -1,13 +1,13 @@
-package com.eseasky.core.framework.system.protocol.vo;
-
-import java.io.Serializable;
-import java.util.List;
+package com.eseasky.protocol.system.entity.VO;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.io.Serializable;
+import java.util.List;
+
 @Data
-public class DictionaryVo implements Serializable {
+public class DictionaryVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@ApiModelProperty(value="字典id")
 	private Long id;
@@ -31,7 +31,7 @@ public class DictionaryVo implements Serializable {
 	private String group;
 	
 	@ApiModelProperty(value="字典项定义")
-	private List<DictItemVo> dictItems;
+	private List<DictItemVO> dictItems;
 	
 	@ApiModelProperty(value="错误信息")
 	private String message;

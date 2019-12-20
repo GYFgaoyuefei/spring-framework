@@ -52,7 +52,25 @@ public class OrgFeignController implements OrgServiceFeign {
 		// TODO Auto-generated method stub
 		OrgSaveVO orgSaveVO = orgService.updateOrgByCode(OrgUpdateDTO);
 		log.info(JSONObject.toJSONString(orgSaveVO));
-		return null;
+		return orgSaveVO;
+	}
+
+	@Override
+	@PostMapping(value = "/disableOrg",consumes = "application/json")
+	public OrgSaveVO disableOrg(@RequestBody @Validated OrgQueryDTO orgUpdateDTO) {
+		// TODO Auto-generated method stub
+		OrgSaveVO orgSaveVO = orgService.disableOrg(orgUpdateDTO);
+		log.info(JSONObject.toJSONString(orgSaveVO));
+		return orgSaveVO;
+	}
+
+	@Override
+	@PostMapping(value = "/getOrgNameByOrgCode",consumes = "application/json")
+	public OrgSaveVO getOrgNameByOrgCode(@RequestBody OrgQueryDTO orgQueryDTO) {
+		// TODO Auto-generated method stub
+		OrgSaveVO orgSaveVO = orgService.getOrgNameByOrgCode(orgQueryDTO.getOrgCode());
+		log.info(JSONObject.toJSONString(orgSaveVO));
+		return orgSaveVO;
 	}
 	
 	
