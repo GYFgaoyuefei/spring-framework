@@ -70,7 +70,7 @@ public class SystemDictServiceImpl implements SystemDictService {
 	}
 
 	@Override
-	@Cacheable(value= {"sys_dict_item","sys_dictionary"}, key="'findValidDictByTypeAndGroup'+#type",unless="#result == null")
+	@Cacheable(value= {"sys_dict_item","sys_dictionary"}, key="'findValidDictByTypeAndGroup'+#type+#group",unless="#result == null")
 	public Dictionary findValidDictByTypeAndGroup(String type, String group) {
 		return systemManagerService.findValidDictByTypeAndGroup(type, group);
 	}
