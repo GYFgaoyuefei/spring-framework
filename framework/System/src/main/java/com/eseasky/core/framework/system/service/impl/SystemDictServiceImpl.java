@@ -17,6 +17,8 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -42,33 +44,39 @@ public class SystemDictServiceImpl implements SystemDictService {
 	SystemManagerService systemManagerService;
 	
 	@Override
+	@CacheEvict(value= {"sys_dict_item","sys_dictionary"}, allEntries=true)
 	public DictionaryVo insertDictionary(DictionaryDto dictionaryDTO) throws GeneralException {
 		Dictionary dictionary = dictionaryDTOToDictionary(dictionaryDTO);
 		return dictionaryToDictionaryVO(systemManagerService.insertDictionary(dictionary));
 	}
 
 	@Override
+	@CacheEvict(value= {"sys_dict_item","sys_dictionary"}, allEntries=true)
 	public Dictionary addItemToGroup(String type, String group, List<DictItem> dictItems) throws GeneralException {
 		return systemManagerService.addItemToGroup(type, group, dictItems);
 	}
 
 	@Override
+	@CacheEvict(value= {"sys_dict_item","sys_dictionary"}, allEntries=true)
 	public DictionaryVo addItemToGroup(Long dict_id, List<DictItemDto> dictItemDTOs) throws GeneralException {
 		List<DictItem> dictItems = listDictItemDTOTolistDictItem(dictItemDTOs);
 		return dictionaryToDictionaryVO(systemManagerService.addItemToGroup(dict_id, dictItems));
 	}
 
 	@Override
+	@CacheEvict(value= {"sys_dict_item","sys_dictionary"}, allEntries=true)
 	public Dictionary addItemToGroup(Dictionary dictionary, List<DictItem> dictItems) throws GeneralException {
 		return systemManagerService.addItemToGroup(dictionary, dictItems);
 	}
 
 	@Override
+	@Cacheable(value= {"sys_dict_item","sys_dictionary"}, key="'findValidDictByTypeAndGroup'+#type",unless="#result == null")
 	public Dictionary findValidDictByTypeAndGroup(String type, String group) {
 		return systemManagerService.findValidDictByTypeAndGroup(type, group);
 	}
 
 	@Override
+	@Cacheable(value= {"sys_dict_item","sys_dictionary"}, key="'findValidDictByType'+#type",unless="#result == null")
 	public List<DictionaryVo> findValidDictByType(String type) {
 		List<DictionaryVo> listDictionaryVO = new ArrayList<DictionaryVo> ();
 		for(Dictionary dictionary : systemManagerService.findValidDictByType(type)) {
@@ -80,59 +88,70 @@ public class SystemDictServiceImpl implements SystemDictService {
 	}
 
 	@Override
+	@Cacheable(value= {"sys_dict_item","sys_dictionary"}, key="'findDictByTypeAndStatus'+#type+#status",unless="#result == null")
 	public List<Dictionary> findDictByTypeAndStatus(String type, String status) {
 		return systemManagerService.findDictByTypeAndStatus(type, status);
 	}
 
 	@Override
+	@Cacheable(value= {"sys_dict_item","sys_dictionary"}, key="'findDictByTypeAndGroupAndStatus'+#type+#group+#status",unless="#result == null")
 	public Dictionary findDictByTypeAndGroupAndStatus(String type, String group, String status) {
 		return systemManagerService.findDictByTypeAndGroupAndStatus(type, group, status);
 	}
 
 	@Override
+	@CacheEvict(value= {"sys_dict_item","sys_dictionary"}, allEntries=true)
 	public DictionaryVo updateDictionary(DictionaryDto dictionaryDTO) throws GeneralException {
 		Dictionary updates = dictionaryDTOToDictionary(dictionaryDTO);
 		return dictionaryToDictionaryVO(systemManagerService.updateDictionary(updates));
 	}
 
 	@Override
+	@CacheEvict(value= {"sys_dict_item","sys_dictionary"}, allEntries=true)
 	public Boolean deleteDictionary(Dictionary dictionary) throws GeneralException {
 		return systemManagerService.deleteDictionary(dictionary);
 	}
 
 	@Override
+	@CacheEvict(value= {"sys_dict_item","sys_dictionary"}, allEntries=true)
 	public Boolean deleteDictionary(Long dict_id) throws GeneralException {
 		return systemManagerService.deleteDictionary(dict_id);
 	}
 
 	@Override
+	@CacheEvict(value= {"sys_dict_item","sys_dictionary"}, allEntries=true)
 	public Dictionary removeItemFromDict(Dictionary dictionary, List<Long> items) throws GeneralException {
 		return systemManagerService.removeItemFromDict(dictionary, items);
 	}
 
 	@Override
-	public Page<Dictionary> queryDictionaries(DictiCondiDto dictiCondiDTO) {
+	@Cacheable(value= {"sys_dict_item","sys_dictionary"}, key="'queryDictionaries'+#dictiCondiDto",unless="#result == null")
+	public Page<Dictionary> queryDictionaries(DictiCondiDto dictiCondiDto) {
 		DictionaryConditions dictionaryConditions = new DictionaryConditions();
-		BeanUtils.copyProperties(dictiCondiDTO, dictionaryConditions);
+		BeanUtils.copyProperties(dictiCondiDto, dictionaryConditions);
 		return systemManagerService.queryDictionaries(dictionaryConditions);
 	}
 
 	@Override
+	@CacheEvict(value= {"sys_dict_item","sys_dictionary"}, allEntries=true)
 	public Boolean deleteDictionary(List<Long> dicts) throws GeneralException {
 		return systemManagerService.deleteDictionary(dicts);
 	}
 
 	@Override
+	@CacheEvict(value= {"sys_dict_item","sys_dictionary"}, allEntries=true)
 	public Boolean deleteDictionaryByObjects(List<Dictionary> dictionaries) throws GeneralException {
 		return systemManagerService.deleteDictionaryByObjects(dictionaries);
 	}
 
 	@Override
+	@Cacheable(value= {"sys_dict_item","sys_dictionary"}, key="'queryOneDict'+#id",unless="#result == null")
 	public Dictionary queryOneDict(Long id) {
 		return systemManagerService.queryOneDict(id);
 	}
 
 	@Override
+	@CacheEvict(value= {"sys_dict_item","sys_dictionary"}, allEntries=true)
 	public DictionaryVo removeItemByIds(DictionaryDto dictionaryDTO)  throws GeneralException {
 		Dictionary dictionary = queryOneDict(dictionaryDTO.getId());
 //		log.info(JSONObject.toJSON(dictionary));
@@ -211,6 +230,7 @@ public class SystemDictServiceImpl implements SystemDictService {
 	}
 
 	@Override
+	@Cacheable(value= {"sys_dictionary"}, key="getDictTypes",unless="#result == null")
 	public Map<String, List<String>> getDictTypes() {
 		Map<String, List<String>> map = new HashMap<String, List<String>> ();
 		map.put("dictTypes", systemManagerService.getDictTypes());
@@ -218,6 +238,7 @@ public class SystemDictServiceImpl implements SystemDictService {
 	}
 
 	@Override
+	@CacheEvict(value= {"sys_dict_item","sys_dictionary"}, allEntries=true)
 	public DictionaryVo updateDictByUploadSingleFile(DictionaryDto dictionaryDTO) throws Exception {
 
 		for (MultipartFile file: dictionaryDTO.getFiles()) {
@@ -271,6 +292,7 @@ public class SystemDictServiceImpl implements SystemDictService {
 	}
 
 	@Override
+	@Cacheable(value= {"sys_dict_item","sys_dictionary"}, key="'queryByKeyAndDictId'+#dictiCondiDTO",unless="#result == null")
 	public DictItemVo queryByKeyAndDictId(DictiCondiDto dictiCondiDTO) throws Exception {
 		if(StringUtils.isBlank(dictiCondiDTO.getType())||StringUtils.isBlank(dictiCondiDTO.getGroup())||StringUtils.isBlank(dictiCondiDTO.getItemKey())){
 			throw new Exception("字典类型，字典分组，映射Key不能为空");

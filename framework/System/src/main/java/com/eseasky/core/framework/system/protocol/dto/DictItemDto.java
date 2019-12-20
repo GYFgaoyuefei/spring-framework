@@ -5,8 +5,11 @@ import javax.persistence.Column;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class DictItemDto {
+public class DictItemDto implements Serializable {
+	private static final long serialVersionUID = 1L;
 	@ApiModelProperty(value="字典项id")
 	private Long id;
 	

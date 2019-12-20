@@ -1,12 +1,14 @@
 package com.eseasky.core.framework.system.protocol.vo;
 
+import java.io.Serializable;
 import java.util.List;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
-public class DictionaryVo {
+public class DictionaryVo implements Serializable {
+	private static final long serialVersionUID = 1L;
 	@ApiModelProperty(value="字典id")
 	private Long id;
 	
