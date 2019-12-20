@@ -8,7 +8,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
-public class DictionaryDTO {
+public class DictionaryDto {
 	
 	@ApiModelProperty(value="上传文件")
 	private List<MultipartFile> files;
@@ -35,7 +35,7 @@ public class DictionaryDTO {
 	private String group;
 	
 	@ApiModelProperty(value="字典项定义")
-	private List<DictItemDTO> dictItems;
+	private List<DictItemDto> dictItems;
 	
 	@ApiModelProperty(value="字典项id列表")
 	private List<Long> dictItemIds;

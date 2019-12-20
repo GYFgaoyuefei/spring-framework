@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.eseasky.protocol.system.entity.DTO.DictiCondiDTO;
+import com.eseasky.protocol.system.entity.VO.DictItemVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,10 +16,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.eseasky.core.framework.system.protocol.SystemParamPro;
-import com.eseasky.core.framework.system.protocol.dto.DictiCondiDTO;
-import com.eseasky.core.framework.system.protocol.dto.DictionaryDTO;
-import com.eseasky.core.framework.system.protocol.vo.DictItemVO;
-import com.eseasky.core.framework.system.protocol.vo.DictionaryVO;
+import com.eseasky.core.framework.system.protocol.dto.DictiCondiDto;
+import com.eseasky.core.framework.system.protocol.dto.DictionaryDto;
+import com.eseasky.core.framework.system.protocol.vo.DictItemVo;
+import com.eseasky.core.framework.system.protocol.vo.DictionaryVo;
 import com.eseasky.core.framework.system.service.SystemDictService;
 import com.eseasky.global.entity.MsgPageInfo;
 import com.eseasky.global.entity.MsgReturn;
@@ -38,29 +40,29 @@ public class SystemParamController  implements SystemParamPro {
 	
 	@Override
 	@ApiOperation(value="根据类型查询有效的字典参数", notes="根据类型查询有效的字典参数")
-	public ResponseEntity<MsgReturn<List<DictionaryVO>>> queryDict(@RequestBody DictionaryDTO dictionaryDTO){
-		MsgReturn<List<DictionaryVO>> msgReturn = new MsgReturn<List<DictionaryVO>>();
+	public ResponseEntity<MsgReturn<List<DictionaryVo>>> queryDict(@RequestBody DictionaryDto dictionaryDTO){
+		MsgReturn<List<DictionaryVo>> msgReturn = new MsgReturn<List<DictionaryVo>>();
 		if (dictionaryDTO != null && dictionaryDTO.getType() != null && !"".equals(dictionaryDTO.getType())) {
 			msgReturn.success(systemDictService.findValidDictByType(dictionaryDTO.getType()));
 		} else {
 			msgReturn.fail("缺少入参type");
 		}
-		return new ResponseEntity<MsgReturn<List<DictionaryVO>>>(msgReturn, HttpStatus.OK);
+		return new ResponseEntity<MsgReturn<List<DictionaryVo>>>(msgReturn, HttpStatus.OK);
 	}
 	
 	@Override
 	@ApiOperation(value="分页查询字典参数", notes="分页查询字典参数")
-	public ResponseEntity<MsgReturn<List<DictionaryVO>>> queryDictAdvance(@RequestBody DictiCondiDTO dictiCondiDTO) {
-		MsgReturn<List<DictionaryVO>> msgReturn = new MsgReturn<List<DictionaryVO>>();
+	public ResponseEntity<MsgReturn<List<DictionaryVo>>> queryDictAdvance(@RequestBody DictiCondiDto dictiCondiDTO) {
+		MsgReturn<List<DictionaryVo>> msgReturn = new MsgReturn<List<DictionaryVo>>();
 		Page<Dictionary> dictionaries = systemDictService.queryDictionaries(dictiCondiDTO);
-		List<DictionaryVO> listDictionaryVO = dictionaries.getContent().stream().map(item -> {
-			DictionaryVO dictionaryVO = new DictionaryVO();
+		List<DictionaryVo> listDictionaryVO = dictionaries.getContent().stream().map(item -> {
+			DictionaryVo dictionaryVO = new DictionaryVo();
 			if (item != null) {
 				BeanUtils.copyProperties(item, dictionaryVO);
 				if ((dictiCondiDTO.getItemKey() != null && !CheckUtils.isEmpty(dictiCondiDTO.getItemKey().trim()))
 						|| (dictiCondiDTO.getItemName() != null && !CheckUtils.isEmpty(dictiCondiDTO.getItemName().trim()))
 						|| !CheckUtils.isEmpty(dictiCondiDTO.getItemStatus())) {
-					List<DictItemVO> newDictItems = new ArrayList<>();
+					List<DictItemVo> newDictItems = new ArrayList<>();
 					for (DictItem dictItem : item.getDictItems()) {
 						Boolean[] needFlag = {true, true, true};
 						if (dictiCondiDTO.getItemKey() != null && !"".equals(dictiCondiDTO.getItemKey().trim())) {
@@ -85,7 +87,7 @@ public class SystemParamController  implements SystemParamPro {
 							}
 						}
 						if (needFlag[0] && needFlag[1] && needFlag[2]) {
-							DictItemVO dictItemVO = new DictItemVO();
+							DictItemVo dictItemVO = new DictItemVo();
 							BeanUtils.copyProperties(dictItem, dictItemVO);
 							newDictItems.add(dictItemVO);
 						}
@@ -96,33 +98,33 @@ public class SystemParamController  implements SystemParamPro {
 			return dictionaryVO;
 		}).collect(Collectors.toList());
 		msgReturn.success().setData(listDictionaryVO, MsgPageInfo.loadFromPageable(dictionaries));
-		return new ResponseEntity<MsgReturn<List<DictionaryVO>>>(msgReturn, HttpStatus.OK);
+		return new ResponseEntity<MsgReturn<List<DictionaryVo>>>(msgReturn, HttpStatus.OK);
 	}
 	
 	@Override
 	@ApiOperation(value="添加字典参数", notes="添加字典参数")
-	public ResponseEntity<MsgReturn<DictionaryVO>> addDict(@RequestBody DictionaryDTO dictionaryDTO){
-		MsgReturn<DictionaryVO> msgReturn = new MsgReturn<DictionaryVO>();
+	public ResponseEntity<MsgReturn<DictionaryVo>> addDict(@RequestBody DictionaryDto dictionaryDTO){
+		MsgReturn<DictionaryVo> msgReturn = new MsgReturn<DictionaryVo>();
 		try {
 			msgReturn.success(systemDictService.insertDictionary(dictionaryDTO));
 		} catch (GeneralException e) {
 			e.printStackTrace();
 			msgReturn.fail(e.getMessage());
 		}
-		return new ResponseEntity<MsgReturn<DictionaryVO>>(msgReturn, HttpStatus.OK);
+		return new ResponseEntity<MsgReturn<DictionaryVo>>(msgReturn, HttpStatus.OK);
 	}
 	
 	@Override
 	@ApiOperation(value="更新字典参数", notes="更新字典参数")
-	public ResponseEntity<MsgReturn<DictionaryVO>> updateDict(@RequestBody DictionaryDTO dictionaryDTO){
-		MsgReturn<DictionaryVO> msgReturn = new MsgReturn<DictionaryVO>();
+	public ResponseEntity<MsgReturn<DictionaryVo>> updateDict(@RequestBody DictionaryDto dictionaryDTO){
+		MsgReturn<DictionaryVo> msgReturn = new MsgReturn<DictionaryVo>();
 		try {
 			msgReturn.success(systemDictService.updateDictionary(dictionaryDTO));
 		} catch (GeneralException e) {
 			e.printStackTrace();
 			msgReturn.fail(e.getMessage());
 		}
-		return new ResponseEntity<MsgReturn<DictionaryVO>>(msgReturn, HttpStatus.OK);
+		return new ResponseEntity<MsgReturn<DictionaryVo>>(msgReturn, HttpStatus.OK);
 
 	}
 	
@@ -145,30 +147,31 @@ public class SystemParamController  implements SystemParamPro {
 	
 	@Override
 	@ApiOperation(value="添加字典项", notes="添加字典项")
-	public ResponseEntity<MsgReturn<DictionaryVO>> addDictItem(@RequestBody DictionaryDTO dictionaryDTO){
-		MsgReturn<DictionaryVO> msgReturn = new MsgReturn<DictionaryVO>();
+	public ResponseEntity<MsgReturn<DictionaryVo>> addDictItem(@RequestBody DictionaryDto dictionaryDTO){
+		MsgReturn<DictionaryVo> msgReturn = new MsgReturn<DictionaryVo>();
 		try {
 			msgReturn.success(systemDictService.addItemToGroup(dictionaryDTO.getId(), dictionaryDTO.getDictItems()));
 		} catch (GeneralException e) {
 			e.printStackTrace();
 			msgReturn.fail(e.getMessage());
 		}
-		return new ResponseEntity<MsgReturn<DictionaryVO>>(msgReturn, HttpStatus.OK);
+		return new ResponseEntity<MsgReturn<DictionaryVo>>(msgReturn, HttpStatus.OK);
 	}
 	
 	@Override
 	@ApiOperation(value="根据条件删除字典项", notes="根据条件删除字典项")
-	public ResponseEntity<MsgReturn<DictionaryVO>> removeItemByIds(@RequestBody DictionaryDTO dictionaryDTO){
-		MsgReturn<DictionaryVO> msgReturn = new MsgReturn<DictionaryVO>();
+	public ResponseEntity<MsgReturn<DictionaryVo>> removeItemByIds(@RequestBody DictionaryDto dictionaryDTO){
+		MsgReturn<DictionaryVo> msgReturn = new MsgReturn<DictionaryVo>();
 		try {
 			msgReturn.success(systemDictService.removeItemByIds(dictionaryDTO));
 		} catch (GeneralException e) {
 			e.printStackTrace();
 			msgReturn.fail(e.getMessage());
 		}
-		return new ResponseEntity<MsgReturn<DictionaryVO>>(msgReturn, HttpStatus.OK);
+		return new ResponseEntity<MsgReturn<DictionaryVo>>(msgReturn, HttpStatus.OK);
 	}
 
+	@Override
 	@ApiOperation(value="获取字典类型", notes="获取字典类型")
 	public ResponseEntity<MsgReturn<Map<String, List<String>>>> getDictTypes() {
 		MsgReturn<Map<String, List<String>>> msgReturn = new MsgReturn<Map<String, List<String>>>();
@@ -178,8 +181,8 @@ public class SystemParamController  implements SystemParamPro {
 
 	@Override
 	@ApiOperation(value="上传获取excel文件更新字典项", notes="上传获取excel文件更新字典项")
-	public ResponseEntity<MsgReturn<DictionaryVO>> updateDictByUploadSingleFile(DictionaryDTO dictionaryDTO) {
-		MsgReturn<DictionaryVO> msgReturn = new MsgReturn<DictionaryVO>();
+	public ResponseEntity<MsgReturn<DictionaryVo>> updateDictByUploadSingleFile(DictionaryDto dictionaryDTO) {
+		MsgReturn<DictionaryVo> msgReturn = new MsgReturn<DictionaryVo>();
 		try {
 			if (CheckUtils.isEmpty(dictionaryDTO.getFiles())) {
 				msgReturn.fail("上传文件为空");
@@ -190,14 +193,20 @@ public class SystemParamController  implements SystemParamPro {
 			e.printStackTrace();
 			msgReturn.fail(e.getMessage());
 		}
-		return new ResponseEntity<MsgReturn<DictionaryVO>>(msgReturn, HttpStatus.OK);
+		return new ResponseEntity<MsgReturn<DictionaryVo>>(msgReturn, HttpStatus.OK);
 	}
 
 	@Override
+	@ApiOperation(value="上传获取excel文件更新字典项", notes="上传获取excel文件更新字典项")
 	public ResponseEntity<MsgReturn<DictItemVO>> queryByKeyAndDictId(@RequestBody DictiCondiDTO dictiCondiDTO) {
 		MsgReturn<DictItemVO> msgReturn = new MsgReturn<DictItemVO>();
 		try {
-			msgReturn.success(systemDictService.queryByKeyAndDictId(dictiCondiDTO));
+			DictiCondiDto dictiCondiDto = new DictiCondiDto();
+			BeanUtils.copyProperties(dictiCondiDTO,dictiCondiDto);
+			DictItemVo dictItemVo = systemDictService.queryByKeyAndDictId(dictiCondiDto);
+			DictItemVO dictItemVO = new DictItemVO();
+			BeanUtils.copyProperties(dictItemVo,dictItemVO);
+			msgReturn.success(dictItemVO);
 		} catch (Exception e) {
 			e.printStackTrace();
 			msgReturn.fail(e.getMessage());
@@ -206,13 +215,13 @@ public class SystemParamController  implements SystemParamPro {
 	}
 
 	@Override
-	public ResponseEntity<MsgReturn<DictionaryVO>> queryByTypeAndGroup(@RequestBody DictionaryDTO dictionaryDTO) {
-		MsgReturn<DictionaryVO> msgReturn = new MsgReturn<DictionaryVO>();
+	public ResponseEntity<MsgReturn<DictionaryVo>> queryByTypeAndGroup(@RequestBody DictionaryDto dictionaryDTO) {
+		MsgReturn<DictionaryVo> msgReturn = new MsgReturn<DictionaryVo>();
 		if (dictionaryDTO != null && dictionaryDTO.getType() != null && !"".equals(dictionaryDTO.getType()) && dictionaryDTO.getGroup() != null && !"".equals(dictionaryDTO.getGroup())) {
 			String group = dictionaryDTO.getGroup();
 			Dictionary dictionary = systemDictService.findValidDictByTypeAndGroup(dictionaryDTO.getType(), group);
 			if(dictionary!=null) {
-				DictionaryVO dictionaryVO = new DictionaryVO();
+				DictionaryVo dictionaryVO = new DictionaryVo();
 				BeanUtils.copyProperties(dictionary, dictionaryVO);
 				msgReturn.success(dictionaryVO);
 			}else {
@@ -221,7 +230,7 @@ public class SystemParamController  implements SystemParamPro {
 		} else {
 			msgReturn.fail("缺少入参type或者group");
 		}
-		return new ResponseEntity<MsgReturn<DictionaryVO>>(msgReturn, HttpStatus.OK);
+		return new ResponseEntity<MsgReturn<DictionaryVo>>(msgReturn, HttpStatus.OK);
 	}
 	
 	@ApiOperation(value="系统参数模块表Model",notes="此接口不使用，只做输出Model数据结构")

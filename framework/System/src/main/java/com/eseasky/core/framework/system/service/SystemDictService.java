@@ -3,13 +3,13 @@ package com.eseasky.core.framework.system.service;
 import java.util.List;
 import java.util.Map;
 
-import com.eseasky.core.framework.system.protocol.vo.DictItemVO;
+import com.eseasky.core.framework.system.protocol.vo.DictItemVo;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
-import com.eseasky.core.framework.system.protocol.dto.DictItemDTO;
-import com.eseasky.core.framework.system.protocol.dto.DictiCondiDTO;
-import com.eseasky.core.framework.system.protocol.dto.DictionaryDTO;
-import com.eseasky.core.framework.system.protocol.vo.DictionaryVO;
+import com.eseasky.core.framework.system.protocol.dto.DictItemDto;
+import com.eseasky.core.framework.system.protocol.dto.DictiCondiDto;
+import com.eseasky.core.framework.system.protocol.dto.DictionaryDto;
+import com.eseasky.core.framework.system.protocol.vo.DictionaryVo;
 import com.eseasky.starter.dictionary.exception.GeneralException;
 import com.eseasky.starter.dictionary.module.model.DictItem;
 import com.eseasky.starter.dictionary.module.model.Dictionary;
@@ -23,7 +23,7 @@ public interface SystemDictService {
 	 * @return
 	 * @throws GeneralException 
 	 */
-	DictionaryVO insertDictionary(DictionaryDTO dictionary) throws GeneralException;
+	DictionaryVo insertDictionary(DictionaryDto dictionary) throws GeneralException;
 	
 	/**
 	 * 添加字典项，通过type和group获取字典对象，最终调用addItemToGroup(Dictionary dictionary, List<DictItem> dictItems)
@@ -38,11 +38,10 @@ public interface SystemDictService {
 	/**
 	 * 添加字典项，通过dict_id获取字典对象，最终调用addItemToGroup(Dictionary dictionary, List<DictItem> dictItems)
 	 * @param dict_id
-	 * @param dictItems
 	 * @return
 	 * @throws GeneralException
 	 */
-	DictionaryVO addItemToGroup(Long dict_id, List<DictItemDTO> dictItemDTOs) throws GeneralException;
+	DictionaryVo addItemToGroup(Long dict_id, List<DictItemDto> dictItemDTOs) throws GeneralException;
 	
 	/**
 	 * 添加字典项
@@ -70,7 +69,7 @@ public interface SystemDictService {
 	 * @param type
 	 * @return
 	 */
-	List<DictionaryVO> findValidDictByType(String type);
+	List<DictionaryVo> findValidDictByType(String type);
 	
 	/**
 	 * 通过类型和字典状态查询字典对象
@@ -97,7 +96,7 @@ public interface SystemDictService {
 	 * @throws GeneralException
 	 * 	字典不存在时抛出异常
 	 */
-	DictionaryVO updateDictionary(DictionaryDTO updates) throws GeneralException;
+	DictionaryVo updateDictionary(DictionaryDto updates) throws GeneralException;
 	
 	/**
 	 * 删除字典
@@ -110,7 +109,6 @@ public interface SystemDictService {
 	
 	/**
 	 * 删除字典
-	 * @param dictionary
 	 * @return
 	 * @throws GeneralException
 	 *  字典不存在时抛出异常
@@ -129,14 +127,12 @@ public interface SystemDictService {
 	
 	/**
 	 * 字典高级查询
-	 * @param dictionaryConditions
 	 * @return
 	 */
-	Page<Dictionary> queryDictionaries(DictiCondiDTO dictiCondiDTO);
+	Page<Dictionary> queryDictionaries(DictiCondiDto dictiCondiDTO);
 	
 	/**
 	 * 删除字典
-	 * @param dictionary
 	 * @return
 	 * @throws GeneralException
 	 *  字典不存在时抛出异常
@@ -145,7 +141,6 @@ public interface SystemDictService {
 	
 	/**
 	 * 删除字典
-	 * @param dictionary
 	 * @return
 	 * @throws GeneralException
 	 *  字典不存在时抛出异常
@@ -154,17 +149,15 @@ public interface SystemDictService {
 	
 	/**
 	 * 查询字典对象
-	 * @param dictionaryConditions
 	 * @return
 	 */
 	Dictionary queryOneDict(Long id);
 
 	/**
 	 * 根据字典ID和字典项ID删除字典项
-	 * @param dictionaryConditions
 	 * @return
 	 */
-	DictionaryVO removeItemByIds(DictionaryDTO dictionaryDTO) throws GeneralException;
+	DictionaryVo removeItemByIds(DictionaryDto dictionaryDto) throws GeneralException;
 
 	/**
 	 * 获取字典类型
@@ -172,8 +165,8 @@ public interface SystemDictService {
 	 */
 	Map<String, List<String>> getDictTypes();
 
-	DictionaryVO updateDictByUploadSingleFile(DictionaryDTO dictionaryDTO) throws Exception ;
+	DictionaryVo updateDictByUploadSingleFile(DictionaryDto dictionaryDto) throws Exception ;
 
-	DictItemVO queryByKeyAndDictId(DictiCondiDTO dictiCondiDTO) throws Exception;
+	DictItemVo queryByKeyAndDictId(DictiCondiDto dictiCondiDto) throws Exception;
 
 }

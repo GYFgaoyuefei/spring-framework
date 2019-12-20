@@ -6,7 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
-public class DictiCondiDTO {
+public class DictiCondiDto {
 	@ApiModelProperty(value="字典id列表")
 	private List<Long> ids; // 字典id列表
 	@ApiModelProperty(value="字典名称")

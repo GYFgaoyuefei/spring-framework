@@ -6,7 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
-public class DictionaryVO {
+public class DictionaryVo {
 	@ApiModelProperty(value="字典id")
 	private Long id;
 	
@@ -29,7 +29,7 @@ public class DictionaryVO {
 	private String group;
 	
 	@ApiModelProperty(value="字典项定义")
-	private List<DictItemVO> dictItems;
+	private List<DictItemVo> dictItems;
 	
 	@ApiModelProperty(value="错误信息")
 	private String message;
