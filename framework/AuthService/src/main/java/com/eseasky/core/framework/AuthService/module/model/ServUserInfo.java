@@ -32,6 +32,6 @@ public class ServUserInfo {
     private String orgCode;
 //    @Column(columnDefinition="varchar(128) default '000'")
 //    private String organCode="000";
-    private String orgName;
+//    private String orgName;
     private String nikeName;
 }

@@ -2,6 +2,7 @@ package com.eseasky.core.framework.AuthService.protocol.dto;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import lombok.Data;
@@ -15,6 +16,10 @@ public class OrgUpdateGrantDTO implements Serializable {
     
     private Integer action;
     
+    @NotEmpty(message = "组织不能为空")
     private String orgCode;
+    
+    @NotEmpty(message = "grantType不能为空")
+    private String grantType="accept";
     
 }

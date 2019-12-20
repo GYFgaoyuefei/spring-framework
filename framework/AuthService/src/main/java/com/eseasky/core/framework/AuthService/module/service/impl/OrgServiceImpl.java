@@ -1,30 +1,43 @@
 package com.eseasky.core.framework.AuthService.module.service.impl;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.eseasky.core.framework.AuthService.exception.BusiException.BusiEnum;
 import com.eseasky.core.framework.AuthService.exception.BusiException.BusiException;
 import com.eseasky.core.framework.AuthService.module.service.OrgService;
-import com.eseasky.core.framework.AuthService.protocol.dto.OrgQueryDTO;
-import com.eseasky.core.framework.AuthService.protocol.dto.OrgSaveDTO;
+import com.eseasky.core.framework.AuthService.protocol.dto.OrgSaveMoreDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgUpdateDTO;
 import com.eseasky.core.framework.AuthService.protocol.vo.MulOrgsVO;
-import com.eseasky.core.framework.AuthService.protocol.vo.OrgQueryVO;
-import com.eseasky.core.framework.AuthService.protocol.vo.OrgSaveVO;
 import com.eseasky.core.starters.organization.persistence.IOrganizeService;
 import com.eseasky.core.starters.organization.persistence.entity.OrgInsertInfo;
 import com.eseasky.core.starters.organization.persistence.entity.OrganizeQuery;
 import com.eseasky.core.starters.organization.persistence.entity.OrganizeUpdateInfo;
 import com.eseasky.core.starters.organization.persistence.model.OrganizeDefined;
 import com.eseasky.global.utils.SequeceHelper;
+import com.eseasky.protocol.auth.entity.DTO.OrgQueryDTO;
+import com.eseasky.protocol.auth.entity.DTO.OrgSaveDTO;
+import com.eseasky.protocol.auth.entity.DTO.OrgUpByCodeDTO;
+import com.eseasky.protocol.auth.entity.VO.OrgQueryVO;
+import com.eseasky.protocol.auth.entity.VO.OrgSaveVO;
 import com.google.common.base.Strings;
 
 @Service
@@ -222,7 +235,7 @@ public class OrgServiceImpl implements OrgService {
 				organizeQuery.setPageSize(50);
 				organizeQuery.setPage(page);
 				organizeQuery.setKeyWords(orgSaveDTO.getName());
-				organizeQuery.setStatus(0);
+				organizeQuery.setStatus(1);
 				Page<OrganizeDefined> organizeDefineds = iOrganizeService.queryOrganize(organizeQuery);
 				if (organizeDefineds != null && organizeDefineds.getContent() != null
 						&& organizeDefineds.getContent().size() > 0) {
@@ -243,5 +256,77 @@ public class OrgServiceImpl implements OrgService {
 			}
 		}
 		return orgSaveVO;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public Set<OrgSaveVO> saveMoreOrg(OrgSaveMoreDTO orgSavesDTO) {
+		// TODO Auto-generated method stub
+		Set<OrgSaveVO> orgSaveVOs=null;
+		if(orgSavesDTO!=null && orgSavesDTO.getOrgSavMore()!=null) {
+			for(OrgSaveDTO orgSaveDTO : orgSavesDTO.getOrgSavMore()) {
+				OrgSaveVO orgSaveVO=saveOrg(orgSaveDTO);
+				if(orgSaveVO!=null) {
+					if(orgSaveVOs!=null) {
+						orgSaveVOs=new HashSet<OrgSaveVO>();
+						orgSaveVOs.add(orgSaveVO);
+					}
+				}
+			}			
+		}
+		return orgSaveVOs;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public OrgSaveVO updateOrgByCode(OrgUpByCodeDTO orgUpdateDTO) {
+		// TODO Auto-generated method stub
+		OrgSaveVO orgSaveVO=null;
+		if(orgUpdateDTO!=null) {
+			OrganizeQuery organizeQuery = new OrganizeQuery();
+			organizeQuery.setOrgCode(orgUpdateDTO.getOrgCode());
+			Page<OrganizeDefined> organizeDefineds = iOrganizeService.queryOrganize(organizeQuery);
+			if(organizeDefineds!=null && organizeDefineds.getContent()!=null && organizeDefineds.getContent().size()>0) {
+				OrganizeDefined organizeDefined=organizeDefineds.getContent().get(0);
+				OrganizeUpdateInfo orgInsertInfo = new OrganizeUpdateInfo();
+				orgInsertInfo.setId(organizeDefined.getId());
+				orgInsertInfo.setName(organizeDefined.getName());
+				organizeDefined = iOrganizeService.updateOrganize(orgInsertInfo);
+				if(organizeDefined!=null) {
+					orgSaveVO=new OrgSaveVO();
+					BeanUtils.copyProperties(organizeDefined, orgSaveVO);
+				}		
+			}else {
+				throw new BusiException(BusiEnum.NO_ORGOFCODE);
+			}
+		}
+		return orgSaveVO;
+	}
+	
+	public List<String> getMerchantByFile(MultipartFile file) {
+		if (file.isEmpty() || file.getOriginalFilename() == null) {
+			throw new BusiException(500, "上传文件为空");
+		} else if (!file.getOriginalFilename().endsWith(".xls") && !file.getOriginalFilename().endsWith(".xlsx")) {
+			throw new BusiException(500, file.getOriginalFilename()+"文件格式不对");
+		} else {
+			try {
+				List<String> retlistStr = new ArrayList<String> ();
+			    InputStream input = new ByteArrayInputStream(file.getBytes());
+			    Workbook workbook = WorkbookFactory.create(input);
+			    input.close();		    
+			    for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
+			    	Sheet sheet = workbook.getSheetAt(i);
+				    Iterator<Row> iteratorRow = sheet.rowIterator();
+				    while (iteratorRow.hasNext()) {
+				    	Row row = iteratorRow.next();
+//				    	retlistStr.add(getCellValue(row.getCell(0)));
+				    }
+			    }			    			    
+			    return retlistStr;
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new BusiException(500, "上传文件失败：" + e.getMessage());
+			}
+		}	
 	}
 }

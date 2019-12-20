@@ -7,6 +7,8 @@ import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 
+import com.eseasky.core.starters.organization.persistence.entity.OrgUserGranted;
+
 @EqualsAndHashCode(callSuper = false)
 @Data
 public class ServUserInfoVO implements Serializable {
@@ -25,4 +27,6 @@ public class ServUserInfoVO implements Serializable {
     private String orgCode;
     @ApiModelProperty(value = "组织编码")
     private String orgName;
+    @ApiModelProperty(value = "用户角色")
+    private OrgUserGranted roles;
 }

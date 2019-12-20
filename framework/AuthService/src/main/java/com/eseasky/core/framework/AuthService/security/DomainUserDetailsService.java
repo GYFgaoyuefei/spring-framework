@@ -1,11 +1,14 @@
 package com.eseasky.core.framework.AuthService.security;
 
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.eseasky.core.framework.AuthService.module.model.ServUserInfo;
 import com.eseasky.core.framework.AuthService.module.service.ServUserInfoService;
+import com.eseasky.core.starters.auth.server.core.entity.FrontEndAuthConfig;
 import com.eseasky.core.starters.auth.server.core.interfaces.UserService;
 import com.eseasky.global.entity.UserViews;
 
@@ -46,6 +49,12 @@ public class DomainUserDetailsService implements UserService {
 			userViews.setName(account.getUserName());
 			return userViews;
 		}
+		return null;
+	}
+
+	@Override
+	public List<FrontEndAuthConfig> getFrontConfig() {
+		// TODO Auto-generated method stub
 		return null;
 	}
 }

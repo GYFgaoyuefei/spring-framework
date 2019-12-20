@@ -20,10 +20,12 @@ import com.eseasky.core.framework.AuthService.protocol.dto.GroupSaveDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.GroupUpdateDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.PowerGroupCreateItemDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.ResoureQueryDTO;
+import com.eseasky.core.framework.AuthService.protocol.dto.VRInfoDTO;
 import com.eseasky.core.framework.AuthService.protocol.vo.GroupQueryVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.GroupSaveVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.OrgGrantInfoVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.ResoureQueryVO;
+import com.eseasky.core.framework.AuthService.protocol.vo.VRInfoVO;
 import com.eseasky.core.framework.AuthService.utils.BinOrListUtil;
 import com.eseasky.core.starters.organization.persistence.IOrganizeService;
 import com.eseasky.core.starters.organization.persistence.entity.OrgUserGranted;
@@ -217,6 +219,16 @@ public class GroupServiceImpl implements GroupService{
 			}
 		}
 		return powerGroupGetItems;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public VRInfoVO reject(VRInfoDTO vRInfoDTO) {
+		// TODO Auto-generated method stub
+		if(vRInfoDTO!=null && vRInfoDTO.getUserVRId()!=null) {
+			iOrganizeService.reject(vRInfoDTO.getUserVRId());
+		}
+		return null;
 	}
 
 	

@@ -22,14 +22,17 @@ public class ServUserInfoDTO implements Serializable{
 	        message = "密码不能为空"
 	    )
 	private String passWord;
+	@NotEmpty(
+	        message = "手机号不能为空"
+	    )
 	private String mobile;
 	private String state;
-	private List<Integer> groupIds;
+	private List<Long> groupIds;
 	@NotEmpty(
 	        message = "组织不能为空"
 	    )
 	private String orgCode;
-	private String orgName;
+//	private String orgName;
 	@NotEmpty(
 	        message = "授权操作用户不能为空"
 	    )

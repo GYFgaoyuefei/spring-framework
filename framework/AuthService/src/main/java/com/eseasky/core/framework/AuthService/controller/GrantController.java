@@ -2,8 +2,6 @@ package com.eseasky.core.framework.AuthService.controller;
 
 import java.util.List;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.validation.annotation.Validated;
@@ -15,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.fastjson.JSONObject;
 import com.eseasky.core.framework.AuthService.module.service.GrantService;
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgGrantInfoDTO;
-import com.eseasky.core.framework.AuthService.protocol.dto.OrgGrantInfosDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgQueryGrantDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgUpdateGrantDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.ResoureQueryDTO;
@@ -62,15 +59,15 @@ public class GrantController {
         return msgReturn;
     }
 	
-	@ApiOperation(value = "授权", httpMethod = "POST")
-    @PostMapping(value = "/grantMore")
-    public ResultModel<List<GrantInfoVO>> grant(@Valid @RequestBody OrgGrantInfosDTO orgGrantInfoDTOs) {
-        ResultModel<List<GrantInfoVO>> msgReturn = new ResultModel<List<GrantInfoVO>>();
-        List<GrantInfoVO> orgGrantInfoVOs = roleService.grant(orgGrantInfoDTOs);
-        log.info(JSONObject.toJSONString(orgGrantInfoVOs));
-        msgReturn.setData(orgGrantInfoVOs);
-        return msgReturn;
-    }
+//	@ApiOperation(value = "授权", httpMethod = "POST")
+//    @PostMapping(value = "/grantMore")
+//    public ResultModel<List<GrantInfoVO>> grant(@Valid @RequestBody OrgGrantInfosDTO orgGrantInfoDTOs) {
+//        ResultModel<List<GrantInfoVO>> msgReturn = new ResultModel<List<GrantInfoVO>>();
+//        List<GrantInfoVO> orgGrantInfoVOs = roleService.grant(orgGrantInfoDTOs);
+//        log.info(JSONObject.toJSONString(orgGrantInfoVOs));
+//        msgReturn.setData(orgGrantInfoVOs);
+//        return msgReturn;
+//    }
 	
 	@ApiOperation(value = "更新授权", httpMethod = "POST")
     @PostMapping(value = "/updateGrant")

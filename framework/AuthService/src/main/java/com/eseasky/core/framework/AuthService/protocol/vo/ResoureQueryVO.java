@@ -37,5 +37,7 @@ public class ResoureQueryVO implements Serializable {
     
     private String user;
     
+    private String grantType;
+    
     private Timestamp createTime;
 }

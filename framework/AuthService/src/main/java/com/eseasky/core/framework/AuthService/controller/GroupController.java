@@ -17,10 +17,12 @@ import com.eseasky.core.framework.AuthService.protocol.dto.GroupQueryDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.GroupSaveDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.GroupUpdateDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.ResoureQueryDTO;
+import com.eseasky.core.framework.AuthService.protocol.dto.VRInfoDTO;
 import com.eseasky.core.framework.AuthService.protocol.vo.GroupQueryVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.GroupSaveVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.OrgGrantInfoVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.ResoureQueryVO;
+import com.eseasky.core.framework.AuthService.protocol.vo.VRInfoVO;
 import com.eseasky.global.entity.MsgPageInfo;
 import com.eseasky.global.entity.ResultModel;
 
@@ -101,6 +103,18 @@ public class GroupController {
         log.info(JSONObject.toJSONString(resoureQueryVOs));
         if(resoureQueryVOs!=null)
         	msgReturn.setData(resoureQueryVOs.getContent(),MsgPageInfo.loadFromPageable(resoureQueryVOs));
+        return msgReturn;
+    }
+	
+	@ApiOperation(value = "查询授权资源", httpMethod = "POST")
+    @PostMapping(value = "/reject")
+    public ResultModel<VRInfoVO> reject(@RequestBody @Validated VRInfoDTO vRInfoDTO ) {
+
+        ResultModel<VRInfoVO> msgReturn = new ResultModel<VRInfoVO>();
+        VRInfoVO vRInfoVO = groupService.reject(vRInfoDTO);
+        log.info(JSONObject.toJSONString(vRInfoVO));
+        if(vRInfoVO!=null)
+        	msgReturn.setData(vRInfoVO);
         return msgReturn;
     }
 

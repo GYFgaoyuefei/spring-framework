@@ -1,5 +1,7 @@
 package com.eseasky.core.framework.AuthService.protocol.vo;
 
+import com.eseasky.protocol.auth.entity.VO.OrgQueryVO;
+
 import java.io.Serializable;
 import java.util.List;
 

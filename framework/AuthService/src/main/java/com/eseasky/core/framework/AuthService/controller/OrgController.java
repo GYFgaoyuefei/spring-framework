@@ -1,6 +1,7 @@
 package com.eseasky.core.framework.AuthService.controller;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,14 +13,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
 import com.eseasky.core.framework.AuthService.module.service.OrgService;
-import com.eseasky.core.framework.AuthService.protocol.dto.OrgQueryDTO;
-import com.eseasky.core.framework.AuthService.protocol.dto.OrgSaveDTO;
+import com.eseasky.core.framework.AuthService.protocol.dto.OrgSaveMoreDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgUpdateDTO;
 import com.eseasky.core.framework.AuthService.protocol.vo.MulOrgsVO;
-import com.eseasky.core.framework.AuthService.protocol.vo.OrgQueryVO;
-import com.eseasky.core.framework.AuthService.protocol.vo.OrgSaveVO;
 import com.eseasky.global.entity.MsgPageInfo;
 import com.eseasky.global.entity.ResultModel;
+import com.eseasky.protocol.auth.entity.DTO.OrgQueryDTO;
+import com.eseasky.protocol.auth.entity.DTO.OrgSaveDTO;
+import com.eseasky.protocol.auth.entity.VO.OrgQueryVO;
+import com.eseasky.protocol.auth.entity.VO.OrgSaveVO;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -53,6 +55,17 @@ public class OrgController {
 		OrgSaveVO orgSaveVO = orgService.saveOrg(orgSaveDTO);
 		log.info(JSONObject.toJSONString(orgSaveVO));
 		msgReturn.setData(orgSaveVO);
+		return msgReturn;
+	}
+	
+	@ApiOperation(value = "添加多个组织", httpMethod = "POST")
+	@PostMapping(value = "/saveMoreOrg")
+	public ResultModel<Set<OrgSaveVO>> saveMoreOrg(@RequestBody @Validated OrgSaveMoreDTO orgSaveDTO) {
+
+		ResultModel<Set<OrgSaveVO>> msgReturn = new ResultModel<Set<OrgSaveVO>>();
+		Set<OrgSaveVO> orgSaveVOs = orgService.saveMoreOrg(orgSaveDTO);
+		log.info(JSONObject.toJSONString(orgSaveVOs));
+		msgReturn.setData(orgSaveVOs);
 		return msgReturn;
 	}
 	

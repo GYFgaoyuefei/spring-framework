@@ -15,11 +15,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
 import com.eseasky.core.framework.AuthService.module.model.ServUserInfo;
+import com.eseasky.core.framework.AuthService.module.service.OrgService;
 import com.eseasky.core.framework.AuthService.module.service.ServUserInfoService;
 import com.eseasky.core.framework.AuthService.protocol.dto.ServUserInfoDTO;
+import com.eseasky.core.framework.AuthService.protocol.dto.VRInfoDTO;
 import com.eseasky.core.framework.AuthService.protocol.vo.ServUserInfoVO;
+import com.eseasky.core.starters.organization.persistence.entity.OrgUserGranted;
 import com.eseasky.global.entity.MsgPageInfo;
 import com.eseasky.global.entity.ResultModel;
+import com.google.common.base.Strings;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -32,6 +36,9 @@ import lombok.extern.log4j.Log4j2;
 public class UserInfoController {
     @Autowired
     private ServUserInfoService servUserInfoService;
+    
+	@Autowired
+	private OrgService orgService;
 
     @ApiOperation(value = "新建用户", httpMethod = "POST")
     @PostMapping(value = "/add")
@@ -53,6 +60,8 @@ public class UserInfoController {
         List<ServUserInfoVO> list = page.stream().map(item -> {
             ServUserInfoVO servUserInfoVO = new ServUserInfoVO();
             BeanUtils.copyProperties(item, servUserInfoVO,"passWord");
+            servUserInfoVO.setRoles(servUserInfoService.getUserGranted(servUserInfoVO.getUserName()));
+            servUserInfoVO.setOrgName(orgService.getOrgNameByOrgCode(servUserInfoDTO.getOrgCode()).getName());
             return servUserInfoVO;
         }).collect(Collectors.toList());
 
@@ -123,4 +132,15 @@ public class UserInfoController {
         return msgReturn;
     }
 
+    @Transactional
+    @ApiOperation(value = "强制下线", httpMethod = "POST")
+    @PostMapping(value = "/getUserGranted")
+    public ResultModel<OrgUserGranted> getUserGranted(@RequestBody VRInfoDTO vRInfoDTO) {
+        ResultModel<OrgUserGranted> msgReturn = new ResultModel<OrgUserGranted>();
+        OrgUserGranted orgUserGranted=null;
+        if(vRInfoDTO!=null && !Strings.isNullOrEmpty(vRInfoDTO.getAccount()))
+        	orgUserGranted = servUserInfoService.getUserGranted(vRInfoDTO.getAccount());
+        msgReturn.setData(orgUserGranted);
+        return msgReturn;
+    }
 }
