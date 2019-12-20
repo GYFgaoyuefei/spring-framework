@@ -1,5 +1,6 @@
 package com.eseasky.core.framework.system.protocol.dto;
 
+import java.io.Serializable;
 import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -8,8 +9,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
-public class DictionaryDTO {
-	
+public class DictionaryDto implements Serializable {
+	private static final long serialVersionUID = 1L;
 	@ApiModelProperty(value="上传文件")
 	private List<MultipartFile> files;
 	
@@ -35,7 +36,7 @@ public class DictionaryDTO {
 	private String group;
 	
 	@ApiModelProperty(value="字典项定义")
-	private List<DictItemDTO> dictItems;
+	private List<DictItemDto> dictItems;
 	
 	@ApiModelProperty(value="字典项id列表")
 	private List<Long> dictItemIds;
