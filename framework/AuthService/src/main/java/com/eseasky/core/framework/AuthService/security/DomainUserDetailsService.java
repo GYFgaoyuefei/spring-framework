@@ -63,7 +63,7 @@ public class DomainUserDetailsService implements UserService {
 
 	
 	@Override
-	public List<FrontEndAuthConfig> getFrontConfig() {
+	public FrontEndAuthConfig getFrontConfig() {
 		// TODO Auto-generated method stub
 		DictiCondiDTO dto = new DictiCondiDTO();
 		dto.setGroup(FRONTEND_DICT_GROUP);
@@ -83,7 +83,7 @@ public class DomainUserDetailsService implements UserService {
 		configItem.setKey("MERCHANT_MENU");
 		configItem.setRelatePower("商家查询,商家新增".split(","));
 		send.add(configItem);
-		return send.isEmpty() ? null : send;
-
+//		return send.isEmpty() ? null : send;
+		return null;
 	}
 }

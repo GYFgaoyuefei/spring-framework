@@ -1,5 +1,6 @@
 package com.eseasky.protocol.auth.protocol.hystrix;
 
+import com.eseasky.core.starters.feign.wrapper.fallbacks.IHystrix;
 import org.springframework.data.domain.Page;
 
 import com.eseasky.core.starters.system.exception.errors.BaseHandlerException;
@@ -11,10 +12,12 @@ import com.eseasky.protocol.auth.entity.VO.OrgQueryVO;
 import com.eseasky.protocol.auth.entity.VO.OrgSaveVO;
 import com.eseasky.protocol.auth.protocol.OrgServiceFeign;
 
-public class OrgServiceFeignHystrix implements OrgServiceFeign {
+import java.util.List;
+
+public class OrgServiceFeignHystrix implements OrgServiceFeign , IHystrix {
 
 	@Override
-	public Page<OrgQueryVO> queryOrg(OrgQueryDTO orgQueryDTO) {
+	public ResultModel<List<OrgQueryVO>> queryOrg(OrgQueryDTO orgQueryDTO) {
 		// TODO Auto-generated method stub
 		throw new BaseHandlerException(500, "error");
 	}
@@ -43,6 +46,10 @@ public class OrgServiceFeignHystrix implements OrgServiceFeign {
 		return null;
 	}
 
-	
-
+private Throwable throwable;
+	@Override
+	public Throwable setThrowable(Throwable throwable) {
+		this.throwable = throwable;
+		return null;
+	}
 }

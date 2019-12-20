@@ -1,8 +1,6 @@
 package com.eseasky.protocol.auth.protocol;
 
-import org.springframework.data.domain.Page;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.eseasky.core.starters.feign.wrapper.config.Feign;
@@ -17,6 +15,8 @@ import feign.Headers;
 import feign.RequestLine;
 import io.swagger.annotations.ApiOperation;
 
+import java.util.List;
+
 
 @Feign(serviceName="AuthService")
 public interface OrgServiceFeign {
@@ -24,7 +24,7 @@ public interface OrgServiceFeign {
 
 	@RequestLine("POST /queryOrg")
 	@Headers({"Content-Type: application/json","Accept: application/json"})
-    public Page<OrgQueryVO> queryOrg(@RequestBody OrgQueryDTO orgQueryDTO);
+    public ResultModel<List<OrgQueryVO>> queryOrg(@RequestBody OrgQueryDTO orgQueryDTO);
     
 	@RequestLine("POST /saveOrg")
 	@Headers({"Content-Type: application/json","Accept: application/json"})
