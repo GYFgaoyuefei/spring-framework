@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.eseasky.protocol.system.entity.DTO.DictiCondiDTO;
 import com.eseasky.protocol.system.entity.VO.DictItemVO;
+import com.eseasky.protocol.system.entity.VO.DictionaryVO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -55,13 +56,13 @@ public interface SystemParamPro {
 	
 	@ApiOperation(value="根据类型和分组查询有效的字典参数", notes="根据类型查询有效的字典参数")
 	@PostMapping(value="/dict/queryByTypeAndGroup")
-	public ResponseEntity<MsgReturn<DictionaryVo>> queryByTypeAndGroup(@RequestBody DictionaryDto dictionaryDTO);
+	public ResponseEntity<MsgReturn<DictionaryVO>> queryByTypeAndGroup(@RequestBody DictiCondiDTO dictiCondiDTO);
 	
 	@ApiOperation(value="上传获取excel文件更新字典项", notes="上传获取excel文件更新字典项")
 	@PostMapping(value="/dict/updateDictByUploadSingleFile")
 	public ResponseEntity<MsgReturn<DictionaryVo>> updateDictByUploadSingleFile(DictionaryDto dictionaryDTO);
 
-	@ApiOperation(value="上传获取excel文件更新字典项", notes="上传获取excel文件更新字典项")
+	@ApiOperation(value="根据类型和分组查询有效的字典参数", notes="根据类型查询有效的字典参数")
 	@PostMapping(value="/dict/queryByKeyAndDictId")
 	public ResponseEntity<MsgReturn<DictItemVO>> queryByKeyAndDictId(@RequestBody DictiCondiDTO dictiCondiDTO);
 
