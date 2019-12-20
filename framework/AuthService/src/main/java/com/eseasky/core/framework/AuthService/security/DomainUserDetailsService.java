@@ -82,7 +82,7 @@ public class DomainUserDetailsService implements UserService {
 //		}
 		FrontEndAuthConfig configItem = new FrontEndAuthConfig();
 		configItem.setKey("MERCHANT_MENU");
-		configItem.setRelatePower("merchant_query,merchant_add".split(","));
+		configItem.setRelatePower("商家查询,商家新增".split(","));
 		send.add(configItem);
 		return send.isEmpty() ? null : send;
 	}
