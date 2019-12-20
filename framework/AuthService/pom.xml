@@ -94,6 +94,10 @@
 			<groupId>com.eseasky.core.starters</groupId>
 			<artifactId>jsch</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.eseasky.framework.protocol</groupId>
+			<artifactId>system-service-protocol</artifactId>
+		</dependency>
 		<!--
 		<dependency>
 			<groupId>com.github.ulisesbocchio</groupId>

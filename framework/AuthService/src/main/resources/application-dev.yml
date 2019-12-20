@@ -1,3 +1,6 @@
+spring:
+  application:
+    name: AuthServiceTest
 custom:
   app:
     token:
@@ -33,12 +36,12 @@ custom:
     absolute-path: /home/mnet/montnets/images     
 
 eurekaserver:
-  ip: 192.168.1.232
+  ip: 192.168.1.233
   port: 9709
-eureka:
-  client:
-    register-with-eureka: false
-    fetch-registry: false
+#eureka:
+#  client:
+#    register-with-eureka: false
+#    fetch-registry: false
 
 logging:
   level:
