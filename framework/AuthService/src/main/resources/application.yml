@@ -131,10 +131,10 @@ management:
 
 #安全配置
 #oauth2配置
-security:
-  oauth2:
-    resource:
-      filter-order: 3
+#security:
+#  oauth2:
+#    resource:
+#      filter-order: 3
 
 #数据库备份与恢复
 database:
