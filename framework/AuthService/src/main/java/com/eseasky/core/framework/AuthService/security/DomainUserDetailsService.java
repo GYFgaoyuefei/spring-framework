@@ -63,7 +63,7 @@ public class DomainUserDetailsService implements UserService {
 
 	
 	@Override
-	public FrontEndAuthConfig getFrontConfig() {
+	public List<FrontEndAuthConfig> getFrontConfig() {
 		// TODO Auto-generated method stub
 		DictiCondiDTO dto = new DictiCondiDTO();
 		dto.setGroup(FRONTEND_DICT_GROUP);
