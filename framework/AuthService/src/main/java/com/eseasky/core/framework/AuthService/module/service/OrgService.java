@@ -1,11 +1,8 @@
 package com.eseasky.core.framework.AuthService.module.service;
 
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.data.domain.Page;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgSaveMoreDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgUpdateDTO;
 import com.eseasky.core.framework.AuthService.protocol.vo.MulOrgsVO;

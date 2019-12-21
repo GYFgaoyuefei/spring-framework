@@ -3,10 +3,8 @@ package com.eseasky.core.framework.AuthService.module.service.impl;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.poi.ss.usermodel.Row;
@@ -181,14 +179,16 @@ public class OrgServiceImpl implements OrgService {
 		firOrgDTO.setLevel(1);
 		firOrgDTO.setPage(0);
 		firOrgDTO.setSize(50);
+		firOrgDTO.setOrgCode(orgQueryDTO.getOrgCode());
+		firOrgDTO.setStatus(1);
 		String keyWords = orgQueryDTO.getKeyWords();
 		Page<OrgQueryVO> firOrgVOs = queryOrg(firOrgDTO);
 		if (firOrgVOs != null && firOrgVOs.getContent() != null) {
 			mulOrgsVOs = firOrgVOs.stream().map(item -> {
-				boolean isFir = false;
+				boolean isExistFir = false;
 				if (Strings.isNullOrEmpty(keyWords) || item.getNote().contains(keyWords)
 						|| item.getName().contains(keyWords))
-					isFir = true;
+					isExistFir = true;
 				List<OrgQueryVO> organizeDefineds = null;
 				int page = 0;
 				while (true) {
@@ -197,8 +197,9 @@ public class OrgServiceImpl implements OrgService {
 					secOrgQueryDTO.setParentCode(item.getOrgCode());
 					secOrgQueryDTO.setPage(page);
 					secOrgQueryDTO.setSize(50);
-					if (!isFir)
-						secOrgQueryDTO.setKeyWords(keyWords);
+					secOrgQueryDTO.setStatus(1);
+					if (!isExistFir)
+						secOrgQueryDTO.setKeyWords(keyWords);					
 					Page<OrgQueryVO> orgQueryVOs = queryOrg(secOrgQueryDTO);
 					if (orgQueryVOs == null || orgQueryVOs.getContent() == null || orgQueryVOs.getContent().size() == 0)
 						break;
@@ -209,7 +210,7 @@ public class OrgServiceImpl implements OrgService {
 					page++;
 				}
 				MulOrgsVO mulOrgsVO = null;
-				if (organizeDefineds != null || isFir) {
+				if (organizeDefineds != null || isExistFir) {
 					mulOrgsVO = new MulOrgsVO();
 					mulOrgsVO.setLevelFirOrg(item);
 				}
@@ -241,7 +242,7 @@ public class OrgServiceImpl implements OrgService {
 				organizeQuery.setPageSize(50);
 				organizeQuery.setPage(page);
 				organizeQuery.setKeyWords(orgSaveDTO.getName());
-				organizeQuery.setStatus(1);
+				organizeQuery.setStatus(null);
 				Page<OrganizeDefined> organizeDefineds = iOrganizeService.queryOrganize(organizeQuery);
 				if (organizeDefineds != null && organizeDefineds.getContent() != null
 						&& organizeDefineds.getContent().size() > 0) {
@@ -323,12 +324,12 @@ public class OrgServiceImpl implements OrgService {
 								orgSaveDTO.setNote(orgSaveDTO.getName());
 							}
 							OrgRowSaveVO orgRowSaveVO = saveByExcel(orgSaveDTO);
-							if (orgRowSaveVO != null) {
-								orgRowSaveVOs.add(orgRowSaveVO);
+							if (orgRowSaveVO != null) {								
 								if(Strings.isNullOrEmpty(orgRowSaveVO.getErrorMessage())) {
 									orgSaveByExcelVO.setSuccessNum(orgSaveByExcelVO.getSuccessNum()+1);
 								}else {
 									orgSaveByExcelVO.setErrorNum(orgSaveByExcelVO.getErrorNum()+1);
+									orgRowSaveVOs.add(orgRowSaveVO);
 								}
 								orgSaveByExcelVO.setCount(orgSaveByExcelVO.getCount()+1);
 							}

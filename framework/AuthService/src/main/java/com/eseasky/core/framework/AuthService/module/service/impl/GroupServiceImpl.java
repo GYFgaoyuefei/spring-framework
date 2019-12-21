@@ -6,55 +6,27 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.eseasky.core.framework.AuthService.exception.BusiException.BusiEnum;
-import com.eseasky.core.framework.AuthService.exception.BusiException.BusiException;
 import com.eseasky.core.framework.AuthService.module.service.GroupService;
 import com.eseasky.core.framework.AuthService.module.service.OrgService;
-import com.eseasky.core.framework.AuthService.module.service.PowerService;
-import com.eseasky.core.framework.AuthService.protocol.dto.AuPowerGrantDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.GroupGrantDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.GroupSaveDTO;
-import com.eseasky.core.framework.AuthService.protocol.dto.PowerQueryDTO;
-import com.eseasky.core.framework.AuthService.protocol.dto.PowerSaveDTO;
-import com.eseasky.core.framework.AuthService.protocol.dto.PowerUpdateDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.QueryGroupDTO;
-import com.eseasky.core.framework.AuthService.protocol.dto.PowerGroupCreateItemDTO;
-import com.eseasky.core.framework.AuthService.protocol.dto.ResoureQueryDTO;
-import com.eseasky.core.framework.AuthService.protocol.dto.VRInfoDTO;
-import com.eseasky.core.framework.AuthService.protocol.vo.PowerQueryVO;
-import com.eseasky.core.framework.AuthService.protocol.vo.PowerSaveVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.GroupQueryVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.GroupSaveVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.OrgGraItemForUserGroupVO;
-import com.eseasky.core.framework.AuthService.protocol.vo.OrgGrantInfoVO;
-import com.eseasky.core.framework.AuthService.protocol.vo.ResoureQueryVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.UserGrantInfoVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.VRInfoVO;
-import com.eseasky.core.framework.AuthService.utils.BinOrListUtil;
 import com.eseasky.core.starters.organization.persistence.IOrganizeService;
 import com.eseasky.core.starters.organization.persistence.entity.OrgGrantedItemForUserGroup;
 import com.eseasky.core.starters.organization.persistence.entity.OrgUserGranted;
-import com.eseasky.core.starters.organization.persistence.entity.PowerGroupCreate;
-import com.eseasky.core.starters.organization.persistence.entity.PowerGroupCreateItem;
-import com.eseasky.core.starters.organization.persistence.entity.PowerGroupGetItem;
-import com.eseasky.core.starters.organization.persistence.entity.PowerGroupInfo;
-import com.eseasky.core.starters.organization.persistence.entity.PowerGroupQuery;
-import com.eseasky.core.starters.organization.persistence.entity.PowerGroupUpdate;
-import com.eseasky.core.starters.organization.persistence.entity.ResourceQuery;
 import com.eseasky.core.starters.organization.persistence.entity.VRInfo;
 import com.eseasky.core.starters.organization.persistence.entity.dto.GrantByGroupDTO;
 import com.eseasky.core.starters.organization.persistence.entity.dto.GroupAddDTO;
 import com.eseasky.core.starters.organization.persistence.entity.dto.GroupQueryDTO;
-import com.eseasky.core.starters.organization.persistence.entity.dto.PowerGrantDTO;
 import com.eseasky.core.starters.organization.persistence.entity.vo.GroupVO;
-import com.eseasky.core.starters.organization.persistence.model.OrgPowerDefined;
-import com.eseasky.core.starters.organization.persistence.model.OrganizeResourceDefined;
-import com.google.common.base.Strings;
 
 
 @Service

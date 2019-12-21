@@ -37,21 +37,15 @@ import com.eseasky.core.framework.AuthService.module.service.GroupService;
 import com.eseasky.core.framework.AuthService.module.service.PowerService;
 import com.eseasky.core.framework.AuthService.module.service.OrgService;
 import com.eseasky.core.framework.AuthService.module.service.ServUserInfoService;
-import com.eseasky.core.framework.AuthService.protocol.dto.GroupGrantDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.ServUserInfoDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.VRInfoDTO;
-import com.eseasky.core.framework.AuthService.protocol.vo.OrgGraItemForUserGroupVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.ServUserInfoVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.UserGrantInfoVO;
-import com.eseasky.core.framework.AuthService.protocol.vo.VRInfoVO;
 import com.eseasky.core.starters.organization.persistence.IOrganizeService;
-import com.eseasky.core.starters.organization.persistence.entity.OrgGrantedItemForUserGroup;
 import com.eseasky.core.starters.organization.persistence.entity.OrgUserGranted;
-import com.eseasky.core.starters.organization.persistence.entity.UserGrantByGroup;
 import com.eseasky.core.starters.organization.persistence.entity.VRInfo;
 import com.eseasky.core.starters.organization.persistence.entity.dto.GrantByGroupDTO;
 import com.eseasky.core.starters.organization.persistence.entity.dto.PowerGrantDTO;
-import com.eseasky.core.starters.organization.persistence.model.UserVrGranted;
 
 import static com.eseasky.core.framework.AuthService.exception.BusiException.BusiEnum.NOT_FOUND_USER;
 
@@ -77,6 +71,9 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 
 	@Autowired
 	private GroupService groupService;
+	
+	@Autowired
+	private OrgService orgService;
 
 //	private List<Predicate> predicates;
 //	private List<String> excludes = Arrays.asList(new String[] { "page", "size" });
@@ -274,6 +271,8 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 			if (userInfo.isPresent() && userInfo.get() != null) {
 				servUserInfoVO = new ServUserInfoVO();
 				BeanUtils.copyProperties(userInfo.get(), servUserInfoVO);
+				servUserInfoVO.setOrgName(orgService.getOrgNameByOrgCode(servUserInfoVO.getOrgCode()).getName());
+				servUserInfoVO.setRoles(getUserGranted(servUserInfoVO.getUserName()));
 				List<AuthAccessToken> authAccessToken = authAccessTokenRepository
 						.findByUserName(userInfo.get().getUserName());
 				if (authAccessToken == null)
