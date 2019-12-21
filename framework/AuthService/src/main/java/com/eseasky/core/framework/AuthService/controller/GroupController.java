@@ -12,16 +12,23 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
 import com.eseasky.core.framework.AuthService.module.service.GroupService;
+import com.eseasky.core.framework.AuthService.module.service.PowerService;
+import com.eseasky.core.framework.AuthService.protocol.dto.AuPowerGrantDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.GroupGrantDTO;
-import com.eseasky.core.framework.AuthService.protocol.dto.GroupQueryDTO;
+import com.eseasky.core.framework.AuthService.protocol.dto.QueryGroupDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.GroupSaveDTO;
-import com.eseasky.core.framework.AuthService.protocol.dto.GroupUpdateDTO;
+import com.eseasky.core.framework.AuthService.protocol.dto.PowerQueryDTO;
+import com.eseasky.core.framework.AuthService.protocol.dto.PowerSaveDTO;
+import com.eseasky.core.framework.AuthService.protocol.dto.PowerUpdateDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.ResoureQueryDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.VRInfoDTO;
+import com.eseasky.core.framework.AuthService.protocol.vo.PowerQueryVO;
+import com.eseasky.core.framework.AuthService.protocol.vo.PowerSaveVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.GroupQueryVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.GroupSaveVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.OrgGrantInfoVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.ResoureQueryVO;
+import com.eseasky.core.framework.AuthService.protocol.vo.UserGrantInfoVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.VRInfoVO;
 import com.eseasky.global.entity.MsgPageInfo;
 import com.eseasky.global.entity.ResultModel;
@@ -40,82 +47,59 @@ public class GroupController {
 	private GroupService groupService;
 	
 	@ApiOperation(value = "添加权限分组", httpMethod = "POST")
-	@PostMapping(value = "/saveGroup")
-	public ResultModel<GroupSaveVO> saveGroup(@RequestBody  @Validated GroupSaveDTO groupSaveDTO) {
+	@PostMapping(value = "/addGroup")
+	public ResultModel<GroupSaveVO> addGroup(@RequestBody  @Validated GroupSaveDTO groupSaveDTO) {
 
 		ResultModel<GroupSaveVO> msgReturn = new ResultModel<GroupSaveVO>();
-		GroupSaveVO groupSaveVO = groupService.saveGroup(groupSaveDTO);
+		GroupSaveVO groupSaveVO = groupService.addGroup(groupSaveDTO);
 		log.info(JSONObject.toJSONString(groupSaveVO));
 		msgReturn.setData(groupSaveVO);
 		return msgReturn;
 	}
 	
-	@ApiOperation(value = "更新权限分组", httpMethod = "POST")
-	@PostMapping(value = "/updateGroup")
-	public ResultModel<GroupSaveVO> updateGroup(@RequestBody  @Validated GroupUpdateDTO groupUpdateDTO) {
-
-		ResultModel<GroupSaveVO> msgReturn = new ResultModel<GroupSaveVO>();
-		GroupSaveVO groupSaveVO = groupService.updateGroup(groupUpdateDTO);
-		log.info(JSONObject.toJSONString(groupSaveVO));
-		msgReturn.setData(groupSaveVO);
-		return msgReturn;
-	}
+//	@ApiOperation(value = "更新权限分组", httpMethod = "POST")
+//	@PostMapping(value = "/updatePower")
+//	public ResultModel<PowerSaveVO> updatePower(@RequestBody  @Validated PowerUpdateDTO groupUpdateDTO) {
+//
+//		ResultModel<PowerSaveVO> msgReturn = new ResultModel<PowerSaveVO>();
+//		PowerSaveVO groupSaveVO = groupService.updatePower(groupUpdateDTO);
+//		log.info(JSONObject.toJSONString(groupSaveVO));
+//		msgReturn.setData(groupSaveVO);
+//		return msgReturn;
+//	}
 	
 	@ApiOperation(value = "删除权限分组", httpMethod = "POST")
 	@PostMapping(value = "/deleteGroup")
-	public ResultModel<GroupSaveVO> deleteGroup(@RequestBody GroupUpdateDTO groupUpdateDTO) {
-		ResultModel<GroupSaveVO> msgReturn = new ResultModel<GroupSaveVO>();
-		GroupSaveVO groupSaveVO = groupService.deleteGroup(groupUpdateDTO);
-		log.info(JSONObject.toJSONString(groupSaveVO));
-		msgReturn.setData(groupSaveVO);
+	public ResultModel<GroupQueryVO> deleteGroup(@RequestBody QueryGroupDTO groupUpdateDTO) {
+		ResultModel<GroupQueryVO> msgReturn = new ResultModel<GroupQueryVO>();
+		groupService.deleteGroup(groupUpdateDTO);
+		msgReturn.setData(null);
 		return msgReturn;
 		
 	}
 	
 	@ApiOperation(value = "查询权限分组", httpMethod = "POST")
     @PostMapping(value = "/queryGroup")
-    public ResultModel<List<GroupQueryVO>> queryGroup(@RequestBody GroupQueryDTO groupQueryDTO) {
+    public ResultModel<List<GroupQueryVO>> queryGroup(@RequestBody QueryGroupDTO groupQueryDTO) {
 
         ResultModel<List<GroupQueryVO>> msgReturn = new ResultModel<List<GroupQueryVO>>();
-        Page<GroupQueryVO> groupQueryVOs = groupService.queryGroup(groupQueryDTO);
+        List<GroupQueryVO> groupQueryVOs = groupService.queryGroup(groupQueryDTO);
         log.info(JSONObject.toJSONString(groupQueryVOs));
-        msgReturn.setData(groupQueryVOs.getContent(),MsgPageInfo.loadFromPageable(groupQueryVOs));
+        msgReturn.setData(groupQueryVOs);
         return msgReturn;
     }
 	
 	@ApiOperation(value = "授权", httpMethod = "POST")
-	@PostMapping(value = "/grant")
-	public ResultModel<OrgGrantInfoVO> grant(@RequestBody @Validated GroupGrantDTO groupGrantDTO) {
+	@PostMapping(value = "/grantByGroup")
+	public ResultModel<UserGrantInfoVO> grantByGroup(@RequestBody @Validated GroupGrantDTO groupGrantDTO) {
 
-		ResultModel<OrgGrantInfoVO> msgReturn = new ResultModel<OrgGrantInfoVO>();
-		OrgGrantInfoVO orgGrantInfoVO = groupService.grant(groupGrantDTO);
+		ResultModel<UserGrantInfoVO> msgReturn = new ResultModel<UserGrantInfoVO>();
+		UserGrantInfoVO orgGrantInfoVO = groupService.grantByGroup(groupGrantDTO);
 		log.info(JSONObject.toJSONString(orgGrantInfoVO));
 		msgReturn.setData(orgGrantInfoVO);
 		return msgReturn;
 	}
 	
-	@ApiOperation(value = "查询授权资源", httpMethod = "POST")
-    @PostMapping(value = "/queryResoure")
-    public ResultModel<List<ResoureQueryVO>> queryResoure(@RequestBody ResoureQueryDTO resoureQueryDTO) {
-
-        ResultModel<List<ResoureQueryVO>> msgReturn = new ResultModel<List<ResoureQueryVO>>();
-        Page<ResoureQueryVO> resoureQueryVOs = groupService.queryResoureItem(resoureQueryDTO);
-        log.info(JSONObject.toJSONString(resoureQueryVOs));
-        if(resoureQueryVOs!=null)
-        	msgReturn.setData(resoureQueryVOs.getContent(),MsgPageInfo.loadFromPageable(resoureQueryVOs));
-        return msgReturn;
-    }
 	
-	@ApiOperation(value = "查询授权资源", httpMethod = "POST")
-    @PostMapping(value = "/reject")
-    public ResultModel<VRInfoVO> reject(@RequestBody @Validated VRInfoDTO vRInfoDTO ) {
-
-        ResultModel<VRInfoVO> msgReturn = new ResultModel<VRInfoVO>();
-        VRInfoVO vRInfoVO = groupService.reject(vRInfoDTO);
-        log.info(JSONObject.toJSONString(vRInfoVO));
-        if(vRInfoVO!=null)
-        	msgReturn.setData(vRInfoVO);
-        return msgReturn;
-    }
 
 }

@@ -4,10 +4,12 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.data.domain.Page;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgSaveMoreDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgUpdateDTO;
 import com.eseasky.core.framework.AuthService.protocol.vo.MulOrgsVO;
+import com.eseasky.core.framework.AuthService.protocol.vo.OrgSaveByExcelVO;
 import com.eseasky.protocol.auth.entity.DTO.OrgQueryDTO;
 import com.eseasky.protocol.auth.entity.DTO.OrgSaveDTO;
 import com.eseasky.protocol.auth.entity.DTO.OrgUpByCodeDTO;
@@ -33,8 +35,10 @@ public interface OrgService {
 
 	List<MulOrgsVO> queryMulOrgs(OrgQueryDTO orgQueryDTO);
 
-	Set<OrgSaveVO> saveMoreOrg(OrgSaveMoreDTO orgSaveDTO);
+//	Set<OrgSaveVO> saveMoreOrg(OrgSaveMoreDTO orgSaveDTO);
 
 	OrgSaveVO updateOrgByCode(OrgUpByCodeDTO orgUpdateDTO);
+
+	OrgSaveByExcelVO saveByExcel(OrgSaveMoreDTO orgSaveMoreDTO);
 
 }

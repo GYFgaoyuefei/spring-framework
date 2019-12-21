@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,7 +19,7 @@ import com.eseasky.core.framework.AuthService.module.service.ServUserInfoService
 import com.eseasky.core.framework.AuthService.protocol.dto.ServUserInfoDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.VRInfoDTO;
 import com.eseasky.core.framework.AuthService.protocol.vo.ServUserInfoVO;
-import com.eseasky.core.starters.organization.persistence.entity.OrgUserGranted;
+import com.eseasky.core.framework.AuthService.protocol.vo.UserGrantInfoVO;
 import com.eseasky.global.entity.MsgPageInfo;
 import com.eseasky.global.entity.ResultModel;
 import com.google.common.base.Strings;
@@ -122,7 +121,6 @@ public class UserInfoController {
         return msgReturn;
     }
 
-    @Transactional
     @ApiOperation(value = "强制下线", httpMethod = "POST")
     @PostMapping(value = "/forceOffLine")
     public ResultModel<ServUserInfoVO> forceOffLine(@RequestBody ServUserInfoDTO servUserInfoDTO) {
@@ -132,15 +130,15 @@ public class UserInfoController {
         return msgReturn;
     }
 
-    @Transactional
+
     @ApiOperation(value = "强制下线", httpMethod = "POST")
     @PostMapping(value = "/getUserGranted")
-    public ResultModel<OrgUserGranted> getUserGranted(@RequestBody VRInfoDTO vRInfoDTO) {
-        ResultModel<OrgUserGranted> msgReturn = new ResultModel<OrgUserGranted>();
-        OrgUserGranted orgUserGranted=null;
+    public ResultModel<UserGrantInfoVO> getUserGranted(@RequestBody VRInfoDTO vRInfoDTO) {
+        ResultModel<UserGrantInfoVO> msgReturn = new ResultModel<UserGrantInfoVO>();
+        UserGrantInfoVO userGrantInfoVO=null;
         if(vRInfoDTO!=null && !Strings.isNullOrEmpty(vRInfoDTO.getAccount()))
-        	orgUserGranted = servUserInfoService.getUserGranted(vRInfoDTO.getAccount());
-        msgReturn.setData(orgUserGranted);
+        	userGrantInfoVO = servUserInfoService.getUserGranted(vRInfoDTO.getAccount());
+        msgReturn.setData(userGrantInfoVO);
         return msgReturn;
     }
 }

@@ -5,7 +5,7 @@ import java.io.Serializable;
 import lombok.Data;
 
 @Data
-public class GroupQueryDTO implements Serializable {
+public class PowerQueryDTO implements Serializable {
 	
     private static final long serialVersionUID = 1L;
     

@@ -16,6 +16,7 @@ import com.eseasky.core.framework.AuthService.module.service.OrgService;
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgSaveMoreDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgUpdateDTO;
 import com.eseasky.core.framework.AuthService.protocol.vo.MulOrgsVO;
+import com.eseasky.core.framework.AuthService.protocol.vo.OrgSaveByExcelVO;
 import com.eseasky.global.entity.MsgPageInfo;
 import com.eseasky.global.entity.ResultModel;
 import com.eseasky.protocol.auth.entity.DTO.OrgQueryDTO;
@@ -58,16 +59,27 @@ public class OrgController {
 		return msgReturn;
 	}
 	
-	@ApiOperation(value = "添加多个组织", httpMethod = "POST")
-	@PostMapping(value = "/saveMoreOrg")
-	public ResultModel<Set<OrgSaveVO>> saveMoreOrg(@RequestBody @Validated OrgSaveMoreDTO orgSaveDTO) {
+	@ApiOperation(value = "添加组织", httpMethod = "POST")
+	@PostMapping(value = "/saveOrgByExcel")
+	public ResultModel<OrgSaveByExcelVO> saveOrgByExcel(@RequestBody OrgSaveMoreDTO orgSaveMoreDTO) {
 
-		ResultModel<Set<OrgSaveVO>> msgReturn = new ResultModel<Set<OrgSaveVO>>();
-		Set<OrgSaveVO> orgSaveVOs = orgService.saveMoreOrg(orgSaveDTO);
-		log.info(JSONObject.toJSONString(orgSaveVOs));
-		msgReturn.setData(orgSaveVOs);
+		ResultModel<OrgSaveByExcelVO> msgReturn = new ResultModel<OrgSaveByExcelVO>();
+		OrgSaveByExcelVO orgSaveVO = orgService.saveByExcel(orgSaveMoreDTO);
+		log.info(JSONObject.toJSONString(orgSaveVO));
+		msgReturn.setData(orgSaveVO);
 		return msgReturn;
 	}
+	
+//	@ApiOperation(value = "添加多个组织", httpMethod = "POST")
+//	@PostMapping(value = "/saveMoreOrg")
+//	public ResultModel<Set<OrgSaveVO>> saveMoreOrg(@RequestBody @Validated OrgSaveMoreDTO orgSaveDTO) {
+//
+//		ResultModel<Set<OrgSaveVO>> msgReturn = new ResultModel<Set<OrgSaveVO>>();
+//		Set<OrgSaveVO> orgSaveVOs = orgService.saveMoreOrg(orgSaveDTO);
+//		log.info(JSONObject.toJSONString(orgSaveVOs));
+//		msgReturn.setData(orgSaveVOs);
+//		return msgReturn;
+//	}
 	
 	@ApiOperation(value = "更新组织", httpMethod = "POST")
 	@PostMapping(value = "/updateOrg")

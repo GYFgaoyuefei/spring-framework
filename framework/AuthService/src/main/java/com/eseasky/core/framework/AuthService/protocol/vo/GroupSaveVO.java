@@ -1,9 +1,9 @@
 package com.eseasky.core.framework.AuthService.protocol.vo;
 
 import java.io.Serializable;
-import java.util.Set;
+import java.util.List;
 
-import com.eseasky.core.starters.organization.persistence.model.OrgPowerGroupItem;
+import com.eseasky.core.starters.organization.persistence.entity.vo.PowerVO;
 
 import lombok.Data;
 
@@ -15,14 +15,10 @@ public class GroupSaveVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private Long id;
-	
-	private String groupName;
-	
-	private String authCode = "000";
-
-	private int status;
-	
+		
+	private String name;
+		
 	private String note;
 	
-	private Set<OrgPowerGroupItem> items;
+	private List<PowerVO> power;
 }

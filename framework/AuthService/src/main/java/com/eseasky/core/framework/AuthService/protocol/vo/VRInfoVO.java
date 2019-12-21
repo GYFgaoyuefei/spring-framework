@@ -1,11 +1,18 @@
 package com.eseasky.core.framework.AuthService.protocol.vo;
 
+import java.io.Serializable;
+
 import lombok.Data;
 
 @Data
-public class VRInfoVO {
+public class VRInfoVO implements Serializable{
 	
-    private Long id;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private Long id;
     
     private String name;
     
@@ -17,6 +24,9 @@ public class VRInfoVO {
     
     private String orgCode;
     
+    private String orgName;
+    
     private int status;
+    
 
 }

@@ -1,9 +1,6 @@
 package com.eseasky.core.framework.AuthService.protocol.dto;
 
 import java.io.Serializable;
-import java.util.List;
-
-import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 
 import lombok.Data;
@@ -14,15 +11,11 @@ public class GroupSaveDTO implements Serializable {
     @NotEmpty(
         message = "权限分组名称不能为空"
     )
-    private String groupName;
+    private String name;
     @NotEmpty(
         message = "权限分组描述不能为空"
     )
     private String note;
     
-    @Valid
-    @NotEmpty(
-            message = "权限分组items不能为空"
-        )
-    private List<PowerGroupCreateItemDTO> items;
+	private Long[] ids;
 }

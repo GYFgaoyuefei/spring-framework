@@ -34,15 +34,24 @@ import com.eseasky.core.framework.AuthService.module.repository.LoginCodeReposit
 import com.eseasky.core.framework.AuthService.module.repository.ServUserInfoRepository;
 import com.eseasky.core.framework.AuthService.module.service.GrantService;
 import com.eseasky.core.framework.AuthService.module.service.GroupService;
+import com.eseasky.core.framework.AuthService.module.service.PowerService;
 import com.eseasky.core.framework.AuthService.module.service.OrgService;
 import com.eseasky.core.framework.AuthService.module.service.ServUserInfoService;
+import com.eseasky.core.framework.AuthService.protocol.dto.GroupGrantDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.ServUserInfoDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.VRInfoDTO;
+import com.eseasky.core.framework.AuthService.protocol.vo.OrgGraItemForUserGroupVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.ServUserInfoVO;
+import com.eseasky.core.framework.AuthService.protocol.vo.UserGrantInfoVO;
+import com.eseasky.core.framework.AuthService.protocol.vo.VRInfoVO;
 import com.eseasky.core.starters.organization.persistence.IOrganizeService;
+import com.eseasky.core.starters.organization.persistence.entity.OrgGrantedItemForUserGroup;
 import com.eseasky.core.starters.organization.persistence.entity.OrgUserGranted;
 import com.eseasky.core.starters.organization.persistence.entity.UserGrantByGroup;
 import com.eseasky.core.starters.organization.persistence.entity.VRInfo;
+import com.eseasky.core.starters.organization.persistence.entity.dto.GrantByGroupDTO;
+import com.eseasky.core.starters.organization.persistence.entity.dto.PowerGrantDTO;
+import com.eseasky.core.starters.organization.persistence.model.UserVrGranted;
 
 import static com.eseasky.core.framework.AuthService.exception.BusiException.BusiEnum.NOT_FOUND_USER;
 
@@ -63,6 +72,9 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 	@Autowired
 	private GrantService roleService;
 
+	@Autowired
+	private PowerService powerService;
+	
 	@Autowired
 	private GroupService groupService;
 
@@ -94,6 +106,7 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 				if (!CheckUsername(servUserInfoDTO)||servUserInfoDTO.getUserName().equals(optional.get().getUserName())) {
 					ServUserInfo servUserInfo = optional.get();
 					BeanUtils.copyProperties(servUserInfoDTO, servUserInfo);
+					grantByGroups(servUserInfoDTO);
 					grantGroups(servUserInfoDTO,true);
 					servUserInfo = servUserInfoRepository.save(servUserInfo);
 					if (servUserInfo != null) {
@@ -120,12 +133,12 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 		if (servUserInfoDTO.getId() != null) {
 			Optional<ServUserInfo> userInfo = servUserInfoRepository.findById(servUserInfoDTO.getId());
 			if (userInfo.isPresent()) {
-				OrgUserGranted orgUserGranted = getUserGranted(userInfo.get().getUserName());
+				OrgUserGranted orgUserGranted = iOrganizeService.getUserGranted(userInfo.get().getUserName());
 				if (orgUserGranted != null && orgUserGranted.getGranteds() != null) {
 					for (VRInfo vRInfo : orgUserGranted.getGranteds()) {
 						VRInfoDTO vRInfoDTO = new VRInfoDTO();
 						vRInfoDTO.setUserVRId(vRInfo.getId());
-						groupService.reject(vRInfoDTO);
+						powerService.reject(vRInfoDTO);
 					}
 				}
 				roleService.deleteByUser(userInfo.get().getUserName());
@@ -152,7 +165,7 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 //			if (Strings.isNullOrEmpty(servUserInfoDTO.getOrgCode()))
 //				throw new BusiException(BusiEnum.USERINFO_ORGIDNOTNULL);
 //			servUserInfo.setOrgName(orgService.getOrgNameByOrgCode(servUserInfoDTO.getOrgCode()).getName());
-			grantGroups(servUserInfoDTO,false);
+			grantByGroups(servUserInfoDTO);
 			servUserInfo = servUserInfoRepository.save(servUserInfo);
 			if (servUserInfo != null) {
 				servUserInfoVO = new ServUserInfoVO();
@@ -333,6 +346,35 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 		return servUserInfoVO;
 	}
 
+	private List<OrgUserGranted> grantByGroups(ServUserInfoDTO servUserInfoDTO) {
+		List<OrgUserGranted> orgUserGranteds = null;
+		if (servUserInfoDTO != null && servUserInfoDTO.getGroupNames() != null
+				&& servUserInfoDTO.getGroupNames().size() > 0) {
+			for (String groupName : servUserInfoDTO.getGroupNames()) {
+				if(Strings.isNullOrEmpty(groupName))
+					continue;
+				GrantByGroupDTO groupGrantDTO=new GrantByGroupDTO();
+				groupGrantDTO.setAccount(servUserInfoDTO.getUserName());
+				groupGrantDTO.setCreateAccount(servUserInfoDTO.getCreaterUser());
+				groupGrantDTO.setGroupName(groupName);
+				groupGrantDTO.setOrgCode(servUserInfoDTO.getOrgCode());
+				try {
+					OrgUserGranted orgUserGranted = iOrganizeService.grant(groupGrantDTO);
+					if (orgUserGranted != null) {
+						if (orgUserGranteds == null)
+							orgUserGranteds = new ArrayList<OrgUserGranted>();
+						orgUserGranteds.add(orgUserGranted);
+					}
+				} catch (Exception e) {
+					throw new BusiException(BusiEnum.USERINFO_GROUPGRANT);
+				}
+			}
+		}
+		return orgUserGranteds;
+
+	}
+	
+	
 	@Transactional
 	private List<OrgUserGranted> grantGroups(ServUserInfoDTO servUserInfoDTO, boolean isUpdate) {
 		List<OrgUserGranted> orgUserGranteds = null;
@@ -340,7 +382,7 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 				&& servUserInfoDTO.getGroupIds().size() > 0) {
 			Set<Long> groupIds = null;
 			if (isUpdate) {
-				OrgUserGranted orgUserGranted = getUserGranted(servUserInfoDTO.getUserName());
+				OrgUserGranted orgUserGranted = iOrganizeService.getUserGranted(servUserInfoDTO.getUserName());
 				if (orgUserGranted != null && orgUserGranted.getGranteds() != null) {
 					groupIds = orgUserGranted.getGranteds().stream().map(item -> item.getId())
 							.collect(Collectors.toSet());
@@ -351,8 +393,8 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 					groupIds.remove(groupId);
 					continue;
 				}
-				UserGrantByGroup userGrantByGroup = new UserGrantByGroup();
-				userGrantByGroup.setGroupId(groupId);
+				PowerGrantDTO userGrantByGroup = new PowerGrantDTO();
+				userGrantByGroup.setPowerId(groupId);
 				userGrantByGroup.setCreateUser(servUserInfoDTO.getCreaterUser());
 				userGrantByGroup.setOrgCode(servUserInfoDTO.getOrgCode());
 				userGrantByGroup.setUser(servUserInfoDTO.getUserName());
@@ -371,7 +413,7 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 				groupIds.stream().forEach(item -> {
 					VRInfoDTO vRInfoDTO = new VRInfoDTO();
 					vRInfoDTO.setUserVRId(item);
-					groupService.reject(vRInfoDTO);
+					powerService.reject(vRInfoDTO);
 				});
 			}
 		}
@@ -411,8 +453,11 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 	}
 
 	@Override
-	public OrgUserGranted getUserGranted(String account) {
+	public UserGrantInfoVO getUserGranted(String account) {
 		// TODO Auto-generated method stub
-		return iOrganizeService.getUserGranted(account);
+		UserGrantInfoVO userGrantInfoVO=null;
+		OrgUserGranted orgUserGranted=iOrganizeService.getUserGranted(account);
+		userGrantInfoVO=groupService.transOUGToUGIVO(orgUserGranted);
+		return userGrantInfoVO;
 	}
 }

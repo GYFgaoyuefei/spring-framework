@@ -27,6 +27,8 @@ import com.eseasky.core.framework.AuthService.module.service.OrgService;
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgSaveMoreDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgUpdateDTO;
 import com.eseasky.core.framework.AuthService.protocol.vo.MulOrgsVO;
+import com.eseasky.core.framework.AuthService.protocol.vo.OrgRowSaveVO;
+import com.eseasky.core.framework.AuthService.protocol.vo.OrgSaveByExcelVO;
 import com.eseasky.core.starters.organization.persistence.IOrganizeService;
 import com.eseasky.core.starters.organization.persistence.entity.OrgInsertInfo;
 import com.eseasky.core.starters.organization.persistence.entity.OrganizeQuery;
@@ -74,9 +76,9 @@ public class OrgServiceImpl implements OrgService {
 		OrgSaveVO orgSaveVO = null;
 		if (orgSaveDTO != null) {
 //			if (orgSaveDTO.getLevel() != 3) {
-				orgSaveVO = checkOrgName(orgSaveDTO);
-				if (orgSaveVO != null && orgSaveVO.getId() != null)
-					throw new BusiException(BusiEnum.ORGNAME_REPEATABLE);
+			orgSaveVO = checkOrgName(orgSaveDTO);
+			if (orgSaveVO != null && orgSaveVO.getId() != null)
+				throw new BusiException(BusiEnum.ORGNAME_REPEATABLE);
 //			}
 			OrgInsertInfo orgInsertInfo = new OrgInsertInfo();
 			BeanUtils.copyProperties(orgSaveDTO, orgInsertInfo);
@@ -179,13 +181,14 @@ public class OrgServiceImpl implements OrgService {
 		firOrgDTO.setLevel(1);
 		firOrgDTO.setPage(0);
 		firOrgDTO.setSize(50);
-		String keyWords=orgQueryDTO.getKeyWords();
+		String keyWords = orgQueryDTO.getKeyWords();
 		Page<OrgQueryVO> firOrgVOs = queryOrg(firOrgDTO);
 		if (firOrgVOs != null && firOrgVOs.getContent() != null) {
 			mulOrgsVOs = firOrgVOs.stream().map(item -> {
-				boolean isFir=false;
-				if(Strings.isNullOrEmpty(keyWords)||item.getNote().contains(keyWords)||item.getName().contains(keyWords))
-					isFir=true;
+				boolean isFir = false;
+				if (Strings.isNullOrEmpty(keyWords) || item.getNote().contains(keyWords)
+						|| item.getName().contains(keyWords))
+					isFir = true;
 				List<OrgQueryVO> organizeDefineds = null;
 				int page = 0;
 				while (true) {
@@ -194,7 +197,7 @@ public class OrgServiceImpl implements OrgService {
 					secOrgQueryDTO.setParentCode(item.getOrgCode());
 					secOrgQueryDTO.setPage(page);
 					secOrgQueryDTO.setSize(50);
-					if(!isFir)
+					if (!isFir)
 						secOrgQueryDTO.setKeyWords(keyWords);
 					Page<OrgQueryVO> orgQueryVOs = queryOrg(secOrgQueryDTO);
 					if (orgQueryVOs == null || orgQueryVOs.getContent() == null || orgQueryVOs.getContent().size() == 0)
@@ -206,15 +209,15 @@ public class OrgServiceImpl implements OrgService {
 					page++;
 				}
 				MulOrgsVO mulOrgsVO = null;
-				if(organizeDefineds!=null||isFir) {
-					mulOrgsVO=new MulOrgsVO();
+				if (organizeDefineds != null || isFir) {
+					mulOrgsVO = new MulOrgsVO();
 					mulOrgsVO.setLevelFirOrg(item);
 				}
-				if(mulOrgsVO!=null && mulOrgsVO.getLevelFirOrg()!=null) {
+				if (mulOrgsVO != null && mulOrgsVO.getLevelFirOrg() != null) {
 					mulOrgsVO.setLevelSecOrgs(organizeDefineds);
-				}			
+				}
 				return mulOrgsVO;
-			}).filter(item->item!=null).collect(Collectors.toList());
+			}).filter(item -> item != null).collect(Collectors.toList());
 		}
 		return mulOrgsVOs;
 	}
@@ -228,9 +231,12 @@ public class OrgServiceImpl implements OrgService {
 				OrganizeQuery organizeQuery = new OrganizeQuery();
 				BeanUtils.copyProperties(orgSaveDTO, organizeQuery);
 				organizeQuery.setParentCode(orgSaveDTO.getParentOrgCode());
-				if (Strings.isNullOrEmpty(orgSaveDTO.getParentOrgCode()) && orgSaveDTO.getLevel() == null)
+				if (Strings.isNullOrEmpty(orgSaveDTO.getParentOrgCode())) {
 					organizeQuery.setLevel(1);
-				if(organizeQuery.getLevel()==3)
+				} else {
+					organizeQuery.setLevel(SequeceHelper.getLevel(orgSaveDTO.getParentOrgCode()) + 1);
+				}
+				if (orgSaveDTO.getLevel() == 3)
 					organizeQuery.setParentCode(null);
 				organizeQuery.setPageSize(50);
 				organizeQuery.setPage(page);
@@ -260,73 +266,131 @@ public class OrgServiceImpl implements OrgService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public Set<OrgSaveVO> saveMoreOrg(OrgSaveMoreDTO orgSavesDTO) {
-		// TODO Auto-generated method stub
-		Set<OrgSaveVO> orgSaveVOs=null;
-		if(orgSavesDTO!=null && orgSavesDTO.getOrgSavMore()!=null) {
-			for(OrgSaveDTO orgSaveDTO : orgSavesDTO.getOrgSavMore()) {
-				OrgSaveVO orgSaveVO=saveOrg(orgSaveDTO);
-				if(orgSaveVO!=null) {
-					if(orgSaveVOs!=null) {
-						orgSaveVOs=new HashSet<OrgSaveVO>();
-						orgSaveVOs.add(orgSaveVO);
-					}
-				}
-			}			
-		}
-		return orgSaveVOs;
-	}
-
-	@Override
-	@Transactional(rollbackFor = Exception.class)
 	public OrgSaveVO updateOrgByCode(OrgUpByCodeDTO orgUpdateDTO) {
 		// TODO Auto-generated method stub
-		OrgSaveVO orgSaveVO=null;
-		if(orgUpdateDTO!=null) {
+		OrgSaveVO orgSaveVO = null;
+		if (orgUpdateDTO != null) {
 			OrganizeQuery organizeQuery = new OrganizeQuery();
 			organizeQuery.setOrgCode(orgUpdateDTO.getOrgCode());
 			Page<OrganizeDefined> organizeDefineds = iOrganizeService.queryOrganize(organizeQuery);
-			if(organizeDefineds!=null && organizeDefineds.getContent()!=null && organizeDefineds.getContent().size()>0) {
-				OrganizeDefined organizeDefined=organizeDefineds.getContent().get(0);
+			if (organizeDefineds != null && organizeDefineds.getContent() != null
+					&& organizeDefineds.getContent().size() > 0) {
+				OrganizeDefined organizeDefined = organizeDefineds.getContent().get(0);
 				OrganizeUpdateInfo orgInsertInfo = new OrganizeUpdateInfo();
 				orgInsertInfo.setId(organizeDefined.getId());
 				orgInsertInfo.setName(organizeDefined.getName());
 				organizeDefined = iOrganizeService.updateOrganize(orgInsertInfo);
-				if(organizeDefined!=null) {
-					orgSaveVO=new OrgSaveVO();
+				if (organizeDefined != null) {
+					orgSaveVO = new OrgSaveVO();
 					BeanUtils.copyProperties(organizeDefined, orgSaveVO);
-				}		
-			}else {
+				}
+			} else {
 				throw new BusiException(BusiEnum.NO_ORGOFCODE);
 			}
 		}
 		return orgSaveVO;
 	}
-	
-	public List<String> getMerchantByFile(MultipartFile file) {
-		if (file.isEmpty() || file.getOriginalFilename() == null) {
-			throw new BusiException(500, "上传文件为空");
-		} else if (!file.getOriginalFilename().endsWith(".xls") && !file.getOriginalFilename().endsWith(".xlsx")) {
-			throw new BusiException(500, file.getOriginalFilename()+"文件格式不对");
-		} else {
-			try {
-				List<String> retlistStr = new ArrayList<String> ();
-			    InputStream input = new ByteArrayInputStream(file.getBytes());
-			    Workbook workbook = WorkbookFactory.create(input);
-			    input.close();		    
-			    for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
-			    	Sheet sheet = workbook.getSheetAt(i);
-				    Iterator<Row> iteratorRow = sheet.rowIterator();
-				    while (iteratorRow.hasNext()) {
-				    	Row row = iteratorRow.next();
-//				    	retlistStr.add(getCellValue(row.getCell(0)));
-				    }
-			    }			    			    
-			    return retlistStr;
-			} catch (Exception e) {
-				e.printStackTrace();
-				throw new BusiException(500, "上传文件失败：" + e.getMessage());
+
+	@Override
+	public OrgSaveByExcelVO saveByExcel(OrgSaveMoreDTO orgSaveMoreDTO) {
+		OrgSaveByExcelVO orgSaveByExcelVO = null;
+		if (orgSaveMoreDTO != null) {
+			MultipartFile file = orgSaveMoreDTO.getFile();
+			if (file.isEmpty() || file.getOriginalFilename() == null) {
+				throw new BusiException(500, "上传文件为空");
+			} else if (!file.getOriginalFilename().endsWith(".xls") && !file.getOriginalFilename().endsWith(".xlsx")) {
+				throw new BusiException(500, file.getOriginalFilename() + "文件格式不对");
+			} else {
+				try {
+					orgSaveByExcelVO = new OrgSaveByExcelVO();
+					List<OrgRowSaveVO> orgRowSaveVOs = new ArrayList<OrgRowSaveVO>();
+					InputStream input = new ByteArrayInputStream(file.getBytes());
+					Workbook workbook = WorkbookFactory.create(input);
+					input.close();
+					for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
+						Sheet sheet = workbook.getSheetAt(i);
+						Iterator<Row> iteratorRow = sheet.rowIterator();
+						while (iteratorRow.hasNext()) {
+							Row row = iteratorRow.next();
+							OrgSaveDTO orgSaveDTO = new OrgSaveDTO();
+							orgSaveDTO.setParentOrgCode(orgSaveMoreDTO.getParentOrgCode());
+							if (row.getCell(0) != null && !Strings.isNullOrEmpty(row.getCell(0).toString())) {
+								orgSaveDTO.setName(row.getCell(0).toString());
+							}
+							if (row.getCell(1) != null && !Strings.isNullOrEmpty(row.getCell(1).toString())) {
+								orgSaveDTO.setNote(row.getCell(1).toString());
+							}
+							OrgRowSaveVO orgRowSaveVO = saveByExcel(orgSaveDTO);
+							if (orgRowSaveVO != null) {
+								orgRowSaveVOs.add(orgRowSaveVO);
+								if(Strings.isNullOrEmpty(orgRowSaveVO.getErrorMessage())) {
+									orgSaveByExcelVO.setSuccessNum(orgSaveByExcelVO.getSuccessNum()+1);
+								}else {
+									orgSaveByExcelVO.setErrorNum(orgSaveByExcelVO.getErrorNum()+1);
+								}
+								orgSaveByExcelVO.setCount(orgSaveByExcelVO.getCount()+1);
+							}
+						}
+						orgSaveByExcelVO.setOrgRowSaveVOs(orgRowSaveVOs);
+					}
+
+				} catch (Exception e) {
+					e.printStackTrace();
+					throw new BusiException(500, "上传文件失败：" + e.getMessage());
+				}
 			}
-		}	
+		}
+		return orgSaveByExcelVO;
+	}
+
+	private OrgRowSaveVO saveByExcel(OrgSaveDTO orgSaveDTO) {
+		// TODO Auto-generated method stub
+		OrgRowSaveVO orgSaveByExcelVO = null;
+		if (orgSaveDTO != null) {
+			orgSaveByExcelVO = new OrgRowSaveVO();
+			BeanUtils.copyProperties(orgSaveDTO, orgSaveByExcelVO);
+			StringBuffer errorMessage = new StringBuffer();
+			if (Strings.isNullOrEmpty(orgSaveByExcelVO.getName())) {
+				errorMessage.append("组织名称不能为null;");
+			}
+			if (Strings.isNullOrEmpty(orgSaveByExcelVO.getNote())) {
+				errorMessage.append("组织描述不能为null;");
+			}
+			if (errorMessage.toString().equals("")) {
+				try {
+					OrgSaveVO saveOrg = saveOrg(orgSaveDTO);
+					if (saveOrg != null) {
+						BeanUtils.copyProperties(saveOrg, orgSaveByExcelVO, "note");
+					}
+				} catch (Exception e) {
+					errorMessage.append(e.getMessage());
+				}
+			}
+			orgSaveByExcelVO.setErrorMessage(errorMessage.toString());
+		}
+		return orgSaveByExcelVO;
+	}
+
+	public OrgSaveVO saveForApp(OrgSaveDTO orgSaveDTO) {
+		// TODO Auto-generated method stub
+		OrgSaveVO orgSaveVO = null;
+		if (orgSaveDTO != null) {
+			orgSaveVO = checkOrgName(orgSaveDTO);
+			if (orgSaveVO != null && orgSaveVO.getId() != null) {
+				if (orgSaveVO.getParentOrgCode().equals(orgSaveDTO.getParentOrgCode())) {
+					return orgSaveVO;
+				} else {
+					throw new BusiException(BusiEnum.ORGNAME_REPEATABLE);
+				}
+			}
+			OrgInsertInfo orgInsertInfo = new OrgInsertInfo();
+			BeanUtils.copyProperties(orgSaveDTO, orgInsertInfo);
+			OrganizeDefined organizeDefined = iOrganizeService.addOrganize(orgInsertInfo);
+			if (organizeDefined != null) {
+				orgSaveVO = new OrgSaveVO();
+				BeanUtils.copyProperties(organizeDefined, orgSaveVO);
+			}
+		}
+		return orgSaveVO;
 	}
 }
