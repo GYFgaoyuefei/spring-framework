@@ -9,7 +9,6 @@ import com.eseasky.core.framework.AuthService.module.model.ServUserInfo;
 import com.eseasky.core.framework.AuthService.protocol.dto.ServUserInfoDTO;
 import com.eseasky.core.framework.AuthService.protocol.vo.ServUserInfoVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.UserGrantInfoVO;
-import com.eseasky.core.starters.organization.persistence.entity.OrgUserGranted;
 
 @Service
 public interface ServUserInfoService {

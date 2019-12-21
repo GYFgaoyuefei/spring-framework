@@ -138,10 +138,14 @@ public class PowerServiceImpl implements PowerService{
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public OrgGrantInfoVO grant(AuPowerGrantDTO groupGrantDTO) {
 		// TODO Auto-generated method stub
 		OrgGrantInfoVO orgGrantInfoVO=null;
 		if(groupGrantDTO!=null) {
+			if(groupGrantDTO.getUserVRId()!=null) {
+				iOrganizeService.reject(groupGrantDTO.getUserVRId());
+			}
 			PowerGrantDTO userGrantByGroup=new PowerGrantDTO();
 			BeanUtils.copyProperties(groupGrantDTO, userGrantByGroup);
 			OrgUserGranted orgUserGranted=iOrganizeService.grant(userGrantByGroup);

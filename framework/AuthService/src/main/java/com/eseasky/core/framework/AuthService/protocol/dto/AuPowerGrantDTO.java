@@ -23,12 +23,14 @@ public class AuPowerGrantDTO implements Serializable {
     private String orgCode;
     
     @NotNull(
-        message = "分组信息不能为空"
+        message = "ar信息不能为空"
     )
-    private Long groupId;
+    private Long powerId;
     
     @NotNull(
         message = "授权操作者不能为空"
     )
     private String createUser;
+    
+    private Long userVRId;
 }
