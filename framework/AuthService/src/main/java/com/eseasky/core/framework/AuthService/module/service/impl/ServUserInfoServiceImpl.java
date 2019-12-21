@@ -74,7 +74,7 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 
 	@Autowired
 	private PowerService powerService;
-	
+
 	@Autowired
 	private GroupService groupService;
 
@@ -103,18 +103,15 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 			Optional<ServUserInfo> optional = servUserInfoRepository.findById(servUserInfoDTO.getId());
 			if (optional.isPresent()) {
 //				servUserInfoDTO.setOrgName(orgService.getOrgNameByOrgCode(servUserInfoDTO.getOrgCode()).getName());
-				if (!CheckUsername(servUserInfoDTO)||servUserInfoDTO.getUserName().equals(optional.get().getUserName())) {
-					ServUserInfo servUserInfo = optional.get();
-					BeanUtils.copyProperties(servUserInfoDTO, servUserInfo);
-					grantByGroups(servUserInfoDTO);
-					grantGroups(servUserInfoDTO,true);
-					servUserInfo = servUserInfoRepository.save(servUserInfo);
-					if (servUserInfo != null) {
-						servUserInfoVO = new ServUserInfoVO();
-						BeanUtils.copyProperties(servUserInfo, servUserInfoVO);
-					}
-				}  else {
-						throw new BusiException(BusiEnum.USERNAME_REPEATABLE);
+				checkUserNameAndMoblie(servUserInfoDTO);
+				ServUserInfo servUserInfo = optional.get();
+				BeanUtils.copyProperties(servUserInfoDTO, servUserInfo);
+				grantByGroups(servUserInfoDTO);
+				grantGroups(servUserInfoDTO, true);
+				servUserInfo = servUserInfoRepository.save(servUserInfo);
+				if (servUserInfo != null) {
+					servUserInfoVO = new ServUserInfoVO();
+					BeanUtils.copyProperties(servUserInfo, servUserInfoVO);
 				}
 			} else {
 				throw new BusiException(NOT_FOUND_USER);
@@ -161,10 +158,7 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 		if (servUserInfoDTO == null || servUserInfoDTO.getId() == null) {
 			ServUserInfo servUserInfo = new ServUserInfo();
 			BeanUtils.copyProperties(servUserInfoDTO, servUserInfo);
-			checkUserName(servUserInfo);
-//			if (Strings.isNullOrEmpty(servUserInfoDTO.getOrgCode()))
-//				throw new BusiException(BusiEnum.USERINFO_ORGIDNOTNULL);
-//			servUserInfo.setOrgName(orgService.getOrgNameByOrgCode(servUserInfoDTO.getOrgCode()).getName());
+			checkUserNameAndMoblie(servUserInfoDTO);
 			grantByGroups(servUserInfoDTO);
 			servUserInfo = servUserInfoRepository.save(servUserInfo);
 			if (servUserInfo != null) {
@@ -178,10 +172,19 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 		return servUserInfoVO;
 	}
 
-	private void checkUserName(ServUserInfo servUserInfo) {
+	private void checkUserNameAndMoblie(ServUserInfoDTO servUserInfoDTO) {
 
-		if (servUserInfoRepository.findByUserName(servUserInfo.getUserName()).isPresent()) {
-			throw new BusiException(BusiEnum.USERNAME_REPEATABLE);
+		Optional<ServUserInfo> ServUserInfo = servUserInfoRepository.findByUserName(servUserInfoDTO.getUserName());
+		if (ServUserInfo.isPresent()) {
+			if (servUserInfoDTO.getId() == null || servUserInfoDTO.getId() != ServUserInfo.get().getId()) {
+				throw new BusiException(BusiEnum.USERNAME_REPEATABLE);
+			}
+		}
+		ServUserInfo = servUserInfoRepository.findByMobile(servUserInfoDTO.getMobile());
+		if (ServUserInfo.isPresent()) {
+			if (servUserInfoDTO.getId() == null || servUserInfoDTO.getId() != ServUserInfo.get().getId()) {
+				throw new BusiException(BusiEnum.MOBILE_REPEATABLE);
+			}
 		}
 	}
 
@@ -351,9 +354,9 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 		if (servUserInfoDTO != null && servUserInfoDTO.getGroupNames() != null
 				&& servUserInfoDTO.getGroupNames().size() > 0) {
 			for (String groupName : servUserInfoDTO.getGroupNames()) {
-				if(Strings.isNullOrEmpty(groupName))
+				if (Strings.isNullOrEmpty(groupName))
 					continue;
-				GrantByGroupDTO groupGrantDTO=new GrantByGroupDTO();
+				GrantByGroupDTO groupGrantDTO = new GrantByGroupDTO();
 				groupGrantDTO.setAccount(servUserInfoDTO.getUserName());
 				groupGrantDTO.setCreateAccount(servUserInfoDTO.getCreaterUser());
 				groupGrantDTO.setGroupName(groupName);
@@ -373,8 +376,7 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 		return orgUserGranteds;
 
 	}
-	
-	
+
 	@Transactional
 	private List<OrgUserGranted> grantGroups(ServUserInfoDTO servUserInfoDTO, boolean isUpdate) {
 		List<OrgUserGranted> orgUserGranteds = null;
@@ -455,9 +457,9 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 	@Override
 	public UserGrantInfoVO getUserGranted(String account) {
 		// TODO Auto-generated method stub
-		UserGrantInfoVO userGrantInfoVO=null;
-		OrgUserGranted orgUserGranted=iOrganizeService.getUserGranted(account);
-		userGrantInfoVO=groupService.transOUGToUGIVO(orgUserGranted);
+		UserGrantInfoVO userGrantInfoVO = null;
+		OrgUserGranted orgUserGranted = iOrganizeService.getUserGranted(account);
+		userGrantInfoVO = groupService.transOUGToUGIVO(orgUserGranted);
 		return userGrantInfoVO;
 	}
 }

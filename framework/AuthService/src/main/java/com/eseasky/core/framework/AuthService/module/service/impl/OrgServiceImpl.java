@@ -278,7 +278,7 @@ public class OrgServiceImpl implements OrgService {
 				OrganizeDefined organizeDefined = organizeDefineds.getContent().get(0);
 				OrganizeUpdateInfo orgInsertInfo = new OrganizeUpdateInfo();
 				orgInsertInfo.setId(organizeDefined.getId());
-				orgInsertInfo.setName(organizeDefined.getName());
+				orgInsertInfo.setName(orgUpdateDTO.getName());
 				organizeDefined = iOrganizeService.updateOrganize(orgInsertInfo);
 				if (organizeDefined != null) {
 					orgSaveVO = new OrgSaveVO();

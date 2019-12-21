@@ -108,8 +108,7 @@ public class GroupServiceImpl implements GroupService{
 		// TODO Auto-generated method stub
 		if(groupUpdateDTO!=null && groupUpdateDTO.getId()!=null) {
 			iOrganizeService.deletePowerGroup(groupUpdateDTO.getId());
-		}
-		
+		}	
 	}
 
 	@Override
@@ -137,6 +136,7 @@ public class GroupServiceImpl implements GroupService{
 					VRInfoVO vRInfoVO=new VRInfoVO();
 					BeanUtils.copyProperties(vRInfo, vRInfoVO);
 					vRInfoVO.setOrgName(orgService.getOrgNameByOrgCode(vRInfoVO.getOrgCode()).getName());
+					granteds.add(vRInfoVO);
 				}
 				userGrantInfoVO.setGranteds(granteds);
 			}
@@ -144,8 +144,9 @@ public class GroupServiceImpl implements GroupService{
 				List<OrgGraItemForUserGroupVO> extraGranteds=new ArrayList<OrgGraItemForUserGroupVO>();
 				for(OrgGrantedItemForUserGroup orgGrantedItemForUserGroup:orgUserGranted.getExtraGranteds()) {
 					OrgGraItemForUserGroupVO orgGraItemForUserGroupVO=new OrgGraItemForUserGroupVO();
-					BeanUtils.copyProperties(orgGraItemForUserGroupVO, orgGrantedItemForUserGroup);
+					BeanUtils.copyProperties(orgGrantedItemForUserGroup, orgGraItemForUserGroupVO);
 					orgGraItemForUserGroupVO.setOrgName(orgService.getOrgNameByOrgCode(orgGraItemForUserGroupVO.getOrgCode()).getName());
+					extraGranteds.add(orgGraItemForUserGroupVO);
 				}
 				userGrantInfoVO.setExtraGranteds(extraGranteds);
 			}

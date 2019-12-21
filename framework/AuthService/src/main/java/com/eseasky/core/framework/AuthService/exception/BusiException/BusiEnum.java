@@ -14,6 +14,8 @@ public enum  BusiEnum {
 	
 	USERNAME_REPEATABLE(500,"系统提示：用户名重复"),
 	
+	MOBILE_REPEATABLE(500,"系统提示：手机号重复"),	
+	
 	ORGNAME_REPEATABLE(500,"系统提示：组织名重复"),
 	
 	NO_ORGOFCODE(500,"系统提示：不存在该组织编码的组织"),
