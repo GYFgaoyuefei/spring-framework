@@ -236,7 +236,7 @@ public class OrgServiceImpl implements OrgService {
 				} else {
 					organizeQuery.setLevel(SequeceHelper.getLevel(orgSaveDTO.getParentOrgCode()) + 1);
 				}
-				if (orgSaveDTO.getLevel() == 3)
+				if (organizeQuery.getLevel() == 3)
 					organizeQuery.setParentCode(null);
 				organizeQuery.setPageSize(50);
 				organizeQuery.setPage(page);
@@ -314,11 +314,13 @@ public class OrgServiceImpl implements OrgService {
 							Row row = iteratorRow.next();
 							OrgSaveDTO orgSaveDTO = new OrgSaveDTO();
 							orgSaveDTO.setParentOrgCode(orgSaveMoreDTO.getParentOrgCode());
-							if (row.getCell(0) != null && !Strings.isNullOrEmpty(row.getCell(0).toString())) {
+							if (row.getCell(0) != null && !Strings.isNullOrEmpty(row.getCell(0).toString().trim())) {
 								orgSaveDTO.setName(row.getCell(0).toString());
 							}
-							if (row.getCell(1) != null && !Strings.isNullOrEmpty(row.getCell(1).toString())) {
+							if (row.getCell(1) != null && !Strings.isNullOrEmpty(row.getCell(1).toString().trim())) {
 								orgSaveDTO.setNote(row.getCell(1).toString());
+							}else {
+								orgSaveDTO.setNote(orgSaveDTO.getName());
 							}
 							OrgRowSaveVO orgRowSaveVO = saveByExcel(orgSaveDTO);
 							if (orgRowSaveVO != null) {

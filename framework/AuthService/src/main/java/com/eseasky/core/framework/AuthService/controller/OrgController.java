@@ -61,7 +61,7 @@ public class OrgController {
 	
 	@ApiOperation(value = "添加组织", httpMethod = "POST")
 	@PostMapping(value = "/saveOrgByExcel")
-	public ResultModel<OrgSaveByExcelVO> saveOrgByExcel(@RequestBody OrgSaveMoreDTO orgSaveMoreDTO) {
+	public ResultModel<OrgSaveByExcelVO> saveOrgByExcel( OrgSaveMoreDTO orgSaveMoreDTO) {
 
 		ResultModel<OrgSaveByExcelVO> msgReturn = new ResultModel<OrgSaveByExcelVO>();
 		OrgSaveByExcelVO orgSaveVO = orgService.saveByExcel(orgSaveMoreDTO);

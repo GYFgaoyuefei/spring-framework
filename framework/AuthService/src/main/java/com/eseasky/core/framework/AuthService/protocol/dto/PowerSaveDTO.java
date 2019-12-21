@@ -12,7 +12,7 @@ import lombok.Data;
 public class PowerSaveDTO implements Serializable {
     private static final long serialVersionUID = 1L;
     @NotEmpty(
-        message = "权限分组名称不能为空"
+        message = "ar名称不能为空"
     )
     private String groupName;
     @NotEmpty(
