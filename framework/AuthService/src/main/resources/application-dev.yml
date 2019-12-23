@@ -36,7 +36,7 @@ custom:
     absolute-path: /home/mnet/montnets/images     
 
 eurekaserver:
-  ip: localhost
+  ip: 192.168.1.233
   port: 9709
 #eureka:
 #  client:
