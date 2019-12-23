@@ -38,4 +38,6 @@ public interface OrgService {
 
 	OrgSaveByExcelVO saveByExcel(OrgSaveMoreDTO orgSaveMoreDTO);
 
+	OrgSaveVO saveForApp(OrgSaveDTO orgSaveDTO);
+
 }

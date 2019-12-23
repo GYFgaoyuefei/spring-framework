@@ -55,7 +55,7 @@ public class OrgFeignController implements OrgServiceFeign {
 	@PostMapping(value = "/saveOrg",consumes = "application/json")
 	public OrgSaveVO saveOrg(@RequestBody @Validated OrgSaveDTO orgSaveDTO) {
 
-		OrgSaveVO orgSaveVO = orgService.saveOrg(orgSaveDTO);
+		OrgSaveVO orgSaveVO = orgService.saveForApp(orgSaveDTO);
 		log.info(JSONObject.toJSONString(orgSaveVO));
 		return orgSaveVO;
 	}
