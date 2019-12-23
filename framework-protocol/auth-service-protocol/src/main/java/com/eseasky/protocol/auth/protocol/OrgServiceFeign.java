@@ -8,6 +8,7 @@ import com.eseasky.global.entity.ResultModel;
 import com.eseasky.protocol.auth.entity.DTO.OrgQueryDTO;
 import com.eseasky.protocol.auth.entity.DTO.OrgSaveDTO;
 import com.eseasky.protocol.auth.entity.DTO.OrgUpByCodeDTO;
+import com.eseasky.protocol.auth.entity.VO.MulOrgsVO;
 import com.eseasky.protocol.auth.entity.VO.OrgQueryVO;
 import com.eseasky.protocol.auth.entity.VO.OrgSaveVO;
 
@@ -41,6 +42,11 @@ public interface OrgServiceFeign {
 	@RequestLine("POST /getOrgNameByOrgCode")
 	@Headers({"Content-Type: application/json","Accept: application/json"})
 	public OrgSaveVO getOrgNameByOrgCode(@RequestBody OrgQueryDTO orgQueryDTO);
+
+	
+	@RequestLine("POST /queryOrgsByMerCode")
+	@Headers({"Content-Type: application/json","Accept: application/json"})
+	public ResultModel<List<MulOrgsVO>>  queryOrgsByMerCode(@RequestBody OrgQueryDTO orgQueryDTO);
 
 	/**
 	 * 查询(若未查出)并新增组织权限

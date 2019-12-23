@@ -6,11 +6,11 @@ import org.omg.PortableServer.LIFESPAN_POLICY_ID;
 import org.springframework.data.domain.Page;
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgSaveMoreDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgUpdateDTO;
-import com.eseasky.core.framework.AuthService.protocol.vo.MulOrgsVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.OrgSaveByExcelVO;
 import com.eseasky.protocol.auth.entity.DTO.OrgQueryDTO;
 import com.eseasky.protocol.auth.entity.DTO.OrgSaveDTO;
 import com.eseasky.protocol.auth.entity.DTO.OrgUpByCodeDTO;
+import com.eseasky.protocol.auth.entity.VO.MulOrgsVO;
 import com.eseasky.protocol.auth.entity.VO.OrgQueryVO;
 import com.eseasky.protocol.auth.entity.VO.OrgSaveVO;
 
@@ -40,6 +40,8 @@ public interface OrgService {
 	OrgSaveByExcelVO saveByExcel(OrgSaveMoreDTO orgSaveMoreDTO);
 
 	OrgSaveVO saveForApp(OrgSaveDTO orgSaveDTO);
+
+	List<MulOrgsVO> queryOrgsByMerCode(OrgQueryDTO orgQueryDTO);
 
 	List<OrgQueryVO> queryAndSaveOrg(List<OrgQueryDTO> orgQueryDTOList);
 }

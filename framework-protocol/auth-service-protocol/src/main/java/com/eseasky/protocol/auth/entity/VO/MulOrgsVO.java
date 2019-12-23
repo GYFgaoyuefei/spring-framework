@@ -1,4 +1,4 @@
-package com.eseasky.core.framework.AuthService.protocol.vo;
+package com.eseasky.protocol.auth.entity.VO;
 
 import com.eseasky.protocol.auth.entity.VO.OrgQueryVO;
 
