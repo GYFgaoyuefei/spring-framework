@@ -20,6 +20,6 @@ public class SystemServiceConfig {
     
     @Bean
     public SystemServiceFeign systemServiceFeign() {
-        return factory.clientFeignContract(SystemServiceFeign.class, Arrays.asList(new String[] {"Authorization"}));
+        return factory.clientFeignContract(SystemServiceFeign.class);
     }
 }
