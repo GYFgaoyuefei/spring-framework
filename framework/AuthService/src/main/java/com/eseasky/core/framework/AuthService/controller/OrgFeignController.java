@@ -29,59 +29,67 @@ import java.util.List;
 @RestController
 @Log4j2
 public class OrgFeignController implements OrgServiceFeign {
-	
-	@Autowired
-	private OrgService orgService;
+
+    @Autowired
+    private OrgService orgService;
 
     @Override
-	@ApiOperation(value = "查询组织", httpMethod = "POST")
-    @PostMapping(value = "/queryOrg",consumes = "application/json")
+    @ApiOperation(value = "查询组织", httpMethod = "POST")
+    @PostMapping(value = "/queryOrg", consumes = "application/json")
     public ResultModel<List<OrgQueryVO>> queryOrg(@RequestBody OrgQueryDTO orgQueryDTO) {
-		ResultModel<List<OrgQueryVO>> resultModel = new ResultModel<>();
-		Page<OrgQueryVO> orgQueryVOS = orgService.queryOrg(orgQueryDTO);
-		if(orgQueryVOS!=null){
-			MsgPageInfo msgPageInfo = new MsgPageInfo();
-			msgPageInfo.setSize(orgQueryVOS.getPageable().getPageSize());
-			msgPageInfo.setTotal(orgQueryVOS.getTotalElements());
-			msgPageInfo.setPage(orgQueryVOS.getPageable().getPageNumber());
-			resultModel.setData(orgQueryVOS.getContent(),msgPageInfo);
-		}
-		return resultModel;
+        ResultModel<List<OrgQueryVO>> resultModel = new ResultModel<>();
+        Page<OrgQueryVO> orgQueryVOS = orgService.queryOrg(orgQueryDTO);
+        if (orgQueryVOS != null) {
+            MsgPageInfo msgPageInfo = new MsgPageInfo();
+            msgPageInfo.setSize(orgQueryVOS.getPageable().getPageSize());
+            msgPageInfo.setTotal(orgQueryVOS.getTotalElements());
+            msgPageInfo.setPage(orgQueryVOS.getPageable().getPageNumber());
+            resultModel.setData(orgQueryVOS.getContent(), msgPageInfo);
+        }
+        return resultModel;
     }
 
 
-	@Override
-	@ApiOperation(value = "添加组织", httpMethod = "POST")
-	@PostMapping(value = "/saveOrg",consumes = "application/json")
-	public OrgSaveVO saveOrg(@RequestBody @Validated OrgSaveDTO orgSaveDTO) {
+    @Override
+    @ApiOperation(value = "添加组织", httpMethod = "POST")
+    @PostMapping(value = "/saveOrg", consumes = "application/json")
+    public OrgSaveVO saveOrg(@RequestBody @Validated OrgSaveDTO orgSaveDTO) {
 
-		OrgSaveVO orgSaveVO = orgService.saveForApp(orgSaveDTO);
-		log.info(JSONObject.toJSONString(orgSaveVO));
-		return orgSaveVO;
-	}
+        OrgSaveVO orgSaveVO = orgService.saveForApp(orgSaveDTO);
+        log.info(JSONObject.toJSONString(orgSaveVO));
+        return orgSaveVO;
+    }
 
-	@PostMapping(value = "/updateOrg",consumes = "application/json")
-	public OrgSaveVO updateOrg(@RequestBody @Validated OrgUpByCodeDTO OrgUpdateDTO) {
-		// TODO Auto-generated method stub
-		OrgSaveVO orgSaveVO = orgService.updateOrgByCode(OrgUpdateDTO);
-		log.info(JSONObject.toJSONString(orgSaveVO));
-		return orgSaveVO;
-	}
+    @PostMapping(value = "/updateOrg", consumes = "application/json")
+    public OrgSaveVO updateOrg(@RequestBody @Validated OrgUpByCodeDTO OrgUpdateDTO) {
+        // TODO Auto-generated method stub
+        OrgSaveVO orgSaveVO = orgService.updateOrgByCode(OrgUpdateDTO);
+        log.info(JSONObject.toJSONString(orgSaveVO));
+        return orgSaveVO;
+    }
 
-	@PostMapping(value = "/disableOrg",consumes = "application/json")
-	public OrgSaveVO disableOrg(@RequestBody @Validated OrgQueryDTO orgUpdateDTO) {
-		// TODO Auto-generated method stub
-		OrgSaveVO orgSaveVO = orgService.disableOrg(orgUpdateDTO);
-		log.info(JSONObject.toJSONString(orgSaveVO));
-		return orgSaveVO;
-	}
+    @PostMapping(value = "/disableOrg", consumes = "application/json")
+    public OrgSaveVO disableOrg(@RequestBody @Validated OrgQueryDTO orgUpdateDTO) {
+        // TODO Auto-generated method stub
+        OrgSaveVO orgSaveVO = orgService.disableOrg(orgUpdateDTO);
+        log.info(JSONObject.toJSONString(orgSaveVO));
+        return orgSaveVO;
+    }
 
-	@PostMapping(value = "/getOrgNameByOrgCode",consumes = "application/json")
-	public OrgSaveVO getOrgNameByOrgCode(@RequestBody OrgQueryDTO orgQueryDTO) {
-		// TODO Auto-generated method stub
-		OrgSaveVO orgSaveVO = orgService.getOrgNameByOrgCode(orgQueryDTO.getOrgCode());
-		log.info(JSONObject.toJSONString(orgSaveVO));
-		return orgSaveVO;
-	}
+    @PostMapping(value = "/getOrgNameByOrgCode", consumes = "application/json")
+    public OrgSaveVO getOrgNameByOrgCode(@RequestBody OrgQueryDTO orgQueryDTO) {
+        // TODO Auto-generated method stub
+        OrgSaveVO orgSaveVO = orgService.getOrgNameByOrgCode(orgQueryDTO.getOrgCode());
+        log.info(JSONObject.toJSONString(orgSaveVO));
+        return orgSaveVO;
+    }
 
+    @PostMapping(value = "/queryAndSaveOrg", consumes = "application/json")
+    @Override
+    public ResultModel<List<OrgQueryVO>> queryAndSaveOrg(@RequestBody List<OrgQueryDTO> orgQueryDTOList) {
+        ResultModel<List<OrgQueryVO>> result = new ResultModel<>();
+        List<OrgQueryVO> orgQuerys = orgService.queryAndSaveOrg(orgQueryDTOList);
+        result.setData(orgQuerys);
+        return result;
+    }
 }
