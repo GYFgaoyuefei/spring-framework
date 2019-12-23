@@ -94,7 +94,7 @@ public class OrgServiceImpl implements OrgService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-//	@CacheEvict(value= {"org_code_defined"})
+	@CacheEvict(value = { "org_code_defined" })
 	public OrgSaveVO updateOrg(OrgUpdateDTO orgUpdateDTO) {
 		// TODO Auto-generated method stub
 		OrgSaveVO orgSaveVO = null;
@@ -299,60 +299,59 @@ public class OrgServiceImpl implements OrgService {
 		}
 		return orgSaveVO;
 	}
+	 @Override
+	    public OrgSaveByExcelVO saveByExcel(OrgSaveMoreDTO orgSaveMoreDTO) {
+	        OrgSaveByExcelVO orgSaveByExcelVO = null;
+	        if (orgSaveMoreDTO != null) {
+	            MultipartFile file = orgSaveMoreDTO.getFile();
+	            if (file.isEmpty() || file.getOriginalFilename() == null) {
+	                throw new BusiException(500, "上传文件为空");
+	            } else if (!file.getOriginalFilename().endsWith(".xls") && !file.getOriginalFilename().endsWith(".xlsx")) {
+	                throw new BusiException(500, file.getOriginalFilename() + "文件格式不对");
+	            } else {
+	                try {
+	                    orgSaveByExcelVO = new OrgSaveByExcelVO();
+	                    List<OrgRowSaveVO> orgRowSaveVOs = new ArrayList<OrgRowSaveVO>();
+	                    InputStream input = new ByteArrayInputStream(file.getBytes());
+	                    Workbook workbook = WorkbookFactory.create(input);
+	                    input.close();
+	                    for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
+	                        Sheet sheet = workbook.getSheetAt(i);
+	                        Iterator<Row> iteratorRow = sheet.rowIterator();
+	                        while (iteratorRow.hasNext()) {
+	                            Row row = iteratorRow.next();
+	                            OrgSaveDTO orgSaveDTO = new OrgSaveDTO();
+	                            orgSaveDTO.setParentOrgCode(orgSaveMoreDTO.getParentOrgCode());
+	                            if (row.getCell(0) != null && !Strings.isNullOrEmpty(row.getCell(0).toString().trim())) {
+	                                orgSaveDTO.setName(row.getCell(0).toString());
+	                            }
+	                            if (row.getCell(1) != null && !Strings.isNullOrEmpty(row.getCell(1).toString().trim())) {
+	                                orgSaveDTO.setNote(row.getCell(1).toString());
+	                            } else {
+	                                orgSaveDTO.setNote(orgSaveDTO.getName());
+	                            }
+	                            OrgRowSaveVO orgRowSaveVO = saveByExcel(orgSaveDTO);
+	                            if (orgRowSaveVO != null) {
+	                                if (Strings.isNullOrEmpty(orgRowSaveVO.getErrorMessage())) {
+	                                    orgSaveByExcelVO.setSuccessNum(orgSaveByExcelVO.getSuccessNum() + 1);
+	                                } else {
+	                                    orgSaveByExcelVO.setErrorNum(orgSaveByExcelVO.getErrorNum() + 1);
+	                                    orgRowSaveVOs.add(orgRowSaveVO);
+	                                }
+	                                orgSaveByExcelVO.setCount(orgSaveByExcelVO.getCount() + 1);
+	                            }
+	                        }
+	                        orgSaveByExcelVO.setOrgRowSaveVOs(orgRowSaveVOs);
+	                    }
 
-	@Override
-	public OrgSaveByExcelVO saveByExcel(OrgSaveMoreDTO orgSaveMoreDTO) {
-		OrgSaveByExcelVO orgSaveByExcelVO = null;
-		if (orgSaveMoreDTO != null) {
-			MultipartFile file = orgSaveMoreDTO.getFile();
-			if (file.isEmpty() || file.getOriginalFilename() == null) {
-				throw new BusiException(500, "上传文件为空");
-			} else if (!file.getOriginalFilename().endsWith(".xls") && !file.getOriginalFilename().endsWith(".xlsx")) {
-				throw new BusiException(500, file.getOriginalFilename() + "文件格式不对");
-			} else {
-				try {
-					orgSaveByExcelVO = new OrgSaveByExcelVO();
-					List<OrgRowSaveVO> orgRowSaveVOs = new ArrayList<OrgRowSaveVO>();
-					InputStream input = new ByteArrayInputStream(file.getBytes());
-					Workbook workbook = WorkbookFactory.create(input);
-					input.close();
-					for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
-						Sheet sheet = workbook.getSheetAt(i);
-						Iterator<Row> iteratorRow = sheet.rowIterator();
-						while (iteratorRow.hasNext()) {
-							Row row = iteratorRow.next();
-							OrgSaveDTO orgSaveDTO = new OrgSaveDTO();
-							orgSaveDTO.setParentOrgCode(orgSaveMoreDTO.getParentOrgCode());
-							if (row.getCell(0) != null && !Strings.isNullOrEmpty(row.getCell(0).toString().trim())) {
-								orgSaveDTO.setName(row.getCell(0).toString());
-							}
-							if (row.getCell(1) != null && !Strings.isNullOrEmpty(row.getCell(1).toString().trim())) {
-								orgSaveDTO.setNote(row.getCell(1).toString());
-							} else {
-								orgSaveDTO.setNote(orgSaveDTO.getName());
-							}
-							OrgRowSaveVO orgRowSaveVO = saveByExcel(orgSaveDTO);
-							if (orgRowSaveVO != null) {
-								if (Strings.isNullOrEmpty(orgRowSaveVO.getErrorMessage())) {
-									orgSaveByExcelVO.setSuccessNum(orgSaveByExcelVO.getSuccessNum() + 1);
-								} else {
-									orgSaveByExcelVO.setErrorNum(orgSaveByExcelVO.getErrorNum() + 1);
-									orgRowSaveVOs.add(orgRowSaveVO);
-								}
-								orgSaveByExcelVO.setCount(orgSaveByExcelVO.getCount() + 1);
-							}
-						}
-						orgSaveByExcelVO.setOrgRowSaveVOs(orgRowSaveVOs);
-					}
-
-				} catch (Exception e) {
-					e.printStackTrace();
-					throw new BusiException(500, "上传文件失败：" + e.getMessage());
-				}
-			}
-		}
-		return orgSaveByExcelVO;
-	}
+	                } catch (Exception e) {
+	                    e.printStackTrace();
+	                    throw new BusiException(500, "上传文件失败：" + e.getMessage());
+	                }
+	            }
+	        }
+	        return orgSaveByExcelVO;
+	    }
 
 	private OrgRowSaveVO saveByExcel(OrgSaveDTO orgSaveDTO) {
 		// TODO Auto-generated method stub
@@ -420,7 +419,7 @@ public class OrgServiceImpl implements OrgService {
 				mulOrgsVOs = queryMulOrgs(orgQueryDTO);
 				break;
 			case 2:
-				mulOrgsVOs=queryOrgsLevel2(orgQueryDTO.getOrgCode());
+				mulOrgsVOs = queryOrgsLevel2(orgQueryDTO.getOrgCode());
 				break;
 			case 3:
 				OrganizeQuery organizeQuery = new OrganizeQuery();
@@ -428,15 +427,15 @@ public class OrgServiceImpl implements OrgService {
 				Page<OrganizeDefined> organizeDefineds = iOrganizeService.queryOrganize(organizeQuery);
 				if (organizeDefineds != null && organizeDefineds.getContent() != null
 						&& organizeDefineds.getContent().size() > 0) {
-					mulOrgsVOs=queryOrgsLevel2(organizeDefineds.getContent().get(0).getParentOrgCode());
-				}				
+					mulOrgsVOs = queryOrgsLevel2(organizeDefineds.getContent().get(0).getParentOrgCode());
+				}
 				break;
 			}
 		}
 		return mulOrgsVOs;
 	}
 
-	private  List<MulOrgsVO> queryOrgsLevel2(String orgCode) {
+	private List<MulOrgsVO> queryOrgsLevel2(String orgCode) {
 		List<MulOrgsVO> mulOrgsVOs = null;
 		if (!Strings.isNullOrEmpty(orgCode)) {
 			OrganizeQuery organizeQuery = new OrganizeQuery();
@@ -457,8 +456,8 @@ public class OrgServiceImpl implements OrgService {
 					organizeDefined = organizeDefineds.getContent().get(0);
 					orgQueryVO = new OrgQueryVO();
 					BeanUtils.copyProperties(organizeDefined, orgQueryVO);
-					mulOrgsVOs=new ArrayList<MulOrgsVO>();
-					MulOrgsVO mulOrgsVO=new MulOrgsVO();
+					mulOrgsVOs = new ArrayList<MulOrgsVO>();
+					MulOrgsVO mulOrgsVO = new MulOrgsVO();
 					mulOrgsVO.setLevelFirOrg(orgQueryVO);
 					mulOrgsVO.setLevelSecOrgs(levelSecOrgs);
 					mulOrgsVOs.add(mulOrgsVO);
@@ -467,4 +466,51 @@ public class OrgServiceImpl implements OrgService {
 		}
 		return mulOrgsVOs;
 	}
+
+	@Override
+	public List<OrgQueryVO> queryAndSaveOrg(List<OrgQueryDTO> orgQueryDTOList) {
+		List<OrgQueryVO> result = new ArrayList<>();
+		for (OrgQueryDTO queryDTO : orgQueryDTOList) {
+			result.add(queryOrGenGenerateOrgCode(queryDTO));
+		}
+		return result;
+	}
+
+	private OrgQueryVO queryOrGenGenerateOrgCode(OrgQueryDTO orgQueryDTO) {
+        OrganizeQuery organizeQuery = new OrganizeQuery();
+        BeanUtils.copyProperties(orgQueryDTO, organizeQuery);
+        if (orgQueryDTO.getSize() != 0) {
+            organizeQuery.setPageSize(orgQueryDTO.getSize());
+        }
+        organizeQuery.setLevel(SequeceHelper.getLevel(orgQueryDTO.getParentCode()) + 1);
+        Page<OrganizeDefined> organizeDefineds = iOrganizeService.queryOrganize(organizeQuery);
+        List<OrgQueryVO> getOrgByName = new ArrayList<>();
+        if (organizeDefineds != null) {
+            getOrgByName = organizeDefineds.stream().map(item -> {
+                if (item.getName().equals(orgQueryDTO.getKeyWords())) {
+                    OrgQueryVO orgQueryVO = new OrgQueryVO();
+                    BeanUtils.copyProperties(item, orgQueryVO);
+                    return orgQueryVO;
+                }
+                return null;
+            }).collect(Collectors.toList());
+        }
+        //查询出来有值
+        if (getOrgByName.size() > 0) {
+            return getOrgByName.get(0);
+        }
+        //生成code
+        OrgInsertInfo orgInsertInfo = new OrgInsertInfo();
+        orgInsertInfo.setName(orgQueryDTO.getKeyWords());
+        orgInsertInfo.setNote(orgQueryDTO.getNote());
+        orgInsertInfo.setParentOrgCode(orgQueryDTO.getParentCode());
+        OrganizeDefined organize = iOrganizeService.addOrganize(orgInsertInfo);
+        if (organize != null) {
+            OrgQueryVO orgQueryVO = new OrgQueryVO();
+            BeanUtils.copyProperties(organize, orgQueryVO);
+            return orgQueryVO;
+        }
+        throw new BusiException(BusiEnum.GET_ORGCODE_ERROR);
+    }
+
 }

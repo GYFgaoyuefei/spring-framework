@@ -26,6 +26,8 @@ public class OrgQueryDTO implements Serializable {
     private int status = 1;
     
     private String keyWords;
+
+    private String note;
     
     private String note;
     

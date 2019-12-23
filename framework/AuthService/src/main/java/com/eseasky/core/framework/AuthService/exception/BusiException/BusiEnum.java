@@ -29,6 +29,8 @@ public enum  BusiEnum {
     USERINFO_GROUPGRANT(500,"无法为该用户授权该权限分组下的权限"),
 
     NOTDELETE(500,"管理员不可删除"),
+
+    GET_ORGCODE_ERROR(500,"组织编码生成失败"),
 	
 	GROUP_NOID(500, "系统提示：授权分组id为空");
 

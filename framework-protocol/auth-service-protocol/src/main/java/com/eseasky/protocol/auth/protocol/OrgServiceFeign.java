@@ -42,10 +42,13 @@ public interface OrgServiceFeign {
 	@RequestLine("POST /getOrgNameByOrgCode")
 	@Headers({"Content-Type: application/json","Accept: application/json"})
 	public OrgSaveVO getOrgNameByOrgCode(@RequestBody OrgQueryDTO orgQueryDTO);
+<<<<<<< HEAD
 	
 	@RequestLine("POST /queryOrgsByMerCode")
 	@Headers({"Content-Type: application/json","Accept: application/json"})
 	public ResultModel<List<MulOrgsVO>>  queryOrgsByMerCode(@RequestBody OrgQueryDTO orgQueryDTO);
+=======
+>>>>>>> 4255b0297196d50cc6e696cda7a68eba719ab86c
 
 	/**
 	 * 查询(若未查出)并新增组织权限
