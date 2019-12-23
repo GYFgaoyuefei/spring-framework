@@ -50,7 +50,7 @@ public class OrgServiceFeignHystrix implements OrgServiceFeign , IHystrix {
 	
 	@Override
 	public ResultModel<List<OrgQueryVO>> queryAndSaveOrg(List<OrgQueryDTO> orgQueryDTOList) {
-		return null;
+		throw new BaseHandlerException(500, "error");
 	}
 
 	@Override
