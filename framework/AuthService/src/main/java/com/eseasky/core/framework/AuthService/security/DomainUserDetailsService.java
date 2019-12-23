@@ -2,19 +2,24 @@ package com.eseasky.core.framework.AuthService.security;
 
 
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.eseasky.core.framework.AuthService.module.model.ServUserInfo;
 import com.eseasky.core.framework.AuthService.module.service.ServUserInfoService;
 import com.eseasky.core.starters.auth.server.core.entity.FrontEndAuthConfig;
 import com.eseasky.core.starters.auth.server.core.interfaces.UserService;
+import com.eseasky.global.entity.MsgReturn;
 import com.eseasky.global.entity.UserViews;
 import com.eseasky.protocol.system.entity.DTO.DictiCondiDTO;
+import com.eseasky.protocol.system.entity.VO.DictItemVO;
+import com.eseasky.protocol.system.entity.VO.DictionaryVO;
 import com.eseasky.protocol.system.protocol.SystemServiceFeign;
+import com.google.common.base.Strings;
 
 
 /**
@@ -68,21 +73,22 @@ public class DomainUserDetailsService implements UserService {
 		DictiCondiDTO dto = new DictiCondiDTO();
 		dto.setGroup(FRONTEND_DICT_GROUP);
 		dto.setType(FRONTEND_DICT_TYPE);
-		dto.setItemKey("MERCHANT_MENU");
 		dto.setStatus("valid");
-//		ResponseEntity<MsgReturn<DictItemVO>> configs = systemServiceFeign.queryByKeyAndDictId(dto);
-		List<FrontEndAuthConfig> send = new ArrayList<FrontEndAuthConfig>();
-//		if (configs != null && configs.getBody() != null) {
-//			MsgReturn<DictItemVO> msg = configs.getBody();
-//			FrontEndAuthConfig configItem = new FrontEndAuthConfig();
-//			configItem.setKey(msg.getData().getKey());
-//			configItem.setRelatePower(msg.getData().getValue().split(","));
-//			send.add(configItem);
-//		}
-		FrontEndAuthConfig configItem = new FrontEndAuthConfig();
-		configItem.setKey("MERCHANT_MENU");
-		configItem.setRelatePower("商家查询,商家新增".split(","));
-		send.add(configItem);
-		return send.isEmpty() ? null : send;
+		ResponseEntity<MsgReturn<DictionaryVO>> configs = systemServiceFeign.queryByTypeAndGroup(dto);
+		if (configs != null && configs.getBody() != null) {
+			MsgReturn<DictionaryVO> msg = configs.getBody();
+			if (msg != null && msg.getData() != null) {
+				List<DictItemVO> items = msg.getData().getDictItems();
+				if (items != null && items.size() > 0) {
+					return items.stream().map(item -> {
+						FrontEndAuthConfig configItem = new FrontEndAuthConfig();
+						configItem.setKey(item.getKey());
+						configItem.setRelatePower(Strings.isNullOrEmpty(item.getValue()) ? null : item.getValue().split(","));
+						return configItem;
+					}).collect(Collectors.toList());
+				}
+			}
+		}
+		return null;
 	}
 }
