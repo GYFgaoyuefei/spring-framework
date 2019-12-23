@@ -211,10 +211,7 @@ public class SystemParamController  implements SystemParamPro {
 		try {
 			DictiCondiDto dictiCondiDto = new DictiCondiDto();
 			BeanUtils.copyProperties(dictiCondiDTO,dictiCondiDto);
-			DictItemVo dictItemVo = systemDictService.queryByKeyAndDictId(dictiCondiDto);
-			DictItemVO dictItemVO = new DictItemVO();
-			BeanUtils.copyProperties(dictItemVo,dictItemVO);
-			msgReturn.success(dictItemVO);
+			msgReturn.success(systemDictService.queryByKeyAndDictId(dictiCondiDto));
 		} catch (Exception e) {
 			e.printStackTrace();
 			msgReturn.fail(e.getMessage());
