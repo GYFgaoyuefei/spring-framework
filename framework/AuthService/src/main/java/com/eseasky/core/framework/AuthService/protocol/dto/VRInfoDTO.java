@@ -8,7 +8,7 @@ import lombok.Data;
 public class VRInfoDTO implements Serializable {
     private static final long serialVersionUID = 1L;
     
-    private Long userVRId; 
+    private Long id; 
     
     private String account;
     

@@ -9,7 +9,7 @@ public class PowerQueryDTO implements Serializable {
 	
     private static final long serialVersionUID = 1L;
     
-    private String groupName;
+    private String powerName;
     
     private String keywords;
     

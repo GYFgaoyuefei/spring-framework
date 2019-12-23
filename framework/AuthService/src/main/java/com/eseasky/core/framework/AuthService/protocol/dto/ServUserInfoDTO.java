@@ -27,7 +27,7 @@ public class ServUserInfoDTO implements Serializable{
 	    )
 	private String mobile;
 	private String state;
-	private List<Long> groupIds;
+	private List<Long> powerIds;
 	private List<String> groupNames;
 	@NotEmpty(
 	        message = "组织不能为空"
