@@ -26,6 +26,8 @@ public class ServUserInfoVO implements Serializable {
     private String orgCode;
     @ApiModelProperty(value = "组织编码")
     private String orgName;
+    @ApiModelProperty(value = "组织编码")
+    private String nickName;
     @ApiModelProperty(value = "用户角色")
     private UserGrantInfoVO roles;
 }

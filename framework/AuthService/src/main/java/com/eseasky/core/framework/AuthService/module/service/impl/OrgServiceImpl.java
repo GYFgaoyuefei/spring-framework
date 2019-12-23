@@ -48,7 +48,7 @@ public class OrgServiceImpl implements OrgService {
 	private IOrganizeService iOrganizeService;
 
 	@Override
-	@Cacheable(value = { "org_code_defined" }, key = "'getOrgNameByOrgCode'+#orgQueryDTO", unless = "#result == null")
+//	@Cacheable(value = { "org_code_defined" }, key = "'getOrgNameByOrgCode'+#orgQueryDTO", unless = "#result == null")
 	public Page<OrgQueryVO> queryOrg(OrgQueryDTO orgQueryDTO) {
 		// TODO Auto-generated method stub
 		Page<OrgQueryVO> orgQueryVOs = null;
