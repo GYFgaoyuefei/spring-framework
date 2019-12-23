@@ -374,6 +374,8 @@ public class OrgServiceImpl implements OrgService {
 		return orgSaveByExcelVO;
 	}
 
+	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public OrgSaveVO saveForApp(OrgSaveDTO orgSaveDTO) {
 		// TODO Auto-generated method stub
 		OrgSaveVO orgSaveVO = null;
