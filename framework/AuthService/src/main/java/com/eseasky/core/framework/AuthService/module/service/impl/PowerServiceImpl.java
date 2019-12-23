@@ -122,8 +122,8 @@ public class PowerServiceImpl implements PowerService{
 			BeanUtils.copyProperties(groupQueryDTO, powerGroupQuery);
 			if(groupQueryDTO.getSize()!=0)
 				powerGroupQuery.setPageSize(groupQueryDTO.getSize());
-			if(!Strings.isNullOrEmpty(groupQueryDTO.getGroupName()))
-				powerGroupQuery.setGroupName("%"+groupQueryDTO.getGroupName());
+			if(!Strings.isNullOrEmpty(groupQueryDTO.getPowerName()))
+				powerGroupQuery.setGroupName("%"+groupQueryDTO.getPowerName());
 			Page<PowerGroupInfo> powerGroupInfos=iOrganizeService.queryPower(powerGroupQuery);
 			if(powerGroupInfos!=null) {
 				List<PowerQueryVO> orgQueryVOls=powerGroupInfos.stream().map(item->{
@@ -229,8 +229,8 @@ public class PowerServiceImpl implements PowerService{
 	@Transactional(rollbackFor = Exception.class)
 	public VRInfoVO reject(VRInfoDTO vRInfoDTO) {
 		// TODO Auto-generated method stub
-		if(vRInfoDTO!=null && vRInfoDTO.getUserVRId()!=null) {
-			iOrganizeService.reject(vRInfoDTO.getUserVRId());
+		if(vRInfoDTO!=null && vRInfoDTO.getId()!=null) {
+			iOrganizeService.reject(vRInfoDTO.getId());
 		}
 		return null;
 	}

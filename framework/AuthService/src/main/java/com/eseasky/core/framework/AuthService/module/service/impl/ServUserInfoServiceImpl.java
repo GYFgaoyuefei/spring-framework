@@ -131,7 +131,7 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 				if (orgUserGranted != null && orgUserGranted.getGranteds() != null) {
 					for (VRInfo vRInfo : orgUserGranted.getGranteds()) {
 						VRInfoDTO vRInfoDTO = new VRInfoDTO();
-						vRInfoDTO.setUserVRId(vRInfo.getId());
+						vRInfoDTO.setId(vRInfo.getId());
 						powerService.reject(vRInfoDTO);
 					}
 				}
@@ -379,8 +379,8 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 	@Transactional
 	private List<OrgUserGranted> grantGroups(ServUserInfoDTO servUserInfoDTO, boolean isUpdate) {
 		List<OrgUserGranted> orgUserGranteds = null;
-		if (servUserInfoDTO != null && servUserInfoDTO.getGroupIds() != null
-				&& servUserInfoDTO.getGroupIds().size() > 0) {
+		if (servUserInfoDTO != null && servUserInfoDTO.getPowerIds() != null
+				&& servUserInfoDTO.getPowerIds().size() > 0) {
 			Set<Long> groupIds = null;
 			if (isUpdate) {
 				OrgUserGranted orgUserGranted = iOrganizeService.getUserGranted(servUserInfoDTO.getUserName());
@@ -389,7 +389,7 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 							.collect(Collectors.toSet());
 				}
 			}
-			for (Long groupId : servUserInfoDTO.getGroupIds()) {
+			for (Long groupId : servUserInfoDTO.getPowerIds()) {
 				if (groupIds != null && groupIds.contains(groupId)) {
 					groupIds.remove(groupId);
 					continue;
@@ -413,7 +413,7 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 			if (groupIds != null && groupIds.size() > 0) {
 				groupIds.stream().forEach(item -> {
 					VRInfoDTO vRInfoDTO = new VRInfoDTO();
-					vRInfoDTO.setUserVRId(item);
+					vRInfoDTO.setId(item);
 					powerService.reject(vRInfoDTO);
 				});
 			}
