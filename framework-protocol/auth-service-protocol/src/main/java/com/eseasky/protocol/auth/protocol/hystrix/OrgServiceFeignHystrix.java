@@ -53,15 +53,6 @@ public class OrgServiceFeignHystrix implements OrgServiceFeign , IHystrix {
 		throw new BaseHandlerException(500, "error");
 	}
 
-<<<<<<< HEAD
-=======
-	@Override
-	public ResultModel<List<OrgQueryVO>> queryAndSaveOrg(List<OrgQueryDTO> orgQueryDTOList) {
-		return null;
-	}
-
-	private Throwable throwable;
->>>>>>> 4255b0297196d50cc6e696cda7a68eba719ab86c
 	@Override
 	public Throwable setThrowable(Throwable throwable) {
 		this.throwable = throwable;
