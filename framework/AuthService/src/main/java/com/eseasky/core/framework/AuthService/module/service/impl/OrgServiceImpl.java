@@ -7,6 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -48,7 +50,7 @@ public class OrgServiceImpl implements OrgService {
 	private IOrganizeService iOrganizeService;
 
 	@Override
-	@Cacheable(value = { "org_code_defined" }, key = "'getOrgNameByOrgCode'+#orgQueryDTO", unless = "#result == null")
+	@Cacheable(value = { "org_code_defined" }, key = "'queryOrg'+#orgQueryDTO", unless = "#result == null")
 	public Page<OrgQueryVO> queryOrg(OrgQueryDTO orgQueryDTO) {
 		// TODO Auto-generated method stub
 		Page<OrgQueryVO> orgQueryVOs = null;
@@ -73,7 +75,7 @@ public class OrgServiceImpl implements OrgService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	@CacheEvict(value = { "org_code_defined" })
+	@CacheEvict(value = { "org_code_defined" },allEntries =true)
 	public OrgSaveVO saveOrg(OrgSaveDTO orgSaveDTO) {
 		OrgSaveVO orgSaveVO = null;
 		if (orgSaveDTO != null) {
@@ -95,7 +97,7 @@ public class OrgServiceImpl implements OrgService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	@CacheEvict(value = { "org_code_defined" })
+	@CacheEvict(value = { "org_code_defined" },allEntries =true)
 	public OrgSaveVO updateOrg(OrgUpdateDTO orgUpdateDTO) {
 		// TODO Auto-generated method stub
 		OrgSaveVO orgSaveVO = null;
@@ -120,7 +122,7 @@ public class OrgServiceImpl implements OrgService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	@CacheEvict(value = { "org_code_defined" })
+	@CacheEvict(value = { "org_code_defined" },allEntries =true)
 	public OrgSaveVO disableOrg(OrgQueryDTO orgUpdateDTO) {
 		// TODO Auto-generated method stub
 		OrgSaveVO orgSaveVO = null;
@@ -136,7 +138,7 @@ public class OrgServiceImpl implements OrgService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	@CacheEvict(value = { "org_code_defined" })
+	@CacheEvict(value = { "org_code_defined" },allEntries =true)
 	public OrgSaveVO openOrg(OrgQueryDTO orgUpdateDTO) {
 		// TODO Auto-generated method stub
 		OrgSaveVO orgSaveVO = null;
@@ -275,7 +277,7 @@ public class OrgServiceImpl implements OrgService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	@CacheEvict(value = { "org_code_defined" })
+	@CacheEvict(value = { "org_code_defined" },allEntries =true)
 	public OrgSaveVO updateOrgByCode(OrgUpByCodeDTO orgUpdateDTO) {
 		// TODO Auto-generated method stub
 		OrgSaveVO orgSaveVO = null;
@@ -301,7 +303,7 @@ public class OrgServiceImpl implements OrgService {
 		return orgSaveVO;
 	}
 	 @Override
-	 @CacheEvict(value = { "org_code_defined" })
+	 @CacheEvict(value = { "org_code_defined" },allEntries =true)
 	    public OrgSaveByExcelVO saveByExcel(OrgSaveMoreDTO orgSaveMoreDTO) {
 	        OrgSaveByExcelVO orgSaveByExcelVO = null;
 	        if (orgSaveMoreDTO != null) {
@@ -324,11 +326,11 @@ public class OrgServiceImpl implements OrgService {
 	                            Row row = iteratorRow.next();
 	                            OrgSaveDTO orgSaveDTO = new OrgSaveDTO();
 	                            orgSaveDTO.setParentOrgCode(orgSaveMoreDTO.getParentOrgCode());
-	                            if (row.getCell(0) != null && !Strings.isNullOrEmpty(row.getCell(0).toString().trim())) {
-	                                orgSaveDTO.setName(row.getCell(0).toString());
+	                            if (row.getCell(0) != null && !Strings.isNullOrEmpty(getCellValue(row.getCell(0)).trim())) {
+	                                orgSaveDTO.setName(getCellValue(row.getCell(0)));
 	                            }
-	                            if (row.getCell(1) != null && !Strings.isNullOrEmpty(row.getCell(1).toString().trim())) {
-	                                orgSaveDTO.setNote(row.getCell(1).toString());
+	                            if (row.getCell(1) != null && !Strings.isNullOrEmpty(getCellValue(row.getCell(1)).trim())) {
+	                                orgSaveDTO.setNote(getCellValue(row.getCell(1)));
 	                            } else {
 	                                orgSaveDTO.setNote(orgSaveDTO.getName());
 	                            }
@@ -385,7 +387,7 @@ public class OrgServiceImpl implements OrgService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	@CacheEvict(value = { "org_code_defined" })
+	@CacheEvict(value = { "org_code_defined" },allEntries =true)
 	public OrgSaveVO saveForApp(OrgSaveDTO orgSaveDTO) {
 		// TODO Auto-generated method stub
 		OrgSaveVO orgSaveVO = null;
@@ -515,5 +517,32 @@ public class OrgServiceImpl implements OrgService {
         }
         throw new BusiException(BusiEnum.GET_ORGCODE_ERROR);
     }
+	
+	private static String getCellValue(Cell cell) {
+        String strCell = "";
+        if (cell == null) {
+            return "";
+        }
+        switch (cell.getCellTypeEnum()) {
+        case STRING:
+            strCell = cell.getStringCellValue();
+            break;
+        case NUMERIC:
+//            strCell = String.valueOf(cell.getNumericCellValue());
+        	cell.setCellType(CellType.STRING);
+        	strCell = cell.getStringCellValue();
+            break;
+        case BOOLEAN:
+            strCell = String.valueOf(cell.getBooleanCellValue());
+            break;
+        case BLANK:
+            strCell = "";
+            break;
+        default:
+            strCell = "";
+            break;
+        }
+        return strCell;
+	}
 
 }
