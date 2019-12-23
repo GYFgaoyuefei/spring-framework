@@ -49,6 +49,11 @@ public class OrgServiceFeignHystrix implements OrgServiceFeign , IHystrix {
 	private Throwable throwable;
 	
 	@Override
+	public ResultModel<List<OrgQueryVO>> queryAndSaveOrg(List<OrgQueryDTO> orgQueryDTOList) {
+		return null;
+	}
+
+	@Override
 	public Throwable setThrowable(Throwable throwable) {
 		this.throwable = throwable;
 		return null;
