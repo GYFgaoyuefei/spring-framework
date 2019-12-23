@@ -13,8 +13,10 @@ import com.eseasky.core.framework.AuthService.module.model.ServUserInfo;
 import com.eseasky.core.framework.AuthService.module.service.ServUserInfoService;
 import com.eseasky.core.starters.auth.server.core.entity.FrontEndAuthConfig;
 import com.eseasky.core.starters.auth.server.core.interfaces.UserService;
+import com.eseasky.core.starters.security.tools.TokenUtils;
 import com.eseasky.global.entity.MsgReturn;
 import com.eseasky.global.entity.UserViews;
+import com.eseasky.protocol.system.SystemServiceConfig;
 import com.eseasky.protocol.system.entity.DTO.DictiCondiDTO;
 import com.eseasky.protocol.system.entity.VO.DictItemVO;
 import com.eseasky.protocol.system.entity.VO.DictionaryVO;
@@ -74,6 +76,7 @@ public class DomainUserDetailsService implements UserService {
 		dto.setGroup(FRONTEND_DICT_GROUP);
 		dto.setType(FRONTEND_DICT_TYPE);
 		dto.setStatus("valid");
+		dto.setAuthKey(TokenUtils.encode(SystemServiceConfig.NO_LOGIN_KEY));
 		ResponseEntity<MsgReturn<DictionaryVO>> configs = systemServiceFeign.queryByTypeAndGroup(dto);
 		if (configs != null && configs.getBody() != null) {
 			MsgReturn<DictionaryVO> msg = configs.getBody();
