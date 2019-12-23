@@ -48,7 +48,7 @@ public class OrgServiceImpl implements OrgService {
 	private IOrganizeService iOrganizeService;
 
 	@Override
-//	@Cacheable(value = { "org_code_defined" }, key = "'getOrgNameByOrgCode'+#orgQueryDTO", unless = "#result == null")
+	@Cacheable(value = { "org_code_defined" }, key = "'getOrgNameByOrgCode'+#orgQueryDTO", unless = "#result == null")
 	public Page<OrgQueryVO> queryOrg(OrgQueryDTO orgQueryDTO) {
 		// TODO Auto-generated method stub
 		Page<OrgQueryVO> orgQueryVOs = null;
@@ -73,6 +73,7 @@ public class OrgServiceImpl implements OrgService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	@CacheEvict(value = { "org_code_defined" })
 	public OrgSaveVO saveOrg(OrgSaveDTO orgSaveDTO) {
 		OrgSaveVO orgSaveVO = null;
 		if (orgSaveDTO != null) {
@@ -103,7 +104,7 @@ public class OrgServiceImpl implements OrgService {
 				OrgSaveDTO orgSaveDTO = new OrgSaveDTO();
 				BeanUtils.copyProperties(orgUpdateDTO, orgSaveDTO);
 				orgSaveVO = checkOrgName(orgSaveDTO);
-				if (orgSaveVO != null && orgSaveVO.getId() != null && orgUpdateDTO.getId() != orgSaveVO.getId())
+				if (orgSaveVO != null && orgSaveVO.getId() != null && orgUpdateDTO.getId().longValue() != orgSaveVO.getId().longValue())
 					throw new BusiException(BusiEnum.ORGNAME_REPEATABLE);
 			}
 			OrganizeUpdateInfo orgInsertInfo = new OrganizeUpdateInfo();
@@ -300,6 +301,7 @@ public class OrgServiceImpl implements OrgService {
 		return orgSaveVO;
 	}
 	 @Override
+	 @CacheEvict(value = { "org_code_defined" })
 	    public OrgSaveByExcelVO saveByExcel(OrgSaveMoreDTO orgSaveMoreDTO) {
 	        OrgSaveByExcelVO orgSaveByExcelVO = null;
 	        if (orgSaveMoreDTO != null) {
@@ -383,6 +385,7 @@ public class OrgServiceImpl implements OrgService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	@CacheEvict(value = { "org_code_defined" })
 	public OrgSaveVO saveForApp(OrgSaveDTO orgSaveDTO) {
 		// TODO Auto-generated method stub
 		OrgSaveVO orgSaveVO = null;

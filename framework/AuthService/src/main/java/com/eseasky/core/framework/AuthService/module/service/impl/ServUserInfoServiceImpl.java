@@ -173,13 +173,13 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 
 		Optional<ServUserInfo> ServUserInfo = servUserInfoRepository.findByUserName(servUserInfoDTO.getUserName());
 		if (ServUserInfo.isPresent()) {
-			if (servUserInfoDTO.getId() == null || servUserInfoDTO.getId() != ServUserInfo.get().getId()) {
+			if (servUserInfoDTO.getId() == null || servUserInfoDTO.getId().longValue() != ServUserInfo.get().getId().longValue()) {
 				throw new BusiException(BusiEnum.USERNAME_REPEATABLE);
 			}
 		}
 		ServUserInfo = servUserInfoRepository.findByMobile(servUserInfoDTO.getMobile());
 		if (ServUserInfo.isPresent()) {
-			if (servUserInfoDTO.getId() == null || servUserInfoDTO.getId() != ServUserInfo.get().getId()) {
+			if (servUserInfoDTO.getId() == null || servUserInfoDTO.getId().longValue() != ServUserInfo.get().getId().longValue()) {
 				throw new BusiException(BusiEnum.MOBILE_REPEATABLE);
 			}
 		}
