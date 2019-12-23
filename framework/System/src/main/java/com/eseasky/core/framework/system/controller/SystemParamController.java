@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.eseasky.protocol.system.SystemServiceConfig;
 import com.eseasky.protocol.system.entity.DTO.DictiCondiDTO;
 import com.eseasky.protocol.system.entity.VO.DictItemVO;
 import com.eseasky.protocol.system.entity.VO.DictionaryVO;
@@ -23,6 +24,8 @@ import com.eseasky.core.framework.system.protocol.dto.DictionaryDto;
 import com.eseasky.core.framework.system.protocol.vo.DictItemVo;
 import com.eseasky.core.framework.system.protocol.vo.DictionaryVo;
 import com.eseasky.core.framework.system.service.SystemDictService;
+import com.eseasky.core.starters.auth.context.AuthContextHelper;
+import com.eseasky.core.starters.security.tools.TokenUtils;
 import com.eseasky.global.entity.MsgPageInfo;
 import com.eseasky.global.entity.MsgReturn;
 import com.eseasky.global.utils.CheckUtils;
@@ -222,6 +225,11 @@ public class SystemParamController  implements SystemParamPro {
 	@Override
 	public ResponseEntity<MsgReturn<DictionaryVO>> queryByTypeAndGroup(@RequestBody DictiCondiDTO dictionaryDTO) {
 		MsgReturn<DictionaryVO> msgReturn = new MsgReturn<DictionaryVO>();
+		if (AuthContextHelper.currentUser() == null) {
+			if (!TokenUtils.check(SystemServiceConfig.NO_LOGIN_KEY, dictionaryDTO.getAuthKey())) {
+				return new ResponseEntity<MsgReturn<DictionaryVO>>(msgReturn, HttpStatus.FORBIDDEN);
+			}
+		}
 		if (!StringUtils.isBlank(dictionaryDTO.getGroup())&&!StringUtils.isBlank(dictionaryDTO.getType())) {
 			Dictionary dictionary = systemDictService.findValidDictByTypeAndGroup(dictionaryDTO.getType(), dictionaryDTO.getGroup());
 			if(dictionary!=null) {
