@@ -2,6 +2,7 @@ package com.eseasky.core.framework.AuthService.module.service;
 
 import java.util.List;
 
+import org.omg.PortableServer.LIFESPAN_POLICY_ID;
 import org.springframework.data.domain.Page;
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgSaveMoreDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgUpdateDTO;
@@ -40,4 +41,5 @@ public interface OrgService {
 
 	OrgSaveVO saveForApp(OrgSaveDTO orgSaveDTO);
 
+	List<OrgQueryVO> queryAndSaveOrg(List<OrgQueryDTO> orgQueryDTOList);
 }
