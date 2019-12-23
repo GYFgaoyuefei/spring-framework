@@ -13,6 +13,8 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
@@ -24,7 +26,6 @@ import com.eseasky.core.framework.AuthService.exception.BusiException.BusiExcept
 import com.eseasky.core.framework.AuthService.module.service.OrgService;
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgSaveMoreDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgUpdateDTO;
-import com.eseasky.core.framework.AuthService.protocol.vo.MulOrgsVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.OrgRowSaveVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.OrgSaveByExcelVO;
 import com.eseasky.core.starters.organization.persistence.IOrganizeService;
@@ -36,6 +37,7 @@ import com.eseasky.global.utils.SequeceHelper;
 import com.eseasky.protocol.auth.entity.DTO.OrgQueryDTO;
 import com.eseasky.protocol.auth.entity.DTO.OrgSaveDTO;
 import com.eseasky.protocol.auth.entity.DTO.OrgUpByCodeDTO;
+import com.eseasky.protocol.auth.entity.VO.MulOrgsVO;
 import com.eseasky.protocol.auth.entity.VO.OrgQueryVO;
 import com.eseasky.protocol.auth.entity.VO.OrgSaveVO;
 import com.google.common.base.Strings;
@@ -46,6 +48,7 @@ public class OrgServiceImpl implements OrgService {
 	private IOrganizeService iOrganizeService;
 
 	@Override
+	@Cacheable(value = { "org_code_defined" }, key = "'getOrgNameByOrgCode'+#orgQueryDTO", unless = "#result == null")
 	public Page<OrgQueryVO> queryOrg(OrgQueryDTO orgQueryDTO) {
 		// TODO Auto-generated method stub
 		Page<OrgQueryVO> orgQueryVOs = null;
@@ -91,6 +94,7 @@ public class OrgServiceImpl implements OrgService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+//	@CacheEvict(value= {"org_code_defined"})
 	public OrgSaveVO updateOrg(OrgUpdateDTO orgUpdateDTO) {
 		// TODO Auto-generated method stub
 		OrgSaveVO orgSaveVO = null;
@@ -115,6 +119,7 @@ public class OrgServiceImpl implements OrgService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	@CacheEvict(value = { "org_code_defined" })
 	public OrgSaveVO disableOrg(OrgQueryDTO orgUpdateDTO) {
 		// TODO Auto-generated method stub
 		OrgSaveVO orgSaveVO = null;
@@ -130,6 +135,7 @@ public class OrgServiceImpl implements OrgService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	@CacheEvict(value = { "org_code_defined" })
 	public OrgSaveVO openOrg(OrgQueryDTO orgUpdateDTO) {
 		// TODO Auto-generated method stub
 		OrgSaveVO orgSaveVO = null;
@@ -144,6 +150,7 @@ public class OrgServiceImpl implements OrgService {
 	}
 
 	@Override
+	@Cacheable(value = { "org_code_defined" }, key = "'getOrgNameByOrgCode'+#orgCode", unless = "#result == null")
 	public OrgSaveVO getOrgNameByOrgCode(String orgCode) {
 		// TODO Auto-generated method stub
 		OrgSaveVO orgSaveVO = null;
@@ -199,7 +206,7 @@ public class OrgServiceImpl implements OrgService {
 					secOrgQueryDTO.setSize(50);
 					secOrgQueryDTO.setStatus(1);
 					if (!isExistFir)
-						secOrgQueryDTO.setKeyWords(keyWords);					
+						secOrgQueryDTO.setKeyWords(keyWords);
 					Page<OrgQueryVO> orgQueryVOs = queryOrg(secOrgQueryDTO);
 					if (orgQueryVOs == null || orgQueryVOs.getContent() == null || orgQueryVOs.getContent().size() == 0)
 						break;
@@ -267,6 +274,7 @@ public class OrgServiceImpl implements OrgService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	@CacheEvict(value = { "org_code_defined" })
 	public OrgSaveVO updateOrgByCode(OrgUpByCodeDTO orgUpdateDTO) {
 		// TODO Auto-generated method stub
 		OrgSaveVO orgSaveVO = null;
@@ -320,18 +328,18 @@ public class OrgServiceImpl implements OrgService {
 							}
 							if (row.getCell(1) != null && !Strings.isNullOrEmpty(row.getCell(1).toString().trim())) {
 								orgSaveDTO.setNote(row.getCell(1).toString());
-							}else {
+							} else {
 								orgSaveDTO.setNote(orgSaveDTO.getName());
 							}
 							OrgRowSaveVO orgRowSaveVO = saveByExcel(orgSaveDTO);
-							if (orgRowSaveVO != null) {								
-								if(Strings.isNullOrEmpty(orgRowSaveVO.getErrorMessage())) {
-									orgSaveByExcelVO.setSuccessNum(orgSaveByExcelVO.getSuccessNum()+1);
-								}else {
-									orgSaveByExcelVO.setErrorNum(orgSaveByExcelVO.getErrorNum()+1);
+							if (orgRowSaveVO != null) {
+								if (Strings.isNullOrEmpty(orgRowSaveVO.getErrorMessage())) {
+									orgSaveByExcelVO.setSuccessNum(orgSaveByExcelVO.getSuccessNum() + 1);
+								} else {
+									orgSaveByExcelVO.setErrorNum(orgSaveByExcelVO.getErrorNum() + 1);
 									orgRowSaveVOs.add(orgRowSaveVO);
 								}
-								orgSaveByExcelVO.setCount(orgSaveByExcelVO.getCount()+1);
+								orgSaveByExcelVO.setCount(orgSaveByExcelVO.getCount() + 1);
 							}
 						}
 						orgSaveByExcelVO.setOrgRowSaveVOs(orgRowSaveVOs);
@@ -397,5 +405,66 @@ public class OrgServiceImpl implements OrgService {
 			}
 		}
 		return orgSaveVO;
+	}
+
+	@Override
+	public List<MulOrgsVO> queryOrgsByMerCode(OrgQueryDTO orgQueryDTO) {
+		List<MulOrgsVO> mulOrgsVOs = null;
+		if (orgQueryDTO != null && !Strings.isNullOrEmpty(orgQueryDTO.getOrgCode())) {
+			int level = SequeceHelper.getLevel(orgQueryDTO.getOrgCode());
+			switch (level) {
+			case 0:
+				mulOrgsVOs = queryMulOrgs(orgQueryDTO);
+				break;
+			case 1:
+				mulOrgsVOs = queryMulOrgs(orgQueryDTO);
+				break;
+			case 2:
+				mulOrgsVOs=queryOrgsLevel2(orgQueryDTO.getOrgCode());
+				break;
+			case 3:
+				OrganizeQuery organizeQuery = new OrganizeQuery();
+				organizeQuery.setOrgCode(orgQueryDTO.getOrgCode());
+				Page<OrganizeDefined> organizeDefineds = iOrganizeService.queryOrganize(organizeQuery);
+				if (organizeDefineds != null && organizeDefineds.getContent() != null
+						&& organizeDefineds.getContent().size() > 0) {
+					mulOrgsVOs=queryOrgsLevel2(organizeDefineds.getContent().get(0).getParentOrgCode());
+				}				
+				break;
+			}
+		}
+		return mulOrgsVOs;
+	}
+
+	private  List<MulOrgsVO> queryOrgsLevel2(String orgCode) {
+		List<MulOrgsVO> mulOrgsVOs = null;
+		if (!Strings.isNullOrEmpty(orgCode)) {
+			OrganizeQuery organizeQuery = new OrganizeQuery();
+			organizeQuery.setOrgCode(orgCode);
+			Page<OrganizeDefined> organizeDefineds = iOrganizeService.queryOrganize(organizeQuery);
+			if (organizeDefineds != null && organizeDefineds.getContent() != null
+					&& organizeDefineds.getContent().size() > 0) {
+				OrganizeDefined organizeDefined = organizeDefineds.getContent().get(0);
+				List<OrgQueryVO> levelSecOrgs = new ArrayList<OrgQueryVO>();
+				OrgQueryVO orgQueryVO = new OrgQueryVO();
+				BeanUtils.copyProperties(organizeDefined, orgQueryVO);
+				levelSecOrgs.add(orgQueryVO);
+				organizeQuery = new OrganizeQuery();
+				organizeQuery.setOrgCode(organizeDefined.getParentOrgCode());
+				organizeDefineds = iOrganizeService.queryOrganize(organizeQuery);
+				if (organizeDefineds != null && organizeDefineds.getContent() != null
+						&& organizeDefineds.getContent().size() > 0) {
+					organizeDefined = organizeDefineds.getContent().get(0);
+					orgQueryVO = new OrgQueryVO();
+					BeanUtils.copyProperties(organizeDefined, orgQueryVO);
+					mulOrgsVOs=new ArrayList<MulOrgsVO>();
+					MulOrgsVO mulOrgsVO=new MulOrgsVO();
+					mulOrgsVO.setLevelFirOrg(orgQueryVO);
+					mulOrgsVO.setLevelSecOrgs(levelSecOrgs);
+					mulOrgsVOs.add(mulOrgsVO);
+				}
+			}
+		}
+		return mulOrgsVOs;
 	}
 }

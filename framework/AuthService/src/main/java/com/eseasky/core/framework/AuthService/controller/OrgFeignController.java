@@ -15,6 +15,7 @@ import com.eseasky.core.framework.AuthService.module.service.OrgService;
 import com.eseasky.protocol.auth.entity.DTO.OrgQueryDTO;
 import com.eseasky.protocol.auth.entity.DTO.OrgSaveDTO;
 import com.eseasky.protocol.auth.entity.DTO.OrgUpByCodeDTO;
+import com.eseasky.protocol.auth.entity.VO.MulOrgsVO;
 import com.eseasky.protocol.auth.entity.VO.OrgQueryVO;
 import com.eseasky.protocol.auth.entity.VO.OrgSaveVO;
 import com.eseasky.protocol.auth.protocol.OrgServiceFeign;
@@ -82,6 +83,25 @@ public class OrgFeignController implements OrgServiceFeign {
 		OrgSaveVO orgSaveVO = orgService.getOrgNameByOrgCode(orgQueryDTO.getOrgCode());
 		log.info(JSONObject.toJSONString(orgSaveVO));
 		return orgSaveVO;
+	}
+	
+	@PostMapping(value = "/queryOrgsByMerCode",consumes = "application/json")
+	public ResultModel<List<MulOrgsVO>> queryOrgsByMerCode(@RequestBody OrgQueryDTO orgQueryDTO) {
+		// TODO Auto-generated method stub
+		ResultModel<List<MulOrgsVO>> resultModel = new ResultModel<List<MulOrgsVO>>();
+		List<MulOrgsVO> orgSaveVO = orgService.queryOrgsByMerCode(orgQueryDTO);
+		log.info(JSONObject.toJSONString(orgSaveVO));
+		if(orgSaveVO!=null) {
+			resultModel.setData(orgSaveVO);
+		}
+		return resultModel;
+	}
+
+
+	@Override
+	public ResultModel<List<OrgQueryVO>> queryAndSaveOrg(List<OrgQueryDTO> orgQueryDTOList) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
