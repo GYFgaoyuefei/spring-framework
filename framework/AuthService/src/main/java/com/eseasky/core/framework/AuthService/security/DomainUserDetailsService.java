@@ -77,6 +77,7 @@ public class DomainUserDetailsService implements UserService {
 		dto.setType(FRONTEND_DICT_TYPE);
 		dto.setStatus("valid");
 		dto.setAuthKey(TokenUtils.encode(SystemServiceConfig.NO_LOGIN_KEY));
+		System.out.println(dto.getAuthKey());
 		ResponseEntity<MsgReturn<DictionaryVO>> configs = systemServiceFeign.queryByTypeAndGroup(dto);
 		if (configs != null && configs.getBody() != null) {
 			MsgReturn<DictionaryVO> msg = configs.getBody();
