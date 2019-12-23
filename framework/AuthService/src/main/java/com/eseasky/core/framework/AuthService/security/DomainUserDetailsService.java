@@ -83,7 +83,6 @@ public class DomainUserDetailsService implements UserService {
 		configItem.setKey("MERCHANT_MENU");
 		configItem.setRelatePower("商家查询,商家新增".split(","));
 		send.add(configItem);
-//		return send.isEmpty() ? null : send;
-		return null;
+		return send.isEmpty() ? null : send;
 	}
 }
