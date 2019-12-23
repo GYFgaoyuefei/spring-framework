@@ -227,6 +227,8 @@ public class SystemParamController  implements SystemParamPro {
 		MsgReturn<DictionaryVO> msgReturn = new MsgReturn<DictionaryVO>();
 		if (AuthContextHelper.currentUser() == null) {
 			if (!TokenUtils.check(SystemServiceConfig.NO_LOGIN_KEY, dictionaryDTO.getAuthKey())) {
+				msgReturn.setStatus(403);
+				msgReturn.setMsg("没有权限");
 				return new ResponseEntity<MsgReturn<DictionaryVO>>(msgReturn, HttpStatus.FORBIDDEN);
 			}
 		}
