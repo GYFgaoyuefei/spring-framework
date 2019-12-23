@@ -8,6 +8,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.eseasky.protocol.system.entity.VO.DictItemVO;
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
+import lombok.SneakyThrows;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -292,22 +295,16 @@ public class SystemDictServiceImpl implements SystemDictService {
 	}
 
 	@Override
-	@Cacheable(value= {"sys_dict_item","sys_dictionary"}, key="'queryByKeyAndDictId'+#dictiCondiDTO",unless="#result == null")
-	public DictItemVo queryByKeyAndDictId(DictiCondiDto dictiCondiDTO) throws Exception {
+	@Cacheable(value= {"sys_dict_item","sys_dictionary"}, key="'queryByKeyAndDictId'+#dictiCondiDTO.group+#dictiCondiDTO.type+#dictiCondiDTO.itemKey",unless="#result == null")
+	public DictItemVO queryByKeyAndDictId(DictiCondiDto dictiCondiDTO) throws Exception {
 		if(StringUtils.isBlank(dictiCondiDTO.getType())||StringUtils.isBlank(dictiCondiDTO.getGroup())||StringUtils.isBlank(dictiCondiDTO.getItemKey())){
 			throw new Exception("字典类型，字典分组，映射Key不能为空");
 		}
-		Dictionary dictionary = systemManagerService.findDictByTypeAndGroup(dictiCondiDTO.getType(), dictiCondiDTO.getGroup());
-		if(dictionary==null ){
-			throw new Exception("字典值不存在");
-		}
-		List<DictItem> dictItems = dictionary.getDictItems();
-		for (DictItem dictItem : dictItems) {
-			if (dictItem.getKey().equals(dictiCondiDTO.getItemKey())){
-				DictItemVo dictItemVO = new DictItemVo();
-				BeanUtils.copyProperties(dictItem, dictItemVO);
-				return  dictItemVO;
-			}
+		DictItem dictItem = systemManagerService.getDictItem(dictiCondiDTO.getType(), dictiCondiDTO.getGroup(), dictiCondiDTO.getItemKey());
+		if(dictItem!=null){
+			DictItemVO dictItemVO = new DictItemVO();
+			BeanUtils.copyProperties(dictItem,dictItemVO);
+			return dictItemVO;
 		}
 		return null;
 	}
@@ -343,4 +340,5 @@ public class SystemDictServiceImpl implements SystemDictService {
 
         return strCell;
 	}
+
 }

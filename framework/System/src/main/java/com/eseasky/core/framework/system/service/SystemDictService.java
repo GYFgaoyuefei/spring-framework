@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.eseasky.core.framework.system.protocol.vo.DictItemVo;
+import com.eseasky.protocol.system.entity.VO.DictItemVO;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import com.eseasky.core.framework.system.protocol.dto.DictItemDto;
@@ -167,6 +168,6 @@ public interface SystemDictService {
 
 	DictionaryVo updateDictByUploadSingleFile(DictionaryDto dictionaryDto) throws Exception ;
 
-	DictItemVo queryByKeyAndDictId(DictiCondiDto dictiCondiDto) throws Exception;
+	DictItemVO queryByKeyAndDictId(DictiCondiDto dictiCondiDto) throws Exception;
 
 }
