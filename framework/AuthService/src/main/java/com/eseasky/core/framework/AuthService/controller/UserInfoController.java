@@ -131,7 +131,7 @@ public class UserInfoController {
     }
 
 
-    @ApiOperation(value = "强制下线", httpMethod = "POST")
+    @ApiOperation(value = "用户授权信息", httpMethod = "POST")
     @PostMapping(value = "/getUserGranted")
     public ResultModel<UserGrantInfoVO> getUserGranted(@RequestBody VRInfoDTO vRInfoDTO) {
         ResultModel<UserGrantInfoVO> msgReturn = new ResultModel<UserGrantInfoVO>();
