@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.eseasky.core.framework.AuthService.module.service.GroupService;
 import com.eseasky.core.framework.AuthService.module.service.OrgService;
+import com.eseasky.core.framework.AuthService.protocol.dto.AddPow2GroupDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.GroupGrantDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.GroupSaveDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.QueryGroupDTO;
@@ -27,6 +28,7 @@ import com.eseasky.core.starters.organization.persistence.entity.dto.GrantByGrou
 import com.eseasky.core.starters.organization.persistence.entity.dto.GroupAddDTO;
 import com.eseasky.core.starters.organization.persistence.entity.dto.GroupQueryDTO;
 import com.eseasky.core.starters.organization.persistence.entity.vo.GroupVO;
+import com.google.common.base.Strings;
 
 
 @Service
@@ -125,6 +127,30 @@ public class GroupServiceImpl implements GroupService{
 		}
 		return userGrantInfoVO;
 		
+	}
+
+	@Override
+	public GroupQueryVO addPowerToGroup(AddPow2GroupDTO addPow2GroupDTO) {
+		// TODO Auto-generated method stub
+		GroupQueryVO groupQueryVO=null;
+		if(addPow2GroupDTO!=null && !Strings.isNullOrEmpty(addPow2GroupDTO.getGroupName())&&addPow2GroupDTO.getPowerIds()!=null) {
+			GroupVO groupVO=iOrganizeService.addPower2Group(addPow2GroupDTO.getGroupName(),addPow2GroupDTO.getPowerIds());
+			if(groupVO!=null) {
+				groupQueryVO=new GroupQueryVO();
+				BeanUtils.copyProperties(groupVO, groupQueryVO);
+			}
+		}
+		return groupQueryVO;
+	}
+
+	@Override
+	public GroupQueryVO deletePowerGroup(AddPow2GroupDTO deleteGroupDTO) {
+		// TODO Auto-generated method stub
+		GroupQueryVO groupQueryVO=null;
+		if(deleteGroupDTO!=null && !Strings.isNullOrEmpty(deleteGroupDTO.getGroupName())) {
+			iOrganizeService.deletePowerGroup(deleteGroupDTO.getGroupName());
+		}
+		return groupQueryVO;
 	}
 	
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
 import com.eseasky.core.framework.AuthService.module.service.GroupService;
+import com.eseasky.core.framework.AuthService.protocol.dto.AddPow2GroupDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.GroupGrantDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.QueryGroupDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.GroupSaveDTO;
@@ -86,6 +87,25 @@ public class GroupController {
 		return msgReturn;
 	}
 	
-	
+	@ApiOperation(value = "授权", httpMethod = "POST")
+	@PostMapping(value = "/addPowerToGroup")
+	public ResultModel<GroupQueryVO> addPowerToGroup(@RequestBody @Validated AddPow2GroupDTO addPow2GroupDTO) {
 
+		ResultModel<GroupQueryVO> msgReturn = new ResultModel<GroupQueryVO>();
+		GroupQueryVO groupQueryVO = groupService.addPowerToGroup(addPow2GroupDTO);
+		log.info(JSONObject.toJSONString(groupQueryVO));
+		msgReturn.setData(groupQueryVO);
+		return msgReturn;
+	}
+
+	@ApiOperation(value = "授权", httpMethod = "POST")
+	@PostMapping(value = "/deletePowerGroup")
+	public ResultModel<GroupQueryVO> deletePowerGroup(@RequestBody @Validated AddPow2GroupDTO  deleteGroupDTO) {
+
+		ResultModel<GroupQueryVO> msgReturn = new ResultModel<GroupQueryVO>();
+		GroupQueryVO groupQueryVO = groupService.deletePowerGroup(deleteGroupDTO);
+		log.info(JSONObject.toJSONString(groupQueryVO));
+		msgReturn.setData(groupQueryVO);
+		return msgReturn;
+	}
 }
