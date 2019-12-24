@@ -18,7 +18,7 @@ import com.eseasky.core.starters.auth.EnableOrganizeGranted;
 @EnableResourceServer //开启资源服务，因为程序需要对外暴露获取token的API接口
 @EnableEurekaClient //开启Eureka Client
 @EnableScheduling
-@EnableOrganizeGranted
+//@EnableOrganizeGranted
 @EnableJpaRepositories(basePackages ={"com.eseasky.core.starters.organization.persistence.repository.**"
     ,"com.eseasky.core.framework.AuthService.module.**"})
 @EntityScan(basePackages ={"com.eseasky.core.starters.organization.persistence.model.**"
