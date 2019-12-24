@@ -46,7 +46,7 @@ public interface OrgServiceFeign {
 	
 	@RequestLine("POST /queryOrgsByMerCode")
 	@Headers({"Content-Type: application/json","Accept: application/json"})
-	public ResultModel<List<MulOrgsVO>>  queryOrgsByMerCode(@RequestBody OrgQueryDTO orgQueryDTO);
+	public ResultModel<List<MulOrgsVO>>  queryOrgsByMerCode(@RequestBody List<OrgQueryDTO> orgQueryDTOList);
 
 	/**
 	 * 查询(若未查出)并新增组织权限

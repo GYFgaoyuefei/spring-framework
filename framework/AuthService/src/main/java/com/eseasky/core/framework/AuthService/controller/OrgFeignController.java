@@ -1,10 +1,12 @@
 package com.eseasky.core.framework.AuthService.controller;
 
 
+import com.eseasky.core.framework.AuthService.utils.QueryMulOrgsUtils;
 import com.eseasky.global.entity.MsgPageInfo;
 import com.eseasky.global.entity.ResultModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.querydsl.QuerydslUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,6 +27,8 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.log4j.Log4j2;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Api(value = "组织管理", tags = "组织管理服务")
 @RestController
@@ -61,6 +65,7 @@ public class OrgFeignController implements OrgServiceFeign {
         return orgSaveVO;
     }
 
+    @Override
     @PostMapping(value = "/updateOrg", consumes = "application/json")
     public OrgSaveVO updateOrg(@RequestBody @Validated OrgUpByCodeDTO OrgUpdateDTO) {
         // TODO Auto-generated method stub
@@ -69,6 +74,7 @@ public class OrgFeignController implements OrgServiceFeign {
         return orgSaveVO;
     }
 
+    @Override
     @PostMapping(value = "/disableOrg", consumes = "application/json")
     public OrgSaveVO disableOrg(@RequestBody @Validated OrgQueryDTO orgUpdateDTO) {
         // TODO Auto-generated method stub
@@ -77,6 +83,7 @@ public class OrgFeignController implements OrgServiceFeign {
         return orgSaveVO;
     }
 
+    @Override
 	@PostMapping(value = "/getOrgNameByOrgCode",consumes = "application/json")
 	public OrgSaveVO getOrgNameByOrgCode(@RequestBody OrgQueryDTO orgQueryDTO) {
 		// TODO Auto-generated method stub
@@ -84,12 +91,15 @@ public class OrgFeignController implements OrgServiceFeign {
 		log.info(JSONObject.toJSONString(orgSaveVO));
 		return orgSaveVO;
 	}
-	
+
+	@Override
 	@PostMapping(value = "/queryOrgsByMerCode",consumes = "application/json")
-	public ResultModel<List<MulOrgsVO>> queryOrgsByMerCode(@RequestBody OrgQueryDTO orgQueryDTO) {
+	public ResultModel<List<MulOrgsVO>> queryOrgsByMerCode(@RequestBody List<OrgQueryDTO> orgQueryDTOList) {
 		// TODO Auto-generated method stub
-		ResultModel<List<MulOrgsVO>> resultModel = new ResultModel<List<MulOrgsVO>>();
-		List<MulOrgsVO> orgSaveVO = orgService.queryOrgsByMerCode(orgQueryDTO);
+		ResultModel<List<MulOrgsVO>> resultModel = new ResultModel<>();
+        Set<String> orgCodes = QueryMulOrgsUtils.getOrgCodes(orgQueryDTOList.stream().map(OrgQueryDTO::getOrgCode).collect(Collectors.toList()));
+
+        List<MulOrgsVO> orgSaveVO = orgService.queryOrgsByMerCode(orgCodes);
 		log.info(JSONObject.toJSONString(orgSaveVO));
 		if(orgSaveVO!=null) {
 			resultModel.setData(orgSaveVO);

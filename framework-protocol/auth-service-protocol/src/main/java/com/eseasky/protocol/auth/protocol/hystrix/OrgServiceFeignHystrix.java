@@ -46,6 +46,11 @@ public class OrgServiceFeignHystrix implements OrgServiceFeign , IHystrix {
 		throw new BaseHandlerException(500, "error");
 	}
 
+	@Override
+	public ResultModel<List<MulOrgsVO>> queryOrgsByMerCode(List<OrgQueryDTO> orgQueryDTOList) {
+		return null;
+	}
+
 	private Throwable throwable;
 	
 	@Override
@@ -59,9 +64,4 @@ public class OrgServiceFeignHystrix implements OrgServiceFeign , IHystrix {
 		return null;
 	}
 
-	@Override
-	public ResultModel<List<MulOrgsVO>> queryOrgsByMerCode(OrgQueryDTO orgQueryDTO) {
-		// TODO Auto-generated method stub
-		throw new BaseHandlerException(500, "error");
-	}
 }

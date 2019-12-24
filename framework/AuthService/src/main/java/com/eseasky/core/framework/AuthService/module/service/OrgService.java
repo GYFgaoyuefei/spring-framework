@@ -1,8 +1,5 @@
 package com.eseasky.core.framework.AuthService.module.service;
 
-import java.util.List;
-
-import org.springframework.data.domain.Page;
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgSaveMoreDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgUpdateDTO;
 import com.eseasky.core.framework.AuthService.protocol.vo.OrgSaveByExcelVO;
@@ -12,6 +9,10 @@ import com.eseasky.protocol.auth.entity.DTO.OrgUpByCodeDTO;
 import com.eseasky.protocol.auth.entity.VO.MulOrgsVO;
 import com.eseasky.protocol.auth.entity.VO.OrgQueryVO;
 import com.eseasky.protocol.auth.entity.VO.OrgSaveVO;
+import org.springframework.data.domain.Page;
+
+import java.util.List;
+import java.util.Set;
 
 
 public interface OrgService {
@@ -40,7 +41,7 @@ public interface OrgService {
 
 	OrgSaveVO saveForApp(OrgSaveDTO orgSaveDTO);
 
-	List<MulOrgsVO> queryOrgsByMerCode(OrgQueryDTO orgQueryDTO);
+	List<MulOrgsVO> queryOrgsByMerCode(Set<String> orgCodeList);
 
 	List<OrgQueryVO> queryAndSaveOrg(List<OrgQueryDTO> orgQueryDTOList);
 }
