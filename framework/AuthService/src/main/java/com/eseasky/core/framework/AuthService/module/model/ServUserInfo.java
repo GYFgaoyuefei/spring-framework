@@ -1,12 +1,15 @@
 package com.eseasky.core.framework.AuthService.module.model;
 
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.Table;
 
+import com.eseasky.core.starters.auth.organize.OrganizeEntity;
+import com.eseasky.core.starters.auth.organize.OrganizeEntityListener;
 
 import lombok.Data;
 
@@ -18,8 +21,8 @@ import lombok.Data;
 		@Index(name="serv_user_info_index_orgCode", columnList = "orgCode"),
 		@Index(name="serv_user_info_index_nikeName", columnList = "nikeName"),
 })
-//@OrganizeEntity(fieldName = "organ_code", name="organCode")
-//@EntityListeners(value = { OrganizeEntityListener.class })
+@OrganizeEntity(fieldName = "org_code", name="orgCode", bootSkip = true)
+@EntityListeners(value = { OrganizeEntityListener.class })
 public class ServUserInfo {
 
     @Id

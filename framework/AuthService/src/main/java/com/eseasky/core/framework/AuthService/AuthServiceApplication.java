@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 
+import com.eseasky.core.starters.auth.EnableOrganizeGranted;
+
 /**
 * OAuth2认证授权服务
 * @ EnableDiscoveryClient 启用服务注册发现
@@ -16,7 +18,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 @EnableResourceServer //开启资源服务，因为程序需要对外暴露获取token的API接口
 @EnableEurekaClient //开启Eureka Client
 @EnableScheduling
-//@EnableOrganizeGranted
+@EnableOrganizeGranted
 @EnableJpaRepositories(basePackages ={"com.eseasky.core.starters.organization.persistence.repository.**"
     ,"com.eseasky.core.framework.AuthService.module.**"})
 @EntityScan(basePackages ={"com.eseasky.core.starters.organization.persistence.model.**"
