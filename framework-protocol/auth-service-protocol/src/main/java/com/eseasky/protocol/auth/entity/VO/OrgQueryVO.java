@@ -22,6 +22,8 @@ public class OrgQueryVO implements Serializable{
     
     private String parentOrgCode;
     
+    private String parentOrgName;
+    
     private String orgCode;
     
     private int status;
