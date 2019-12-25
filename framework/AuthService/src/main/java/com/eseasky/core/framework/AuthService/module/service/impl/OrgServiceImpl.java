@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import jodd.cache.FIFOCache;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
@@ -67,6 +66,9 @@ public class OrgServiceImpl implements OrgService {
                 List<OrgQueryVO> orgQueryVOls = organizeDefineds.stream().map(item -> {
                     OrgQueryVO orgQueryVO = new OrgQueryVO();
                     BeanUtils.copyProperties(item, orgQueryVO);
+                    if(orgQueryVO.getLevel()!=null && orgQueryVO.getLevel()==3) {
+                    	orgQueryVO.setParentOrgName(getOrgNameByOrgCode(orgQueryVO.getParentOrgCode()).getName());
+                    }                 	
                     return orgQueryVO;
                 }).collect(Collectors.toList());
                 orgQueryVOs = new PageImpl<OrgQueryVO>(orgQueryVOls, organizeDefineds.getPageable(),
@@ -255,7 +257,7 @@ public class OrgServiceImpl implements OrgService {
                 organizeQuery.setPageSize(50);
                 organizeQuery.setPage(page);
                 organizeQuery.setKeyWords(orgSaveDTO.getName());
-                organizeQuery.setStatus(null);
+                organizeQuery.setStatus(1);
                 Page<OrganizeDefined> organizeDefineds = iOrganizeService.queryOrganize(organizeQuery);
                 if (organizeDefineds != null && organizeDefineds.getContent() != null
                         && organizeDefineds.getContent().size() > 0) {
