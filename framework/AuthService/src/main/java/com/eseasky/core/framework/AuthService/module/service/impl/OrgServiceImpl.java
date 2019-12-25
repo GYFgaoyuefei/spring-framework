@@ -420,7 +420,7 @@ public class OrgServiceImpl implements OrgService {
     @Override
     public List<MulOrgsVO> queryOrgsByMerCode(Set<String> orgCodeList) {
         List<MulOrgsVO> resultOrgsVOList = new ArrayList<>();
-        orgCodeList=dealSonCode(orgCodeList);
+//        orgCodeList=dealSonCode(orgCodeList);
         for (String code : orgCodeList) {
             List<MulOrgsVO> mulOrgsVOList = new ArrayList<>();
             int level = SequeceHelper.getLevel(code);
@@ -450,8 +450,32 @@ public class OrgServiceImpl implements OrgService {
                 resultOrgsVOList.addAll(mulOrgsVOList);
             }
         }
+        return mergeOrgCode(resultOrgsVOList,new ArrayList<MulOrgsVO>());
+    }
 
-        return resultOrgsVOList;
+    /**
+     * 合并组织结构
+     * @param targetList 目标list
+     * @return
+     */
+    private List<MulOrgsVO> mergeOrgCode(List<MulOrgsVO> targetList,List<MulOrgsVO> resultList){
+        if (targetList.size() == 0){
+            return resultList;
+        }
+        MulOrgsVO target = targetList.get(0);
+        targetList.remove(0);
+        if (target.getLevelSecOrgs() == null){
+            return mergeOrgCode(targetList,resultList);
+        }
+        for (MulOrgsVO item : resultList) {
+            if (target.getLevelFirOrg().getName().equals(item.getLevelFirOrg().getName())){
+                item.getLevelSecOrgs().removeAll(target.getLevelSecOrgs());
+                item.getLevelSecOrgs().addAll(target.getLevelSecOrgs());
+                return mergeOrgCode(targetList,resultList);
+            }
+        }
+        resultList.add(target);
+        return mergeOrgCode(targetList,resultList);
     }
 
     private Set<String> dealSonCode(Set<String> orgCodeList) {
