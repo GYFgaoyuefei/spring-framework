@@ -517,27 +517,20 @@ public class OrgServiceImpl implements OrgService {
     }
 
     private OrgQueryVO queryOrGenGenerateOrgCode(OrgQueryDTO orgQueryDTO) {
-        OrganizeQuery organizeQuery = new OrganizeQuery();
-        BeanUtils.copyProperties(orgQueryDTO, organizeQuery);
-        if (orgQueryDTO.getSize() != 0) {
-            organizeQuery.setPageSize(orgQueryDTO.getSize());
-        }
-        organizeQuery.setLevel(SequeceHelper.getLevel(orgQueryDTO.getParentCode()) + 1);
-        Page<OrganizeDefined> organizeDefineds = iOrganizeService.queryOrganize(organizeQuery);
-        List<OrgQueryVO> getOrgByName = new ArrayList<>();
-        if (organizeDefineds != null) {
-            getOrgByName = organizeDefineds.stream().map(item -> {
-                if (item.getName().equals(orgQueryDTO.getKeyWords())) {
-                    OrgQueryVO orgQueryVO = new OrgQueryVO();
-                    BeanUtils.copyProperties(item, orgQueryVO);
-                    return orgQueryVO;
-                }
-                return null;
-            }).collect(Collectors.toList());
-        }
-        //查询出来有值
-        if (getOrgByName.size() > 0) {
-            return getOrgByName.get(0);
+        OrgSaveDTO orgSaveDTO = new OrgSaveDTO();
+        orgSaveDTO.setName(orgQueryDTO.getKeyWords());
+        orgSaveDTO.setParentOrgCode(orgQueryDTO.getParentCode());
+
+        OrgSaveVO orgSaveVO = checkOrgName(orgSaveDTO);
+        OrgQueryVO orgQueryVO = new OrgQueryVO();
+
+        if (orgSaveVO != null && orgSaveVO.getId() != null) {
+            if (orgSaveVO.getParentOrgCode().equals(orgSaveDTO.getParentOrgCode())) {
+                BeanUtils.copyProperties(orgSaveVO,orgQueryVO);
+                return orgQueryVO;
+            } else {
+                throw new BusiException(BusiEnum.ORGNAME_REPEATABLE);
+            }
         }
         //生成code
         OrgInsertInfo orgInsertInfo = new OrgInsertInfo();
@@ -546,7 +539,6 @@ public class OrgServiceImpl implements OrgService {
         orgInsertInfo.setParentOrgCode(orgQueryDTO.getParentCode());
         OrganizeDefined organize = iOrganizeService.addOrganize(orgInsertInfo);
         if (organize != null) {
-            OrgQueryVO orgQueryVO = new OrgQueryVO();
             BeanUtils.copyProperties(organize, orgQueryVO);
             return orgQueryVO;
         }
