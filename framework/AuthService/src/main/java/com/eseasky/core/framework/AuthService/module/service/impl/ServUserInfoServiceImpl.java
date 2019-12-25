@@ -104,7 +104,7 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 				ServUserInfo servUserInfo = optional.get();
 				BeanUtils.copyProperties(servUserInfoDTO, servUserInfo);
 				grantByGroups(servUserInfoDTO);
-				grantGroups(servUserInfoDTO, true);
+//				grantGroups(servUserInfoDTO, true);
 				servUserInfo = servUserInfoRepository.save(servUserInfo);
 				if (servUserInfo != null) {
 					servUserInfoVO = new ServUserInfoVO();

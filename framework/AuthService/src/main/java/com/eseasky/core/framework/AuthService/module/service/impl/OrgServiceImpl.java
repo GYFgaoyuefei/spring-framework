@@ -3,6 +3,7 @@ package com.eseasky.core.framework.AuthService.module.service.impl;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -52,7 +53,7 @@ public class OrgServiceImpl implements OrgService {
     private IOrganizeService iOrganizeService;
 
     @Override
-    @Cacheable(value = {"org_code_defined"}, key = "'queryOrg'+#orgQueryDTO", unless = "#result == null")
+//    @Cacheable(value = {"org_code_defined"}, key = "'queryOrg'+#orgQueryDTO", unless = "#result == null")
     public Page<OrgQueryVO> queryOrg(OrgQueryDTO orgQueryDTO) {
         // TODO Auto-generated method stub
         Page<OrgQueryVO> orgQueryVOs = null;
@@ -417,6 +418,7 @@ public class OrgServiceImpl implements OrgService {
     @Override
     public List<MulOrgsVO> queryOrgsByMerCode(Set<String> orgCodeList) {
         List<MulOrgsVO> resultOrgsVOList = new ArrayList<>();
+        orgCodeList=dealSonCode(orgCodeList);
         for (String code : orgCodeList) {
             List<MulOrgsVO> mulOrgsVOList = new ArrayList<>();
             int level = SequeceHelper.getLevel(code);
@@ -450,7 +452,30 @@ public class OrgServiceImpl implements OrgService {
         return resultOrgsVOList;
     }
 
-    private List<MulOrgsVO> queryOrgsLevel2(String orgCode) {
+    private Set<String> dealSonCode(Set<String> orgCodeList) {
+		// TODO Auto-generated method stub
+    	Set<String> orgCodeSet=null;
+    	if(orgCodeList!=null && orgCodeList.size()>0) {
+    		orgCodeSet=new HashSet<String>();
+    		for(String code : orgCodeList) {
+    			if(!Strings.isNullOrEmpty(code)) {
+    				boolean isExist=false;
+    				for(String parentCode:orgCodeSet) {
+    					if(Strings.isNullOrEmpty(parentCode)||code.indexOf(parentCode)>0) {
+    						isExist=true;
+    						break;
+    					}
+    				}
+    				if(!isExist) {
+    					orgCodeSet.add(code);
+    				}
+    			}
+    		}
+    	}
+		return orgCodeSet;
+	}
+
+	private List<MulOrgsVO> queryOrgsLevel2(String orgCode) {
         List<MulOrgsVO> mulOrgsVOs = null;
         if (!Strings.isNullOrEmpty(orgCode)) {
             OrganizeQuery organizeQuery = new OrganizeQuery();
