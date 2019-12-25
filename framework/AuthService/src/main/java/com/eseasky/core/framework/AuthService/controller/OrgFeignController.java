@@ -4,6 +4,8 @@ package com.eseasky.core.framework.AuthService.controller;
 import com.eseasky.core.framework.AuthService.utils.QueryMulOrgsUtils;
 import com.eseasky.global.entity.MsgPageInfo;
 import com.eseasky.global.entity.ResultModel;
+import com.eseasky.protocol.auth.entity.DTO.OrgRefreshDTO;
+import com.eseasky.protocol.auth.protocol.OrgRefreshServiceFeign;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.validation.annotation.Validated;
@@ -113,5 +115,13 @@ public class OrgFeignController implements OrgServiceFeign {
         List<OrgQueryVO> orgQuerys = orgService.queryAndSaveOrg(orgQueryDTOList);
         result.setData(orgQuerys);
         return result;
+    }
+
+    @Autowired
+    OrgRefreshServiceFeign orgRefreshServiceFeign;
+
+    @PostMapping(value = "/refresh", consumes = "application/json")
+    public ResultModel<OrgSaveVO> refresh(@RequestBody OrgRefreshDTO orgRefreshDTO) {
+        return orgRefreshServiceFeign.orgRefresh(orgRefreshDTO);
     }
 }
