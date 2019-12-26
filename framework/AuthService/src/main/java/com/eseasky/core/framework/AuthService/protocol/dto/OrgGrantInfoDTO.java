@@ -31,7 +31,7 @@ public class OrgGrantInfoDTO implements Serializable {
     private String createUser;
     
     @NotEmpty(message = "grantedType不能为空")
-    private String grantedType="reject";
+    private String grantedType="REJECT";
     
     private Long grantId;
     

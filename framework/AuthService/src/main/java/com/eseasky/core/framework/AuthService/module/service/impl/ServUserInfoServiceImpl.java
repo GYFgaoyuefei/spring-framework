@@ -10,6 +10,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.validation.ConstraintViolationException;
 
 import com.eseasky.core.framework.AuthService.exception.BusiException.BusiEnum;
 import com.eseasky.core.framework.AuthService.exception.BusiException.BusiException;
@@ -19,6 +20,7 @@ import com.google.common.base.Strings;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -43,9 +45,12 @@ import com.eseasky.core.framework.AuthService.protocol.vo.ServUserInfoVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.UserGrantInfoVO;
 import com.eseasky.core.starters.organization.persistence.IOrganizeService;
 import com.eseasky.core.starters.organization.persistence.entity.OrgUserGranted;
+import com.eseasky.core.starters.organization.persistence.entity.PowerGroupInfo;
+import com.eseasky.core.starters.organization.persistence.entity.PowerGroupQuery;
 import com.eseasky.core.starters.organization.persistence.entity.VRInfo;
 import com.eseasky.core.starters.organization.persistence.entity.dto.GrantByGroupDTO;
 import com.eseasky.core.starters.organization.persistence.entity.dto.PowerGrantDTO;
+import com.eseasky.core.starters.organization.persistence.model.OrgPowerDefined;
 
 import static com.eseasky.core.framework.AuthService.exception.BusiException.BusiEnum.NOT_FOUND_USER;
 
@@ -156,12 +161,23 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 			ServUserInfo servUserInfo = new ServUserInfo();
 			BeanUtils.copyProperties(servUserInfoDTO, servUserInfo);
 			checkUserNameAndMoblie(servUserInfoDTO);
-			grantByGroups(servUserInfoDTO);
-			servUserInfo = servUserInfoRepository.save(servUserInfo);
+//			try {
+				servUserInfo = servUserInfoRepository.save(servUserInfo);
+//			}catch(DataIntegrityViolationException e) {
+//				if(e.getCause().contains("user_name")) {
+//					throw new BusiException(BusiEnum.USERNAME_REPEATABLE);
+//				}
+//				if(e.getCause().getMessage().contains("user_moblie")) {
+//					throw new BusiException(BusiEnum.MOBILE_REPEATABLE);
+//				}
+//			}
+			grantBasePower(servUserInfoDTO);
+			grantByGroups(servUserInfoDTO);				
 			if (servUserInfo != null) {
 				servUserInfoVO = new ServUserInfoVO();
 				BeanUtils.copyProperties(servUserInfo, servUserInfoVO);
 			}
+			
 		} else {
 			throw new BusiException(BusiEnum.USERINFO_NOID);
 		}
@@ -422,6 +438,30 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 
 	}
 
+	@Transactional
+	private void grantBasePower(ServUserInfoDTO servUserInfoDTO) {
+		if(servUserInfoDTO!=null){
+			PowerGroupQuery powerGroupQuery=new PowerGroupQuery();
+			powerGroupQuery.setGroupName("基础权限");
+			Page<PowerGroupInfo> groups = iOrganizeService.queryPower(powerGroupQuery);
+			if (groups != null && groups.getContent() != null) {
+				PowerGroupInfo group=groups.stream().filter(item -> item.getGroupName().equals("基础权限")).limit(1).collect(Collectors.toList()).get(0);
+				if(group!=null) {
+					PowerGrantDTO userGrantByGroup = new PowerGrantDTO();
+					userGrantByGroup.setPowerId(group.getId());
+					userGrantByGroup.setCreateUser(servUserInfoDTO.getCreaterUser());
+					userGrantByGroup.setOrgCode(servUserInfoDTO.getOrgCode());
+					userGrantByGroup.setUser(servUserInfoDTO.getUserName());
+					try {
+						iOrganizeService.grant(userGrantByGroup);
+					} catch (Exception e) {
+						throw new BusiException(BusiEnum.USERINFO_GROUPGRANT);
+					}
+				}
+			}
+		}
+	}
+	
 	@Override
 	public ServUserInfo findByPhone(String phone) {
 		// TODO Auto-generated method stub

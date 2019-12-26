@@ -54,15 +54,15 @@ public class GrantServiceImpl implements GrantService {
 				resourceQuery.setPageSize(resoureQueryDTO.getSize());
 //			List<OrganizeUserGranted> organizeUserGranteds = null;
 			Page<OrganizeResourceDefined> organizeDefineds = iOrganizeService.getResourceItems(resourceQuery);
-			if(organizeDefineds!=null) {
-				List<ResoureQueryVO> temResoureQueryVOs=organizeDefineds.stream().map(item->{
-					ResoureQueryVO temResoureQueryVO=new ResoureQueryVO();
-					BeanUtils.copyProperties(item, temResoureQueryVO,"orgCode");
+			if (organizeDefineds != null) {
+				List<ResoureQueryVO> temResoureQueryVOs = organizeDefineds.stream().map(item -> {
+					ResoureQueryVO temResoureQueryVO = new ResoureQueryVO();
+					BeanUtils.copyProperties(item, temResoureQueryVO, "orgCode");
 					return temResoureQueryVO;
 				}).collect(Collectors.toList());
-				if(temResoureQueryVOs!=null)
-				resoureQueryVOs=new PageImpl<ResoureQueryVO>(temResoureQueryVOs, organizeDefineds.getPageable(),
-						organizeDefineds.getTotalElements());
+				if (temResoureQueryVOs != null)
+					resoureQueryVOs = new PageImpl<ResoureQueryVO>(temResoureQueryVOs, organizeDefineds.getPageable(),
+							organizeDefineds.getTotalElements());
 			}
 //			if (resoureQueryDTO.getUser() != null && resoureQueryDTO.getOrgCode() != null) {
 //				organizeUserGranteds=queryGrantByUser(resoureQueryDTO.getUser());
@@ -80,30 +80,29 @@ public class GrantServiceImpl implements GrantService {
 		if (orgGrantInfoDTO != null) {
 			OrgUserGranted orgUserGranted = null;
 			try {
-			if (orgGrantInfoDTO.getGrantId() != null) {
-				OrgGrantedUpdateInfo orgGrantedUpdateInfo = new OrgGrantedUpdateInfo();
-				orgGrantedUpdateInfo.setOrgCode(orgGrantInfoDTO.getOrgCode());
-				orgGrantedUpdateInfo.setAction(BinOrListUtil.transToInt(orgGrantInfoDTO.getAction()));
-				orgGrantedUpdateInfo.setId(orgGrantInfoDTO.getGrantId());
-				orgGrantedUpdateInfo.setUpdateUser(orgGrantInfoDTO.getCreateUser());
-//				if(orgGrantedUpdateInfo.getAction()==null || orgGrantedUpdateInfo.getAction()==0 ||)
-				orgUserGranted = iOrganizeService.updateGranted(orgGrantedUpdateInfo);
-			} else {
+				if (orgGrantInfoDTO.getGrantId() != null) {
+					OrgGrantedUpdateInfo orgGrantedUpdateInfo = new OrgGrantedUpdateInfo();
+					orgGrantedUpdateInfo.setOrgCode(orgGrantInfoDTO.getOrgCode());
+					orgGrantedUpdateInfo.setAction(BinOrListUtil.transToInt(orgGrantInfoDTO.getAction()));
+					orgGrantedUpdateInfo.setId(orgGrantInfoDTO.getGrantId());
+					orgGrantedUpdateInfo.setUpdateUser(orgGrantInfoDTO.getCreateUser());
+					orgUserGranted = iOrganizeService.deleteGranted(orgGrantedUpdateInfo);
+
+				}
 				OrgGrantInfo orgGrantInfo = new OrgGrantInfo();
 				BeanUtils.copyProperties(orgGrantInfoDTO, orgGrantInfo);
 				orgGrantInfo.setAction(BinOrListUtil.transToInt(orgGrantInfoDTO.getAction()));
-				if(orgGrantInfo.getAction()!=null && orgGrantInfo.getAction()!=0)
-				orgUserGranted = iOrganizeService.grant(orgGrantInfo);
-			}}catch(OrgPersistenceException orgPersistenceException) {
-				if(orgPersistenceException.getCode()==OrgLogicException.DUPLICATE_GRANTED) {
+				if (orgGrantInfo.getAction() != null && orgGrantInfo.getAction() != 0)
+					orgUserGranted = iOrganizeService.grant(orgGrantInfo);
+			} catch (OrgPersistenceException orgPersistenceException) {
+				if (orgPersistenceException.getCode() == OrgLogicException.DUPLICATE_GRANTED) {
 					orgGrantInfoVO = new GrantInfoVO();
 					BeanUtils.copyProperties(orgGrantInfoDTO, orgGrantInfoVO);
 					orgGrantInfoVO.setMessage(orgPersistenceException.getMessage());
 					return orgGrantInfoVO;
-				}				
-				else
+				} else
 					throw orgPersistenceException;
-			}			
+			}
 			if (orgUserGranted != null) {
 				orgGrantInfoVO = new GrantInfoVO();
 				BeanUtils.copyProperties(orgGrantInfoDTO, orgGrantInfoVO);
@@ -161,11 +160,12 @@ public class GrantServiceImpl implements GrantService {
 			BeanUtils.copyProperties(orgQueryGrantDTO, orgGrantedQuery);
 			if (orgQueryGrantDTO.getSize() != 0)
 				orgGrantedQuery.setPageSize(orgQueryGrantDTO.getSize());
+			orgGrantedQuery.setType("REJECT");
 			Page<OrganizeUserGranted> orgGrantedItems = iOrganizeService.queryOrgUserGranted(orgGrantedQuery);
 			if (orgGrantedItems != null) {
 				List<ResoureQueryVO> orgGrantedItemVOls = orgGrantedItems.stream().map(item -> {
 					ResoureQueryVO orgGrantedItemVO = new ResoureQueryVO();
-					BeanUtils.copyProperties(item, orgGrantedItemVO,"id");
+					BeanUtils.copyProperties(item, orgGrantedItemVO, "id");
 					orgGrantedItemVO.setGrantId(item.getId());
 					orgGrantedItemVO.setActionArr(BinOrListUtil.transToBin(item.getAction()));
 					orgGrantedItemVO.setOrgName(orgService.getOrgNameByOrgCode(item.getOrgCode()).getName());
@@ -215,8 +215,6 @@ public class GrantServiceImpl implements GrantService {
 		return orgGrantInfoVOs;
 	}
 
-	
-
 	private List<OrganizeUserGranted> queryGrantByUser(String user) {
 		List<OrganizeUserGranted> organizeUserGranteds = null;
 		if (user != null) {
@@ -227,7 +225,8 @@ public class GrantServiceImpl implements GrantService {
 				orgGrantedQuery.setPage(page);
 				orgGrantedQuery.setPageSize(50);
 				Page<OrganizeUserGranted> orgGrantedItems = iOrganizeService.queryOrgUserGranted(orgGrantedQuery);
-				if (orgGrantedItems == null || orgGrantedItems.getContent() == null || orgGrantedItems.getContent().size()==0)
+				if (orgGrantedItems == null || orgGrantedItems.getContent() == null
+						|| orgGrantedItems.getContent().size() == 0)
 					break;
 				if (organizeUserGranteds == null)
 					organizeUserGranteds = orgGrantedItems.getContent();
@@ -243,19 +242,19 @@ public class GrantServiceImpl implements GrantService {
 	@Transactional(rollbackFor = Exception.class)
 	public void deleteByUser(String userName) {
 		// TODO Auto-generated method stub
-		List<OrganizeUserGranted> organizeUserGranteds=queryGrantByUser(userName);
-		if(organizeUserGranteds!=null) {
-			for(OrganizeUserGranted organizeUserGranted:organizeUserGranteds) {
-				if(organizeUserGranted!=null) {
+		List<OrganizeUserGranted> organizeUserGranteds = queryGrantByUser(userName);
+		if (organizeUserGranteds != null) {
+			for (OrganizeUserGranted organizeUserGranted : organizeUserGranteds) {
+				if (organizeUserGranted != null) {
 					OrgGrantedUpdateInfo orgGrantedUpdateInfo = new OrgGrantedUpdateInfo();
 					orgGrantedUpdateInfo.setId(organizeUserGranted.getId());
 //					if(orgGrantedUpdateInfo.getAction()==null || orgGrantedUpdateInfo.getAction()==0 ||)
 					iOrganizeService.deleteGranted(orgGrantedUpdateInfo);
 				}
 			}
-		}	
+		}
 	}
-	
+
 //	@Override
 //	@Transactional(rollbackFor = Exception.class)
 //	public void updateByUser(String userName) {
@@ -272,7 +271,7 @@ public class GrantServiceImpl implements GrantService {
 //			}
 //		}	
 //	}
-	
+
 //	private Page<ResoureQueryVO>  transToResVO(Page<OrganizeResourceDefined> organizeDefineds,List<OrganizeUserGranted> organizeUserGranteds,String orgCode) {
 //		Page<ResoureQueryVO> resoureQueryVOs=null;
 //		if (organizeDefineds != null&& orgCode!=null) {

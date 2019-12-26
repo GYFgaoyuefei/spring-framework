@@ -426,7 +426,7 @@ public class OrgServiceImpl implements OrgService {
             List<MulOrgsVO> mulOrgsVOList = new ArrayList<>();
             int level = SequeceHelper.getLevel(code);
             OrgQueryDTO orgQueryDTO = new OrgQueryDTO();
-            orgQueryDTO.setOrgCode(code);
+            orgQueryDTO.setOrgCode(code.equals("000")?null:code);
             switch (level) {
                 case 0:
                     mulOrgsVOList = queryMulOrgs(orgQueryDTO);
