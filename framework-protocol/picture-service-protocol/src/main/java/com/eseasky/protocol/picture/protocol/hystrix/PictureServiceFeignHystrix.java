@@ -24,8 +24,7 @@ public class PictureServiceFeignHystrix implements PictureServiceFeign, IHystrix
 	}
 
 	@Override
-	public ResultModel<PictureInfoVO> uploadSingle(String resourceType, String organization, MultipartFile file) {
-		// TODO Auto-generated method stub
+	public ResultModel<PictureInfoVO> uploadSingle(String resourceType, String published, String organization, MultipartFile file) {
 		return null;
 	}
 

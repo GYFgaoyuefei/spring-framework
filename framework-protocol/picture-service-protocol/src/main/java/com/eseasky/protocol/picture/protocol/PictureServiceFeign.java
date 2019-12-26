@@ -9,6 +9,7 @@ import feign.Param;
 import feign.RequestLine;
 import feign.Response;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 @Feign(serviceName="PictureServer")
@@ -20,7 +21,8 @@ public interface PictureServiceFeign {
 //            produces = {MediaType.APPLICATION_JSON_UTF8_VALUE},
 //            consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResultModel<PictureInfoVO> uploadSingle(
-			@Param("resourceType") String resourceType, 
+			@Param("resourceType") String resourceType,
+			@Param("published") String published,
 			@Param("organization") String organization, 
 			@Param("file") MultipartFile file);
 
