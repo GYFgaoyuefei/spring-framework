@@ -529,11 +529,13 @@ public class OrgServiceImpl implements OrgService {
         OrgQueryVO orgQueryVO = new OrgQueryVO();
 
         if (orgSaveVO != null && orgSaveVO.getId() != null) {
+            BeanUtils.copyProperties(orgSaveVO,orgQueryVO);
             if (orgSaveVO.getParentOrgCode().equals(orgSaveDTO.getParentOrgCode())) {
-                BeanUtils.copyProperties(orgSaveVO,orgQueryVO);
                 return orgQueryVO;
             } else {
-                throw new BusiException(BusiEnum.ORGNAME_REPEATABLE);
+                orgQueryVO.setMessage("组织名重复");
+                return orgQueryVO;
+//                throw new BusiException(BusiEnum.ORGNAME_REPEATABLE);
             }
         }
         //生成code
