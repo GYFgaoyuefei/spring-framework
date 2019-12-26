@@ -15,36 +15,38 @@ import com.eseasky.protocol.auth.entity.VO.OrgSaveVO;
 import feign.Headers;
 import feign.RequestLine;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.List;
 
 
 @Feign(serviceName="AuthService")
 public interface OrgServiceFeign {
-	
 
-	@RequestLine("POST /queryOrg")
+
+	@RequestMapping(value="/queryOrg",method= RequestMethod.POST,consumes = "application/json")
 	@Headers({"Content-Type: application/json","Accept: application/json"})
     public ResultModel<List<OrgQueryVO>> queryOrg(@RequestBody OrgQueryDTO orgQueryDTO);
     
-	@RequestLine("POST /saveOrg")
+	@RequestMapping(value="/saveOrg",method= RequestMethod.POST,consumes = "application/json")
 	@Headers({"Content-Type: application/json","Accept: application/json"})
 	public OrgSaveVO saveOrg(@RequestBody @Validated OrgSaveDTO orgSaveDTO);
 	
-	@RequestLine("POST /updateOrg")
+	@RequestMapping(value="/updateOrg",method= RequestMethod.POST,consumes = "application/json")
 	@Headers({"Content-Type: application/json","Accept: application/json"})
 	public OrgSaveVO updateOrg(@RequestBody @Validated OrgUpByCodeDTO OrgUpdateDTO);
-	
-	@RequestLine("POST /disableOrg")
+
+	@RequestMapping(value="/disableOrg",method= RequestMethod.POST,consumes = "application/json")
 	@Headers({"Content-Type: application/json","Accept: application/json"})
 	public OrgSaveVO disableOrg(@RequestBody @Validated OrgQueryDTO orgUpdateDTO);
 	
-	@RequestLine("POST /getOrgNameByOrgCode")
+	@RequestMapping(value="/getOrgNameByOrgCode",method= RequestMethod.POST,consumes = "application/json")
 	@Headers({"Content-Type: application/json","Accept: application/json"})
 	public OrgSaveVO getOrgNameByOrgCode(@RequestBody OrgQueryDTO orgQueryDTO);
 
 	
-	@RequestLine("POST /queryOrgsByMerCode")
+	@RequestMapping(value="/queryOrgsByMerCode",method= RequestMethod.POST,consumes = "application/json")
 	@Headers({"Content-Type: application/json","Accept: application/json"})
 	public ResultModel<List<MulOrgsVO>>  queryOrgsByMerCode(@RequestBody List<OrgQueryDTO> orgQueryDTOList);
 
@@ -53,7 +55,7 @@ public interface OrgServiceFeign {
 	 * @param orgQueryDTOList
 	 * @return
 	 */
-	@RequestLine("POST /queryAndSaveOrg")
+	@RequestMapping(value="/queryAndSaveOrg",method= RequestMethod.POST,consumes = "application/json")
 	@Headers({"Content-Type: application/json","Accept: application/json"})
 	public ResultModel<List<OrgQueryVO>> queryAndSaveOrg(@RequestBody List<OrgQueryDTO> orgQueryDTOList);
 }

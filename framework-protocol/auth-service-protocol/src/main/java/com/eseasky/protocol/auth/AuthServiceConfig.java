@@ -23,7 +23,7 @@ public class AuthServiceConfig {
 	
 	@Bean
 	public OrgServiceFeign orgServiceFeign() {
-		return factory.clientFeignContract(OrgServiceFeign.class);
+		return factory.client(OrgServiceFeign.class);
 	}
 
 	@Bean

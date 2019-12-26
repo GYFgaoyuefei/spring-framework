@@ -41,7 +41,7 @@ public class OrgFeignController implements OrgServiceFeign {
 
     @Override
     @ApiOperation(value = "查询组织", httpMethod = "POST")
-    @PostMapping(value = "/queryOrg", consumes = "application/json")
+//    @PostMapping(value = "/queryOrg", consumes = "application/json")
     public ResultModel<List<OrgQueryVO>> queryOrg(@RequestBody OrgQueryDTO orgQueryDTO) {
         ResultModel<List<OrgQueryVO>> resultModel = new ResultModel<>();
         Page<OrgQueryVO> orgQueryVOS = orgService.queryOrg(orgQueryDTO);
@@ -58,7 +58,7 @@ public class OrgFeignController implements OrgServiceFeign {
 
     @Override
     @ApiOperation(value = "添加组织", httpMethod = "POST")
-    @PostMapping(value = "/saveOrg", consumes = "application/json")
+//    @PostMapping(value = "/saveOrg", consumes = "application/json")
     public OrgSaveVO saveOrg(@RequestBody @Validated OrgSaveDTO orgSaveDTO) {
 
         OrgSaveVO orgSaveVO = orgService.saveForApp(orgSaveDTO);
@@ -67,7 +67,7 @@ public class OrgFeignController implements OrgServiceFeign {
     }
 
     @Override
-    @PostMapping(value = "/updateOrg", consumes = "application/json")
+//    @PostMapping(value = "/updateOrg", consumes = "application/json")
     public OrgSaveVO updateOrg(@RequestBody @Validated OrgUpByCodeDTO OrgUpdateDTO) {
         // TODO Auto-generated method stub
         OrgSaveVO orgSaveVO = orgService.updateOrgByCode(OrgUpdateDTO);
@@ -76,7 +76,7 @@ public class OrgFeignController implements OrgServiceFeign {
     }
 
     @Override
-    @PostMapping(value = "/disableOrg", consumes = "application/json")
+//    @PostMapping(value = "/disableOrg", consumes = "application/json")
     public OrgSaveVO disableOrg(@RequestBody @Validated OrgQueryDTO orgUpdateDTO) {
         // TODO Auto-generated method stub
         OrgSaveVO orgSaveVO = orgService.disableOrg(orgUpdateDTO);
@@ -85,7 +85,7 @@ public class OrgFeignController implements OrgServiceFeign {
     }
 
     @Override
-	@PostMapping(value = "/getOrgNameByOrgCode",consumes = "application/json")
+//	@PostMapping(value = "/getOrgNameByOrgCode",consumes = "application/json")
 	public OrgSaveVO getOrgNameByOrgCode(@RequestBody OrgQueryDTO orgQueryDTO) {
 		// TODO Auto-generated method stub
 		OrgSaveVO orgSaveVO = orgService.getOrgNameByOrgCode(orgQueryDTO.getOrgCode());
@@ -94,7 +94,7 @@ public class OrgFeignController implements OrgServiceFeign {
 	}
 
 	@Override
-	@PostMapping(value = "/queryOrgsByMerCode",consumes = "application/json")
+//	@PostMapping(value = "/queryOrgsByMerCode",consumes = "application/json")
 	public ResultModel<List<MulOrgsVO>> queryOrgsByMerCode(@RequestBody List<OrgQueryDTO> orgQueryDTOList) {
 		// TODO Auto-generated method stub
 		ResultModel<List<MulOrgsVO>> resultModel = new ResultModel<>();
@@ -108,7 +108,7 @@ public class OrgFeignController implements OrgServiceFeign {
 		return resultModel;
 	}
 
-    @PostMapping(value = "/queryAndSaveOrg", consumes = "application/json")
+//    @PostMapping(value = "/queryAndSaveOrg", consumes = "application/json")
     @Override
     public ResultModel<List<OrgQueryVO>> queryAndSaveOrg(@RequestBody List<OrgQueryDTO> orgQueryDTOList) {
         ResultModel<List<OrgQueryVO>> result = new ResultModel<>();
@@ -120,7 +120,7 @@ public class OrgFeignController implements OrgServiceFeign {
     @Autowired
     OrgRefreshServiceFeign orgRefreshServiceFeign;
 
-    @PostMapping(value = "/refresh", consumes = "application/json")
+//    @PostMapping(value = "/refresh", consumes = "application/json")
     public ResultModel<OrgSaveVO> refresh(@RequestBody OrgRefreshDTO orgRefreshDTO) {
         return orgRefreshServiceFeign.orgRefresh(orgRefreshDTO);
     }
