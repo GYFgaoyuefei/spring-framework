@@ -32,4 +32,7 @@ public class OrgQueryVO implements Serializable{
     
     private int status;
 
+    //多个组织编码申请 专用 判断该组织编码是否被重复申请
+    private String message;
+
 }
