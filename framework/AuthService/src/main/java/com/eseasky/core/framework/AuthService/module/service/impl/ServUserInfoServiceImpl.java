@@ -215,9 +215,9 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 //				if (!Strings.isNullOrEmpty(servUserInfoDTO.getOrgName())) {
 //					predicates.add(criteriaBuilder.like(root.get("orgName"), "%" + servUserInfoDTO.getOrgName() + "%"));
 //				}
-				if (!Strings.isNullOrEmpty(servUserInfoDTO.getNikeName())) {
+				if (!Strings.isNullOrEmpty(servUserInfoDTO.getNickName())) {
 					predicates
-							.add(criteriaBuilder.like(root.get("nikeName"), "%" + servUserInfoDTO.getNikeName() + "%"));
+							.add(criteriaBuilder.like(root.get("nikeName"), "%" + servUserInfoDTO.getNickName() + "%"));
 				}
 				if (!Strings.isNullOrEmpty(servUserInfoDTO.getUserName())) {
 					predicates

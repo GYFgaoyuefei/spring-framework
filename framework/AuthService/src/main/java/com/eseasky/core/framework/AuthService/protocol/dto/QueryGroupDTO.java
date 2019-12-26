@@ -16,4 +16,8 @@ public class QueryGroupDTO implements Serializable {
     private Long id;
 	
 	private String name;
+	
+	private int page=0;
+	
+	private int size=10;
 }

@@ -39,7 +39,7 @@ public class ServUserInfoDTO implements Serializable{
 	    )
 	private String createrUser;
 	
-	private String nikeName;
+	private String nickName;
 	
 	private Integer page = 0;
 	private Integer size = 10;

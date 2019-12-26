@@ -3,6 +3,7 @@ package com.eseasky.core.framework.AuthService.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,6 +19,7 @@ import com.eseasky.core.framework.AuthService.protocol.dto.GroupSaveDTO;
 import com.eseasky.core.framework.AuthService.protocol.vo.GroupQueryVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.GroupSaveVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.UserGrantInfoVO;
+import com.eseasky.global.entity.MsgPageInfo;
 import com.eseasky.global.entity.ResultModel;
 
 import io.swagger.annotations.Api;
@@ -70,9 +72,11 @@ public class GroupController {
     public ResultModel<List<GroupQueryVO>> queryGroup(@RequestBody QueryGroupDTO groupQueryDTO) {
 
         ResultModel<List<GroupQueryVO>> msgReturn = new ResultModel<List<GroupQueryVO>>();
-        List<GroupQueryVO> groupQueryVOs = groupService.queryGroup(groupQueryDTO);
+        Page<GroupQueryVO> groupQueryVOs = groupService.queryGroup(groupQueryDTO);
+        if(groupQueryVOs!=null) {
+        	msgReturn.setData(groupQueryVOs.getContent(), MsgPageInfo.loadFromPageable(groupQueryVOs));
+        }
         log.info(JSONObject.toJSONString(groupQueryVOs));
-        msgReturn.setData(groupQueryVOs);
         return msgReturn;
     }
 	

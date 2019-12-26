@@ -3,7 +3,6 @@ package com.eseasky.core.framework.AuthService.module.service.impl;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -67,6 +66,8 @@ public class OrgServiceImpl implements OrgService {
                     OrgQueryVO orgQueryVO = new OrgQueryVO();
                     BeanUtils.copyProperties(item, orgQueryVO);
                     if(orgQueryVO.getLevel()!=null && orgQueryVO.getLevel()==3) {
+                    	orgQueryVO.setLevel1OrgCode(orgQueryVO.getParentOrgCode().substring(0, SequeceHelper.SEQUECE_LEVEL_LENGTH[0]));
+                    	orgQueryVO.setLevel2OrgCode(orgQueryVO.getParentOrgCode());
                     	orgQueryVO.setParentOrgName(getOrgNameByOrgCode(orgQueryVO.getParentOrgCode()).getName());
                     }                 	
                     return orgQueryVO;
@@ -477,29 +478,6 @@ public class OrgServiceImpl implements OrgService {
         resultList.add(target);
         return mergeOrgCode(targetList,resultList);
     }
-
-    private Set<String> dealSonCode(Set<String> orgCodeList) {
-		// TODO Auto-generated method stub
-    	Set<String> orgCodeSet=null;
-    	if(orgCodeList!=null && orgCodeList.size()>0) {
-    		orgCodeSet=new HashSet<String>();
-    		for(String code : orgCodeList) {
-    			if(!Strings.isNullOrEmpty(code)) {
-    				boolean isExist=false;
-    				for(String parentCode:orgCodeSet) {
-    					if(Strings.isNullOrEmpty(parentCode)||code.indexOf(parentCode)>0) {
-    						isExist=true;
-    						break;
-    					}
-    				}
-    				if(!isExist) {
-    					orgCodeSet.add(code);
-    				}
-    			}
-    		}
-    	}
-		return orgCodeSet;
-	}
 
 	private List<MulOrgsVO> queryOrgsLevel2(String orgCode) {
         List<MulOrgsVO> mulOrgsVOs = null;

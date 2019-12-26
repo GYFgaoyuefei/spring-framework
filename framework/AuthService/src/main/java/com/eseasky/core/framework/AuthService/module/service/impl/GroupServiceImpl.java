@@ -6,6 +6,11 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +23,7 @@ import com.eseasky.core.framework.AuthService.protocol.dto.QueryGroupDTO;
 import com.eseasky.core.framework.AuthService.protocol.vo.GroupQueryVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.GroupSaveVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.OrgGraItemForUserGroupVO;
+import com.eseasky.core.framework.AuthService.protocol.vo.ResoureQueryVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.UserGrantInfoVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.VRInfoVO;
 import com.eseasky.core.starters.organization.persistence.IOrganizeService;
@@ -58,23 +64,27 @@ public class GroupServiceImpl implements GroupService{
 	}
 
 	@Override
-	public List<GroupQueryVO> queryGroup(QueryGroupDTO groupQueryDTO) {
+	public Page<GroupQueryVO> queryGroup(QueryGroupDTO groupQueryDTO) {
 		// TODO Auto-generated method stub
-		List<GroupQueryVO> groupQueryVOs=null;
+		
+		Page<GroupQueryVO> pageGroups=null;
 		if(groupQueryDTO!=null) {
 			GroupQueryDTO groupQuery=new GroupQueryDTO();
 			BeanUtils.copyProperties(groupQueryDTO, groupQuery);
 			List<GroupVO> groupVOs = iOrganizeService.queryGroup(groupQuery);
-			if(groupVOs!=null && groupVOs.size()>0 ) {
-				groupQueryVOs= groupVOs.stream().map(item->{
+			List<GroupQueryVO> groupQueryVOs=new ArrayList<GroupQueryVO>();
+			if(groupVOs!=null && groupVOs.size()>0 ) {			
+				groupQueryVOs=groupVOs.stream().skip(groupQueryDTO.getPage() * groupQueryDTO.getSize()).limit(groupQueryDTO.getSize()).map(item->{
 					GroupQueryVO groupQueryVO=new GroupQueryVO();
 					BeanUtils.copyProperties(item, groupQueryVO);
 					return groupQueryVO;
-
 				}).collect(Collectors.toList());
 			}
+			if(groupQueryVOs!=null) {
+				pageGroups=new PageImpl<GroupQueryVO>(groupQueryVOs, PageRequest.of(groupQueryDTO.getPage(), groupQueryDTO.getSize()),groupVOs==null?0:groupVOs.size());		
+			}
 		}
-		return groupQueryVOs;
+		return pageGroups;
 	}
 
 	@Override

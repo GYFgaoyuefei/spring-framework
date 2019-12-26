@@ -3,6 +3,8 @@ package com.eseasky.core.framework.AuthService.module.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+
 import com.eseasky.core.framework.AuthService.protocol.dto.AddPow2GroupDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.GroupGrantDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.GroupSaveDTO;
@@ -17,7 +19,7 @@ public interface GroupService {
 
 	GroupSaveVO addGroup(GroupSaveDTO groupSaveDTO);
 
-	List<GroupQueryVO> queryGroup(QueryGroupDTO groupQueryDTO);
+	Page<GroupQueryVO> queryGroup(QueryGroupDTO groupQueryDTO);
 
 	void deleteGroup(QueryGroupDTO groupUpdateDTO);
 

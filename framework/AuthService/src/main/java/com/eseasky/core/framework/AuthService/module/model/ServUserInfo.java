@@ -19,7 +19,7 @@ import lombok.Data;
 		@Index(name="serv_user_info_index_userName", columnList = "userName", unique = true),
 		@Index(name="serv_user_info_index_mobile", columnList = "mobile", unique = true),
 		@Index(name="serv_user_info_index_orgCode", columnList = "orgCode"),
-		@Index(name="serv_user_info_index_nikeName", columnList = "nikeName"),
+		@Index(name="serv_user_info_index_nickName", columnList = "nickName"),
 })
 @OrganizeEntity(fieldName = "org_code", name="orgCode", bootSkip = true)
 @EntityListeners(value = { OrganizeEntityListener.class })
@@ -36,5 +36,5 @@ public class ServUserInfo {
 //    @Column(columnDefinition="varchar(128) default '000'")
 //    private String organCode="000";
 //    private String orgName;
-    private String nikeName;
+    private String nickName;
 }
