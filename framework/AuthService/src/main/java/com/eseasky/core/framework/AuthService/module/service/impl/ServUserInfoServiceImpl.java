@@ -10,7 +10,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import javax.validation.ConstraintViolationException;
 
 import com.eseasky.core.framework.AuthService.exception.BusiException.BusiEnum;
 import com.eseasky.core.framework.AuthService.exception.BusiException.BusiException;
@@ -50,7 +49,6 @@ import com.eseasky.core.starters.organization.persistence.entity.PowerGroupQuery
 import com.eseasky.core.starters.organization.persistence.entity.VRInfo;
 import com.eseasky.core.starters.organization.persistence.entity.dto.GrantByGroupDTO;
 import com.eseasky.core.starters.organization.persistence.entity.dto.PowerGrantDTO;
-import com.eseasky.core.starters.organization.persistence.model.OrgPowerDefined;
 
 import static com.eseasky.core.framework.AuthService.exception.BusiException.BusiEnum.NOT_FOUND_USER;
 
@@ -104,13 +102,11 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 		if (servUserInfoDTO.getId() != null) {
 			Optional<ServUserInfo> optional = servUserInfoRepository.findById(servUserInfoDTO.getId());
 			if (optional.isPresent()) {
-//				servUserInfoDTO.setOrgName(orgService.getOrgNameByOrgCode(servUserInfoDTO.getOrgCode()).getName());
-				checkUserNameAndMoblie(servUserInfoDTO);
+//				checkUserNameAndMoblie(servUserInfoDTO);
 				ServUserInfo servUserInfo = optional.get();
 				BeanUtils.copyProperties(servUserInfoDTO, servUserInfo);
 				grantByGroups(servUserInfoDTO);
-//				grantGroups(servUserInfoDTO, true);
-				servUserInfo = servUserInfoRepository.save(servUserInfo);
+				servUserInfo = saveUserInfo(servUserInfo);
 				if (servUserInfo != null) {
 					servUserInfoVO = new ServUserInfoVO();
 					BeanUtils.copyProperties(servUserInfo, servUserInfoVO);
@@ -160,17 +156,8 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 		if (servUserInfoDTO == null || servUserInfoDTO.getId() == null) {
 			ServUserInfo servUserInfo = new ServUserInfo();
 			BeanUtils.copyProperties(servUserInfoDTO, servUserInfo);
-			checkUserNameAndMoblie(servUserInfoDTO);
-//			try {
-				servUserInfo = servUserInfoRepository.save(servUserInfo);
-//			}catch(DataIntegrityViolationException e) {
-//				if(e.getCause().contains("user_name")) {
-//					throw new BusiException(BusiEnum.USERNAME_REPEATABLE);
-//				}
-//				if(e.getCause().getMessage().contains("user_moblie")) {
-//					throw new BusiException(BusiEnum.MOBILE_REPEATABLE);
-//				}
-//			}
+			//checkUserNameAndMoblie(servUserInfoDTO);
+			servUserInfo=saveUserInfo(servUserInfo);
 			grantBasePower(servUserInfoDTO);
 			grantByGroups(servUserInfoDTO);				
 			if (servUserInfo != null) {
@@ -185,35 +172,35 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 		return servUserInfoVO;
 	}
 
-	private void checkUserNameAndMoblie(ServUserInfoDTO servUserInfoDTO) {
-
-		Optional<ServUserInfo> ServUserInfo = servUserInfoRepository.findByUserName(servUserInfoDTO.getUserName());
-		if (ServUserInfo.isPresent()) {
-			if (servUserInfoDTO.getId() == null || servUserInfoDTO.getId().longValue() != ServUserInfo.get().getId().longValue()) {
-				throw new BusiException(BusiEnum.USERNAME_REPEATABLE);
-			}
-		}
-		ServUserInfo = servUserInfoRepository.findByMobile(servUserInfoDTO.getMobile());
-		if (ServUserInfo.isPresent()) {
-			if (servUserInfoDTO.getId() == null || servUserInfoDTO.getId().longValue() != ServUserInfo.get().getId().longValue()) {
-				throw new BusiException(BusiEnum.MOBILE_REPEATABLE);
-			}
-		}
-	}
+//	private void checkUserNameAndMoblie(ServUserInfoDTO servUserInfoDTO) {
+//
+//		Optional<ServUserInfo> ServUserInfo = servUserInfoRepository.findByUserName(servUserInfoDTO.getUserName());
+//		if (ServUserInfo.isPresent()) {
+//			if (servUserInfoDTO.getId() == null || servUserInfoDTO.getId().longValue() != ServUserInfo.get().getId().longValue()) {
+//				throw new BusiException(BusiEnum.USERNAME_REPEATABLE);
+//			}
+//		}
+//		ServUserInfo = servUserInfoRepository.findByMobile(servUserInfoDTO.getMobile());
+//		if (ServUserInfo.isPresent()) {
+//			if (servUserInfoDTO.getId() == null || servUserInfoDTO.getId().longValue() != ServUserInfo.get().getId().longValue()) {
+//				throw new BusiException(BusiEnum.MOBILE_REPEATABLE);
+//			}
+//		}
+//	}
 
 	@Override
 	public Page<ServUserInfo> queryUserInfo(ServUserInfoDTO servUserInfoDTO) {
 		// TODO Auto-generated method stub
 
-		Iterable<ServUserInfo> allUserInfo = servUserInfoRepository.findAll();
-		for (ServUserInfo item : allUserInfo) {
-			List<AuthAccessToken> AuthUser = authAccessTokenRepository.findByUserName(item.getUserName());
-			if (AuthUser.size() == 0 || item.getState() == null) {
-				item.setState("0");
-			} else
-				item.setState("1");
-			servUserInfoRepository.save(item);
-		}
+//		Iterable<ServUserInfo> allUserInfo = servUserInfoRepository.findAll();
+//		for (ServUserInfo item : allUserInfo) {
+//			List<AuthAccessToken> AuthUser = authAccessTokenRepository.findByUserName(item.getUserName());
+//			if (AuthUser.size() == 0 || item.getState() == null) {
+//				item.setState("0");
+//			} else
+//				item.setState("1");
+//			servUserInfoRepository.save(item);
+//		}
 
 		Pageable pageable = PageRequest.of(servUserInfoDTO.getPage(), servUserInfoDTO.getSize(),
 				Sort.by(Direction.DESC, "id"));
@@ -500,5 +487,22 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 		OrgUserGranted orgUserGranted = iOrganizeService.getUserGranted(account);
 		userGrantInfoVO = groupService.transOUGToUGIVO(orgUserGranted);
 		return userGrantInfoVO;
+	}
+
+	@Transactional(rollbackFor = Exception.class)
+	private ServUserInfo saveUserInfo(ServUserInfo servUserInfo) {
+		if (servUserInfo != null) {
+			try {
+				servUserInfo = servUserInfoRepository.save(servUserInfo);
+			} catch (DataIntegrityViolationException e) {
+				if (e.getLocalizedMessage().contains("uniq_user_name")) {
+					throw new BusiException(BusiEnum.USERNAME_REPEATABLE);
+				}
+				if (e.getLocalizedMessage().contains("serv_user_info_index_mobile")) {
+					throw new BusiException(BusiEnum.MOBILE_REPEATABLE);
+				}
+			}
+		}
+		return servUserInfo;
 	}
 }
