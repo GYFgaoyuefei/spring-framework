@@ -1,7 +1,5 @@
 package com.eseasky.core.framework.AuthService.module.service;
 
-
-
 import org.springframework.data.domain.Page;
 
 import com.eseasky.core.framework.AuthService.protocol.dto.AddPow2GroupDTO;

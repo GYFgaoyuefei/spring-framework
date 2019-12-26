@@ -192,15 +192,15 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 	public Page<ServUserInfo> queryUserInfo(ServUserInfoDTO servUserInfoDTO) {
 		// TODO Auto-generated method stub
 
-//		Iterable<ServUserInfo> allUserInfo = servUserInfoRepository.findAll();
-//		for (ServUserInfo item : allUserInfo) {
-//			List<AuthAccessToken> AuthUser = authAccessTokenRepository.findByUserName(item.getUserName());
-//			if (AuthUser.size() == 0 || item.getState() == null) {
-//				item.setState("0");
-//			} else
-//				item.setState("1");
-//			servUserInfoRepository.save(item);
-//		}
+		Iterable<ServUserInfo> allUserInfo = servUserInfoRepository.findAll();
+		for (ServUserInfo item : allUserInfo) {
+			List<AuthAccessToken> AuthUser = authAccessTokenRepository.findByUserName(item.getUserName());
+			if (AuthUser.size() == 0 || item.getState() == null) {
+				item.setState("0");
+			} else
+				item.setState("1");
+			servUserInfoRepository.save(item);
+		}
 
 		Pageable pageable = PageRequest.of(servUserInfoDTO.getPage(), servUserInfoDTO.getSize(),
 				Sort.by(Direction.DESC, "id"));
@@ -489,7 +489,7 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 		return userGrantInfoVO;
 	}
 
-	@Transactional(rollbackFor = Exception.class)
+//	@Transactional(rollbackFor = Exception.class)
 	private ServUserInfo saveUserInfo(ServUserInfo servUserInfo) {
 		if (servUserInfo != null) {
 			try {
