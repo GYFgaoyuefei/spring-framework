@@ -48,6 +48,9 @@ public class DomainUserDetailsService implements UserService {
 				userViews.setId(account.getId());
 				userViews.setName(name);
 				userViews.setPassword(account.getPassWord());
+				userViews.setMobile(account.getMobile());
+				userViews.setState(account.getState());
+				userViews.setNickName(account.getNickName());
 				return userViews;
 			}
 		}
