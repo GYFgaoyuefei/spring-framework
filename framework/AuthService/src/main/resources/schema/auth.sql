@@ -89,6 +89,18 @@ CREATE TABLE IF NOT EXISTS `serv_user_info` (
   KEY `serv_user_info_index_nickName` (`nick_name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS `org_code_defined` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `level` int(11) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `note` varchar(255) DEFAULT NULL,
+  `org_code` varchar(255) DEFAULT NULL,
+  `parent_org_code` varchar(255) DEFAULT NULL,
+  `status` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `org_code_defined_index_orgCode` (`org_code`),
+  KEY `org_code_defined_index_parent` (`parent_org_code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `org_resource_defined` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,

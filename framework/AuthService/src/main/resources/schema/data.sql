@@ -7,6 +7,7 @@ INSERT INTO `serv_client_details` (`id`, `access_token_validity`, `additional_in
 insert into `serv_user_info` (`id`, `mobile`, `nick_name`, `org_code`, `pass_word`, `state`, `user_name`) values('1',NULL,NULL,'000','mont@35441','1','admin');
 insert into `serv_user_info` (`id`, `mobile`, `nick_name`, `org_code`, `pass_word`, `state`, `user_name`) values('2',NULL,NULL,'000','mont@callback','1','callback');
 
+insert into `org_code_defined` (`id`, `level`, `name`, `note`, `org_code`, `parent_org_code`, `status`) values('1','1','中国','中国','001',NULL,'1');
 
 insert into `org_resource_defined` (`id`, `note`, `resource_group`, `resource_name`, `resource_type`, `status`, `org_code`) values('2','商家日志表','商家','serv_merchant_log','mysql','1','000');
 insert into `org_resource_defined` (`id`, `note`, `resource_group`, `resource_name`, `resource_type`, `status`, `org_code`) values('3','端口主表','端口','serv_port','mysql','1','000');
@@ -94,7 +95,7 @@ insert into `org_power` (`id`, `auth_code`, `group_name`, `note`, `status`) valu
 insert into `org_power` (`id`, `auth_code`, `group_name`, `note`, `status`) values('41','000','权限删除','权限删除','1');
 insert into `org_power` (`id`, `auth_code`, `group_name`, `note`, `status`) values('42','000','组织更新','组织更新','1');
 insert into `org_power` (`id`, `auth_code`, `group_name`, `note`, `status`) values('43','000','基础权限','基础权限','1');
-
+insert into `org_power` (`id`, `auth_code`, `group_name`, `note`, `status`) values('44','000','商家删除','商家删除','1');
 
 
 insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('1','callback','admin','000','商家查看','商家查看','1','1');
@@ -140,49 +141,52 @@ insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `po
 insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('41','callback','admin','000','权限删除','权限删除','1','41');
 insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('42','callback','admin','000','组织更新','组织更新','1','42');
 insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('43','callback','admin','000','基础权限','基础权限','1','43');
-insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('44','admin','admin','000','商家查看','商家查看','1','1');
-insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('45','admin','admin','000','商家入驻','商家入驻','1','2');
-insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('46','admin','admin','000','商家修改','商家修改','1','3');
-insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('47','admin','admin','000','同步资源','同步资源','1','4');
-insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('48','admin','admin','000','端口号查看','端口号查看','1','5');
-insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('49','admin','admin','000','端口号创建','端口号创建','1','6');
-insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('50','admin','admin','000','端口号修改','端口号修改','1','7');
-insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('51','admin','admin','000','端口号删除','端口号删除','1','8');
-insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('52','admin','admin','000','服务号查看','服务号查看','1','9');
-insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('53','admin','admin','000','服务号创建','服务号创建','1','10');
-insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('54','admin','admin','000','服务号修改','服务号修改','1','11');
-insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('55','admin','admin','000','服务号删除','服务号删除','1','12');
-insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('56','admin','admin','000','商家冻结','商家冻结','1','13');
-insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('57','admin','admin','000','主页查看','主页查看','1','14');
-insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('58','admin','admin','000','主页创建','主页创建','1','15');
-insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('59','admin','admin','000','主页修改','主页修改','1','16');
-insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('60','admin','admin','000','主页删除','主页删除','1','17');
-insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('61','admin','admin','000','主页克隆','主页克隆','1','18');
-insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('62','admin','admin','000','菜单查看','菜单查看','1','19');
-insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('63','admin','admin','000','菜单创建','菜单创建','1','20');
-insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('64','admin','admin','000','菜单修改','菜单修改','1','21');
-insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('65','admin','admin','000','菜单删除','菜单删除','1','22');
-insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('66','admin','admin','000','菜单克隆','菜单克隆','1','23');
-insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('67','admin','admin','000','查看账户列表','查看账户列表','1','24');
-insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('68','admin','admin','000','新增账户','新增账户','1','25');
-insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('69','admin','admin','000','删除账户','删除账户','1','26');
-insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('70','admin','admin','000','修改账户','修改账户','1','27');
-insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('71','admin','admin','000','修改密码(管理)','修改密码(管理)','1','28');
-insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('72','admin','admin','000','修改密码(个人)','修改密码(个人)','1','29');
-insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('73','admin','admin','000','查看账户信息(管理)','查看账户信息(管理)','1','30');
-insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('74','admin','admin','000','组织查看','组织查看','1','31');
-insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('75','admin','admin','000','组织新增','组织新增','1','32');
-insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('76','admin','admin','000','组织禁用','组织禁用','1','33');
-insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('77','admin','admin','000','组织启用','组织启用','1','34');
-insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('78','admin','admin','000','用户授权','用户授权','1','35');
-insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('79','admin','admin','000','删除授权','删除授权','1','36');
-insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('80','admin','admin','000','用户下线','用户下线','1','37');
-insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('81','admin','admin','000','权限查看','权限查看','1','38');
-insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('82','admin','admin','000','权限新增','权限新增','1','39');
-insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('83','admin','admin','000','权限修改','权限修改','1','40');
-insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('84','admin','admin','000','权限删除','权限删除','1','41');
-insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('85','admin','admin','000','组织更新','组织更新','1','42');
-insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('86','admin','admin','000','基础权限','基础权限','1','43');
+insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('44','callback','admin','000','商家删除','商家删除','1','44');
+insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('45','admin','admin','000','商家查看','商家查看','1','1');
+insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('46','admin','admin','000','商家入驻','商家入驻','1','2');
+insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('47','admin','admin','000','商家修改','商家修改','1','3');
+insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('48','admin','admin','000','同步资源','同步资源','1','4');
+insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('49','admin','admin','000','端口号查看','端口号查看','1','5');
+insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('50','admin','admin','000','端口号创建','端口号创建','1','6');
+insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('51','admin','admin','000','端口号修改','端口号修改','1','7');
+insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('52','admin','admin','000','端口号删除','端口号删除','1','8');
+insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('53','admin','admin','000','服务号查看','服务号查看','1','9');
+insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('54','admin','admin','000','服务号创建','服务号创建','1','10');
+insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('55','admin','admin','000','服务号修改','服务号修改','1','11');
+insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('56','admin','admin','000','服务号删除','服务号删除','1','12');
+insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('57','admin','admin','000','商家冻结','商家冻结','1','13');
+insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('58','admin','admin','000','主页查看','主页查看','1','14');
+insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('59','admin','admin','000','主页创建','主页创建','1','15');
+insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('60','admin','admin','000','主页修改','主页修改','1','16');
+insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('61','admin','admin','000','主页删除','主页删除','1','17');
+insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('62','admin','admin','000','主页克隆','主页克隆','1','18');
+insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('63','admin','admin','000','菜单查看','菜单查看','1','19');
+insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('64','admin','admin','000','菜单创建','菜单创建','1','20');
+insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('65','admin','admin','000','菜单修改','菜单修改','1','21');
+insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('66','admin','admin','000','菜单删除','菜单删除','1','22');
+insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('67','admin','admin','000','菜单克隆','菜单克隆','1','23');
+insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('68','admin','admin','000','查看账户列表','查看账户列表','1','24');
+insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('69','admin','admin','000','新增账户','新增账户','1','25');
+insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('70','admin','admin','000','删除账户','删除账户','1','26');
+insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('71','admin','admin','000','修改账户','修改账户','1','27');
+insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('72','admin','admin','000','修改密码(管理)','修改密码(管理)','1','28');
+insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('73','admin','admin','000','修改密码(个人)','修改密码(个人)','1','29');
+insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('74','admin','admin','000','查看账户信息(管理)','查看账户信息(管理)','1','30');
+insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('75','admin','admin','000','组织查看','组织查看','1','31');
+insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('76','admin','admin','000','组织新增','组织新增','1','32');
+insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('77','admin','admin','000','组织禁用','组织禁用','1','33');
+insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('78','admin','admin','000','组织启用','组织启用','1','34');
+insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('79','admin','admin','000','用户授权','用户授权','1','35');
+insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('80','admin','admin','000','删除授权','删除授权','1','36');
+insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('81','admin','admin','000','用户下线','用户下线','1','37');
+insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('82','admin','admin','000','权限查看','权限查看','1','38');
+insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('83','admin','admin','000','权限新增','权限新增','1','39');
+insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('84','admin','admin','000','权限修改','权限修改','1','40');
+insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('85','admin','admin','000','权限删除','权限删除','1','41');
+insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('86','admin','admin','000','组织更新','组织更新','1','42');
+insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('87','admin','admin','000','基础权限','基础权限','1','43');
+insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('88','admin','admin','000','商家删除','商家删除','1','44');
+
 
 
 
@@ -370,3 +374,6 @@ insert into `org_power_item` (`id`, `action`, `res_id`, `res_name`, `res_type`, 
 insert into `org_power_item` (`id`, `action`, `res_id`, `res_name`, `res_type`, `group_id`, `target`, `grant_code`) values('181','15','23','用户-用户下线','api','43','/UserInfoManage/forceOffLine',NULL);
 insert into `org_power_item` (`id`, `action`, `res_id`, `res_name`, `res_type`, `group_id`, `target`, `grant_code`) values('182','15','24','组织-授权列表','api','43','/UserInfoManage/getUserGranted',NULL);
 insert into `org_power_item` (`id`, `action`, `res_id`, `res_name`, `res_type`, `group_id`, `target`, `grant_code`) values('183','1','41','权限-用户权限表','mysql','43','org_user_power',NULL);
+insert into `org_power_item` (`id`, `action`, `res_id`, `res_name`, `res_type`, `group_id`, `target`, `grant_code`) values('184','9','2','商家-商家日志表','mysql','44','serv_merchant_log',NULL);
+insert into `org_power_item` (`id`, `action`, `res_id`, `res_name`, `res_type`, `group_id`, `target`, `grant_code`) values('185','1','8','组织-组织定义','mysql','44','org_code_defined',NULL);
+insert into `org_power_item` (`id`, `action`, `res_id`, `res_name`, `res_type`, `group_id`, `target`, `grant_code`) values('186','9','10','商家-商家主表','mysql','44','serv_merchant',NULL);
