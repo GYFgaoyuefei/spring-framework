@@ -59,7 +59,6 @@ public class UserInfoController {
         List<ServUserInfoVO> list = page.stream().map(item -> {
             ServUserInfoVO servUserInfoVO = new ServUserInfoVO();
             BeanUtils.copyProperties(item, servUserInfoVO,"passWord");
-//            servUserInfoVO.setRoles(servUserInfoService.getUserGranted(servUserInfoVO.getUserName()));
             servUserInfoVO.setOrgName(orgService.getOrgNameByOrgCode(item.getOrgCode()).getName());
             return servUserInfoVO;
         }).collect(Collectors.toList());
@@ -93,7 +92,6 @@ public class UserInfoController {
     public ResultModel<ServUserInfoVO> changePwd(@RequestBody ServUserInfoDTO servUserInfoDTO) {
         ResultModel<ServUserInfoVO> msgReturn = new ResultModel<>();
         ServUserInfoVO userInfoVO = servUserInfoService.updatePwd(servUserInfoDTO);
-
         msgReturn.setData(userInfoVO);
         return msgReturn;
     }

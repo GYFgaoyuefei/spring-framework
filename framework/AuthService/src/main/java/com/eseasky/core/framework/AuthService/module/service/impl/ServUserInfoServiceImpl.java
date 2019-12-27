@@ -3,7 +3,6 @@ package com.eseasky.core.framework.AuthService.module.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -57,6 +56,7 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 
 	@Autowired
 	private ServUserInfoRepository servUserInfoRepository;
+	
 	@Autowired
 	private AuthAccessTokenRepository authAccessTokenRepository;
 
@@ -77,9 +77,6 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 	
 	@Autowired
 	private OrgService orgService;
-
-//	private List<Predicate> predicates;
-//	private List<String> excludes = Arrays.asList(new String[] { "page", "size" });
 
 	@Override
 	public ServUserInfo findByUserName(String userName) {
@@ -102,7 +99,6 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 		if (servUserInfoDTO.getId() != null) {
 			Optional<ServUserInfo> optional = servUserInfoRepository.findById(servUserInfoDTO.getId());
 			if (optional.isPresent()) {
-//				checkUserNameAndMoblie(servUserInfoDTO);
 				ServUserInfo servUserInfo = optional.get();
 				BeanUtils.copyProperties(servUserInfoDTO, servUserInfo);
 				grantByGroups(servUserInfoDTO);
@@ -156,7 +152,6 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 		if (servUserInfoDTO == null || servUserInfoDTO.getId() == null) {
 			ServUserInfo servUserInfo = new ServUserInfo();
 			BeanUtils.copyProperties(servUserInfoDTO, servUserInfo);
-			//checkUserNameAndMoblie(servUserInfoDTO);
 			servUserInfo=saveUserInfo(servUserInfo);
 			grantBasePower(servUserInfoDTO);
 			grantByGroups(servUserInfoDTO);				
@@ -168,30 +163,12 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 		} else {
 			throw new BusiException(BusiEnum.USERINFO_NOID);
 		}
-		// TODO Auto-generated method stub
 		return servUserInfoVO;
 	}
-
-//	private void checkUserNameAndMoblie(ServUserInfoDTO servUserInfoDTO) {
-//
-//		Optional<ServUserInfo> ServUserInfo = servUserInfoRepository.findByUserName(servUserInfoDTO.getUserName());
-//		if (ServUserInfo.isPresent()) {
-//			if (servUserInfoDTO.getId() == null || servUserInfoDTO.getId().longValue() != ServUserInfo.get().getId().longValue()) {
-//				throw new BusiException(BusiEnum.USERNAME_REPEATABLE);
-//			}
-//		}
-//		ServUserInfo = servUserInfoRepository.findByMobile(servUserInfoDTO.getMobile());
-//		if (ServUserInfo.isPresent()) {
-//			if (servUserInfoDTO.getId() == null || servUserInfoDTO.getId().longValue() != ServUserInfo.get().getId().longValue()) {
-//				throw new BusiException(BusiEnum.MOBILE_REPEATABLE);
-//			}
-//		}
-//	}
 
 	@Override
 	public Page<ServUserInfo> queryUserInfo(ServUserInfoDTO servUserInfoDTO) {
 		// TODO Auto-generated method stub
-
 		Iterable<ServUserInfo> allUserInfo = servUserInfoRepository.findAll();
 		for (ServUserInfo item : allUserInfo) {
 			List<AuthAccessToken> AuthUser = authAccessTokenRepository.findByUserName(item.getUserName());
@@ -201,7 +178,6 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 				item.setState("1");
 			servUserInfoRepository.save(item);
 		}
-
 		Pageable pageable = PageRequest.of(servUserInfoDTO.getPage(), servUserInfoDTO.getSize(),
 				Sort.by(Direction.DESC, "id"));
 		return servUserInfoRepository.findAll(new Specification<ServUserInfo>() {
@@ -215,12 +191,9 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 				if (!Strings.isNullOrEmpty(servUserInfoDTO.getOrgCode())) {
 					predicates.add(criteriaBuilder.like(root.get("orgCode"), servUserInfoDTO.getOrgCode() + "%"));
 				}
-//				if (!Strings.isNullOrEmpty(servUserInfoDTO.getOrgName())) {
-//					predicates.add(criteriaBuilder.like(root.get("orgName"), "%" + servUserInfoDTO.getOrgName() + "%"));
-//				}
 				if (!Strings.isNullOrEmpty(servUserInfoDTO.getNickName())) {
 					predicates
-							.add(criteriaBuilder.like(root.get("nikeName"), "%" + servUserInfoDTO.getNickName() + "%"));
+							.add(criteriaBuilder.like(root.get("nickName"), "%" + servUserInfoDTO.getNickName() + "%"));
 				}
 				if (!Strings.isNullOrEmpty(servUserInfoDTO.getUserName())) {
 					predicates
@@ -240,29 +213,6 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 			}
 		}, pageable);
 	}
-
-//	private void query(Root<ServUserInfo> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder,
-//			ServUserInfoDTO servUserInfoDTO) throws IllegalAccessException {
-//		predicates = new ArrayList<>();
-//		List<ReflexEntity> enties = null;
-//		enties = ReflexUtils.reflex2EntityAndSuperClass(servUserInfoDTO);
-//
-//		if (enties != null && enties.size() > 0) {
-//
-//			for (ReflexEntity entity : enties) {
-//				Class<?> type = entity.getType();
-//				String fieldName = entity.getName();
-//				Object value = entity.getValue();
-//				if (excludes.get(0).contains(fieldName))
-//					break;
-//				if (String.class.isAssignableFrom(type) && value != null && !value.equals(""))
-//					predicates.add(criteriaBuilder.like(root.get(fieldName), "%" + String.valueOf(value) + "%"));
-//				if (Long.class.isAssignableFrom(type) && value != null)
-//					predicates.add(criteriaBuilder.equal(root.get(fieldName), (Long) value));
-//
-//			}
-//		}
-//	}
 
 	@Override
 	public ServUserInfoVO findById(ServUserInfoDTO servUserInfoDTO) {
@@ -379,53 +329,51 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 
 	}
 
-	@Transactional
-	private List<OrgUserGranted> grantGroups(ServUserInfoDTO servUserInfoDTO, boolean isUpdate) {
-		List<OrgUserGranted> orgUserGranteds = null;
-		if (servUserInfoDTO != null && servUserInfoDTO.getPowerIds() != null
-				&& servUserInfoDTO.getPowerIds().size() > 0) {
-			Set<Long> groupIds = null;
-			if (isUpdate) {
-				OrgUserGranted orgUserGranted = iOrganizeService.getUserGranted(servUserInfoDTO.getUserName());
-				if (orgUserGranted != null && orgUserGranted.getGranteds() != null) {
-					groupIds = orgUserGranted.getGranteds().stream().map(item -> item.getId())
-							.collect(Collectors.toSet());
-				}
-			}
-			for (Long groupId : servUserInfoDTO.getPowerIds()) {
-				if (groupIds != null && groupIds.contains(groupId)) {
-					groupIds.remove(groupId);
-					continue;
-				}
-				PowerGrantDTO userGrantByGroup = new PowerGrantDTO();
-				userGrantByGroup.setPowerId(groupId);
-				userGrantByGroup.setCreateUser(servUserInfoDTO.getCreaterUser());
-				userGrantByGroup.setOrgCode(servUserInfoDTO.getOrgCode());
-				userGrantByGroup.setUser(servUserInfoDTO.getUserName());
-				try {
-					OrgUserGranted orgUserGranted = iOrganizeService.grant(userGrantByGroup);
-					if (orgUserGranted != null) {
-						if (orgUserGranteds == null)
-							orgUserGranteds = new ArrayList<OrgUserGranted>();
-						orgUserGranteds.add(orgUserGranted);
-					}
-				} catch (Exception e) {
-					throw new BusiException(BusiEnum.USERINFO_GROUPGRANT);
-				}
-			}
-			if (groupIds != null && groupIds.size() > 0) {
-				groupIds.stream().forEach(item -> {
-					VRInfoDTO vRInfoDTO = new VRInfoDTO();
-					vRInfoDTO.setId(item);
-					powerService.reject(vRInfoDTO);
-				});
-			}
-		}
-		return orgUserGranteds;
+//	private List<OrgUserGranted> grantGroups(ServUserInfoDTO servUserInfoDTO, boolean isUpdate) {
+//		List<OrgUserGranted> orgUserGranteds = null;
+//		if (servUserInfoDTO != null && servUserInfoDTO.getPowerIds() != null
+//				&& servUserInfoDTO.getPowerIds().size() > 0) {
+//			Set<Long> groupIds = null;
+//			if (isUpdate) {
+//				OrgUserGranted orgUserGranted = iOrganizeService.getUserGranted(servUserInfoDTO.getUserName());
+//				if (orgUserGranted != null && orgUserGranted.getGranteds() != null) {
+//					groupIds = orgUserGranted.getGranteds().stream().map(item -> item.getId())
+//							.collect(Collectors.toSet());
+//				}
+//			}
+//			for (Long groupId : servUserInfoDTO.getPowerIds()) {
+//				if (groupIds != null && groupIds.contains(groupId)) {
+//					groupIds.remove(groupId);
+//					continue;
+//				}
+//				PowerGrantDTO userGrantByGroup = new PowerGrantDTO();
+//				userGrantByGroup.setPowerId(groupId);
+//				userGrantByGroup.setCreateUser(servUserInfoDTO.getCreaterUser());
+//				userGrantByGroup.setOrgCode(servUserInfoDTO.getOrgCode());
+//				userGrantByGroup.setUser(servUserInfoDTO.getUserName());
+//				try {
+//					OrgUserGranted orgUserGranted = iOrganizeService.grant(userGrantByGroup);
+//					if (orgUserGranted != null) {
+//						if (orgUserGranteds == null)
+//							orgUserGranteds = new ArrayList<OrgUserGranted>();
+//						orgUserGranteds.add(orgUserGranted);
+//					}
+//				} catch (Exception e) {
+//					throw new BusiException(BusiEnum.USERINFO_GROUPGRANT);
+//				}
+//			}
+//			if (groupIds != null && groupIds.size() > 0) {
+//				groupIds.stream().forEach(item -> {
+//					VRInfoDTO vRInfoDTO = new VRInfoDTO();
+//					vRInfoDTO.setId(item);
+//					powerService.reject(vRInfoDTO);
+//				});
+//			}
+//		}
+//		return orgUserGranteds;
+//
+//	}
 
-	}
-
-	@Transactional
 	private void grantBasePower(ServUserInfoDTO servUserInfoDTO) {
 		if(servUserInfoDTO!=null){
 			PowerGroupQuery powerGroupQuery=new PowerGroupQuery();
@@ -489,7 +437,6 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 		return userGrantInfoVO;
 	}
 
-//	@Transactional(rollbackFor = Exception.class)
 	private ServUserInfo saveUserInfo(ServUserInfo servUserInfo) {
 		if (servUserInfo != null) {
 			try {

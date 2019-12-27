@@ -18,7 +18,7 @@ public interface GroupService {
 
 	Page<GroupQueryVO> queryGroup(QueryGroupDTO groupQueryDTO);
 
-	void deleteGroup(QueryGroupDTO groupUpdateDTO);
+	void deletePowerOfGroup(QueryGroupDTO groupUpdateDTO);
 
 	UserGrantInfoVO grantByGroup(GroupGrantDTO groupGrantDTO);
 

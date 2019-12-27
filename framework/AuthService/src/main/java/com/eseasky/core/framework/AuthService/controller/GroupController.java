@@ -57,11 +57,11 @@ public class GroupController {
 //		return msgReturn;
 //	}
 	
-	@ApiOperation(value = "删除权限分组", httpMethod = "POST")
+	@ApiOperation(value = "删除权限分组子项", httpMethod = "POST")
 	@PostMapping(value = "/deleteGroup")
-	public ResultModel<GroupQueryVO> deleteGroup(@RequestBody QueryGroupDTO groupUpdateDTO) {
+	public ResultModel<GroupQueryVO> deletePowerOfGroup(@RequestBody QueryGroupDTO groupUpdateDTO) {
 		ResultModel<GroupQueryVO> msgReturn = new ResultModel<GroupQueryVO>();
-		groupService.deleteGroup(groupUpdateDTO);
+		groupService.deletePowerOfGroup(groupUpdateDTO);
 		msgReturn.setData(null);
 		return msgReturn;
 		
@@ -80,7 +80,7 @@ public class GroupController {
         return msgReturn;
     }
 	
-	@ApiOperation(value = "授权", httpMethod = "POST")
+	@ApiOperation(value = "通过分组授权", httpMethod = "POST")
 	@PostMapping(value = "/grantByGroup")
 	public ResultModel<UserGrantInfoVO> grantByGroup(@RequestBody @Validated GroupGrantDTO groupGrantDTO) {
 
@@ -91,7 +91,7 @@ public class GroupController {
 		return msgReturn;
 	}
 	
-	@ApiOperation(value = "授权", httpMethod = "POST")
+	@ApiOperation(value = "添加权限分组子项", httpMethod = "POST")
 	@PostMapping(value = "/addPowerToGroup")
 	public ResultModel<GroupQueryVO> addPowerToGroup(@RequestBody @Validated AddPow2GroupDTO addPow2GroupDTO) {
 
@@ -102,7 +102,7 @@ public class GroupController {
 		return msgReturn;
 	}
 
-	@ApiOperation(value = "授权", httpMethod = "POST")
+	@ApiOperation(value = "删除整个权限分组", httpMethod = "POST")
 	@PostMapping(value = "/deletePowerGroup")
 	public ResultModel<GroupQueryVO> deletePowerGroup(@RequestBody @Validated AddPow2GroupDTO  deleteGroupDTO) {
 

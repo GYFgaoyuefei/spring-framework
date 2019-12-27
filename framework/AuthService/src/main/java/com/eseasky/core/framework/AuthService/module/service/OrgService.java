@@ -33,8 +33,6 @@ public interface OrgService {
 
 	List<MulOrgsVO> queryMulOrgs(OrgQueryDTO orgQueryDTO);
 
-//	Set<OrgSaveVO> saveMoreOrg(OrgSaveMoreDTO orgSaveDTO);
-
 	OrgSaveVO updateOrgByCode(OrgUpByCodeDTO orgUpdateDTO);
 
 	OrgSaveByExcelVO saveByExcel(OrgSaveMoreDTO orgSaveMoreDTO);

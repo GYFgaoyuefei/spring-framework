@@ -39,7 +39,7 @@ public class PowerController {
 	@Autowired
 	private PowerService groupService;
 	
-	@ApiOperation(value = "添加权限分组", httpMethod = "POST")
+	@ApiOperation(value = "添加vr", httpMethod = "POST")
 	@PostMapping(value = "/createPower")
 	public ResultModel<PowerSaveVO> createPower(@RequestBody  @Validated PowerSaveDTO groupSaveDTO) {
 
@@ -50,7 +50,7 @@ public class PowerController {
 		return msgReturn;
 	}
 	
-	@ApiOperation(value = "更新权限分组", httpMethod = "POST")
+	@ApiOperation(value = "更新vr", httpMethod = "POST")
 	@PostMapping(value = "/updatePower")
 	public ResultModel<PowerSaveVO> updatePower(@RequestBody  @Validated PowerUpdateDTO groupUpdateDTO) {
 
@@ -61,7 +61,7 @@ public class PowerController {
 		return msgReturn;
 	}
 	
-	@ApiOperation(value = "删除权限分组", httpMethod = "POST")
+	@ApiOperation(value = "删除vr", httpMethod = "POST")
 	@PostMapping(value = "/deletePower")
 	public ResultModel<PowerSaveVO> deletePower(@RequestBody PowerUpdateDTO groupUpdateDTO) {
 		ResultModel<PowerSaveVO> msgReturn = new ResultModel<PowerSaveVO>();
@@ -72,7 +72,7 @@ public class PowerController {
 		
 	}
 	
-	@ApiOperation(value = "查询权限分组", httpMethod = "POST")
+	@ApiOperation(value = "查询vr", httpMethod = "POST")
     @PostMapping(value = "/queryPower")
     public ResultModel<List<PowerQueryVO>> queryPower(@RequestBody PowerQueryDTO groupQueryDTO) {
 
@@ -83,7 +83,7 @@ public class PowerController {
         return msgReturn;
     }
 	
-	@ApiOperation(value = "授权", httpMethod = "POST")
+	@ApiOperation(value = "vr授权", httpMethod = "POST")
 	@PostMapping(value = "/grant")
 	public ResultModel<OrgGrantInfoVO> grant(@RequestBody @Validated AuPowerGrantDTO groupGrantDTO) {
 

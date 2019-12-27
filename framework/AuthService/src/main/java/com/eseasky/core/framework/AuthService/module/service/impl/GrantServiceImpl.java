@@ -52,7 +52,6 @@ public class GrantServiceImpl implements GrantService {
 			BeanUtils.copyProperties(resoureQueryDTO, resourceQuery);
 			if (resoureQueryDTO.getSize() != 0)
 				resourceQuery.setPageSize(resoureQueryDTO.getSize());
-//			List<OrganizeUserGranted> organizeUserGranteds = null;
 			Page<OrganizeResourceDefined> organizeDefineds = iOrganizeService.getResourceItems(resourceQuery);
 			if (organizeDefineds != null) {
 				List<ResoureQueryVO> temResoureQueryVOs = organizeDefineds.stream().map(item -> {
@@ -73,7 +72,6 @@ public class GrantServiceImpl implements GrantService {
 	}
 
 	@Override
-//	@Transactional(rollbackFor = Exception.class)
 	public GrantInfoVO grant(OrgGrantInfoDTO orgGrantInfoDTO) {
 		// TODO Auto-generated method stub
 		GrantInfoVO orgGrantInfoVO = null;
@@ -87,7 +85,6 @@ public class GrantServiceImpl implements GrantService {
 					orgGrantedUpdateInfo.setId(orgGrantInfoDTO.getGrantId());
 					orgGrantedUpdateInfo.setUpdateUser(orgGrantInfoDTO.getCreateUser());
 					orgUserGranted = iOrganizeService.deleteGranted(orgGrantedUpdateInfo);
-
 				}
 				OrgGrantInfo orgGrantInfo = new OrgGrantInfo();
 				BeanUtils.copyProperties(orgGrantInfoDTO, orgGrantInfo);
@@ -112,21 +109,6 @@ public class GrantServiceImpl implements GrantService {
 		return orgGrantInfoVO;
 	}
 
-	@Override
-	public OrgGrantInfoVO updateGrant(OrgUpdateGrantDTO orgUpdateGrantDTO) {
-		// TODO Auto-generated method stub
-		OrgGrantInfoVO orgGrantInfoVO = null;
-//		if (orgUpdateGrantDTO != null) {
-//			OrgUpdateInfo orgUpdateInfo = new OrgUpdateInfo();
-//			BeanUtils.copyProperties(orgUpdateGrantDTO, orgUpdateInfo);
-//			OrgUserGranted orgUserGranted = iOrganizeService.updateGranted(orgUpdateInfo);
-//			if (orgUserGranted != null) {
-//				orgGrantInfoVO = new OrgGrantInfoVO();
-//				BeanUtils.copyProperties(orgUserGranted, orgGrantInfoVO);
-//			}
-//		}
-		return orgGrantInfoVO;
-	}
 
 	@Override
 	public Page<OrgGrantedItemVO> queryGranted(OrgQueryGrantDTO orgGrantedItemDTO) {
@@ -160,7 +142,6 @@ public class GrantServiceImpl implements GrantService {
 			BeanUtils.copyProperties(orgQueryGrantDTO, orgGrantedQuery);
 			if (orgQueryGrantDTO.getSize() != 0)
 				orgGrantedQuery.setPageSize(orgQueryGrantDTO.getSize());
-//			orgGrantedQuery.set("REJECT");
 			Page<OrganizeUserGranted> orgGrantedItems = iOrganizeService.queryOrgUserGranted(orgGrantedQuery);
 			if (orgGrantedItems != null) {
 				List<ResoureQueryVO> orgGrantedItemVOls = orgGrantedItems.stream().filter(item->item.getGrantType().equals("REJECT")).map(item -> {

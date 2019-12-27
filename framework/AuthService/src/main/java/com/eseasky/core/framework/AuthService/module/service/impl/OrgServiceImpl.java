@@ -51,7 +51,6 @@ public class OrgServiceImpl implements OrgService {
     private IOrganizeService iOrganizeService;
 
     @Override
-//    @Cacheable(value = {"org_code_defined"}, key = "'queryOrg'+#orgQueryDTO", unless = "#result == null")
     public Page<OrgQueryVO> queryOrg(OrgQueryDTO orgQueryDTO) {
         // TODO Auto-generated method stub
         Page<OrgQueryVO> orgQueryVOs = null;
@@ -87,8 +86,9 @@ public class OrgServiceImpl implements OrgService {
         if (orgSaveDTO != null) {
 //			if (orgSaveDTO.getLevel() != 3) {
             orgSaveVO = checkOrgName(orgSaveDTO);
-            if (orgSaveVO != null && orgSaveVO.getId() != null)
-                throw new BusiException(BusiEnum.ORGNAME_REPEATABLE);
+            if (orgSaveVO != null && orgSaveVO.getId() != null) {
+            	throw new BusiException(BusiEnum.ORGNAME_REPEATABLE);
+            }             
 //			}
             OrgInsertInfo orgInsertInfo = new OrgInsertInfo();
             BeanUtils.copyProperties(orgSaveDTO, orgInsertInfo);
@@ -551,7 +551,7 @@ public class OrgServiceImpl implements OrgService {
         throw new BusiException(BusiEnum.GET_ORGCODE_ERROR);
     }
 
-    private static String getCellValue(Cell cell) {
+    private  String getCellValue(Cell cell) {
         String strCell = "";
         if (cell == null) {
             return "";
@@ -561,7 +561,6 @@ public class OrgServiceImpl implements OrgService {
                 strCell = cell.getStringCellValue();
                 break;
             case NUMERIC:
-//            strCell = String.valueOf(cell.getNumericCellValue());
                 cell.setCellType(CellType.STRING);
                 strCell = cell.getStringCellValue();
                 break;

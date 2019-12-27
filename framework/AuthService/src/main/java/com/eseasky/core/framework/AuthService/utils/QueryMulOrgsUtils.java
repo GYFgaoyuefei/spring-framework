@@ -2,7 +2,6 @@ package com.eseasky.core.framework.AuthService.utils;
 
 import com.eseasky.global.utils.SequeceHelper;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -37,18 +36,5 @@ public class QueryMulOrgsUtils {
             }
         }
         return flag;
-    }
-
-    public static void main(String[] args) {
-        List<String> list = new ArrayList<String>() {{
-            add("001");
-            add("002");
-            add("003");
-            add("0010001");
-            add("0020003");
-            add("0040003000123");
-        }};
-
-        getOrgCodes(list);
     }
 }

@@ -24,8 +24,6 @@ public interface GrantService {
 	
 	GrantInfoVO grant(@Valid OrgGrantInfoDTO orgGrantInfoDTO);
 
-	OrgGrantInfoVO updateGrant(OrgUpdateGrantDTO orgUpdateGrantDTO);
-
 	Page<OrgGrantedItemVO> queryGranted(OrgQueryGrantDTO orgQueryGrantDTO);
 
 	Page<ResoureQueryVO> queryOrgUserGranted(OrgQueryGrantDTO orgQueryGrantDTO);

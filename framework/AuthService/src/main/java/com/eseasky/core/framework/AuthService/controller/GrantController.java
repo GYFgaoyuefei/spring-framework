@@ -21,7 +21,6 @@ import com.eseasky.core.framework.AuthService.protocol.dto.OrgUpdateGrantDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.ResoureQueryDTO;
 import com.eseasky.core.framework.AuthService.protocol.vo.GrantInfoVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.OrgGrantInfoVO;
-import com.eseasky.core.framework.AuthService.protocol.vo.OrgGrantedItemVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.ResoureQueryVO;
 import com.eseasky.global.entity.MsgPageInfo;
 import com.eseasky.global.entity.ResultModel;
@@ -72,17 +71,6 @@ public class GrantController {
         return msgReturn;
     }
 	
-	@ApiOperation(value = "更新授权", httpMethod = "POST")
-    @PostMapping(value = "/updateGrant")
-    public ResultModel<OrgGrantInfoVO> updateGrant(@RequestBody @Validated OrgUpdateGrantDTO orgUpdateGrantDTO) {
-
-        ResultModel<OrgGrantInfoVO> msgReturn = new ResultModel<OrgGrantInfoVO>();
-        OrgGrantInfoVO orgGrantInfoVO = roleService.updateGrant(orgUpdateGrantDTO);
-        log.info(JSONObject.toJSONString(orgGrantInfoVO));
-        msgReturn.setData(orgGrantInfoVO);
-        return msgReturn;
-    }
-	
 	@ApiOperation(value = "删除授权", httpMethod = "POST")
     @PostMapping(value = "/deleteGrant")
     public ResultModel<OrgGrantInfoVO> deleteGrant(@RequestBody OrgUpdateGrantDTO orgUpdateGrantDTO) {
@@ -94,24 +82,12 @@ public class GrantController {
         return msgReturn;
     }
 	
-	@ApiOperation(value = "查询已授权", httpMethod = "POST")
-    @PostMapping(value = "/queryGrant")
-    public ResultModel<List<OrgGrantedItemVO>> queryGranted(@RequestBody OrgQueryGrantDTO orgQueryGrantDTO) {
-
-        ResultModel<List<OrgGrantedItemVO>> msgReturn = new ResultModel<List<OrgGrantedItemVO>>();
-        Page<OrgGrantedItemVO> orgGrantedItemVOs = roleService.queryGranted(orgQueryGrantDTO);
-        log.info(JSONObject.toJSONString(orgGrantedItemVOs));
-        if(orgGrantedItemVOs!=null)
-        msgReturn.setData(orgGrantedItemVOs.getContent(),MsgPageInfo.loadFromPageable(orgGrantedItemVOs));
-        return msgReturn;
-    }
-	
-//	@ApiOperation(value = "查询授权", httpMethod = "POST")
-//    @PostMapping(value = "/queryOrgUserGrant")
-//    public ResultModel<List<OrgUserGrantedVO>> queryOrgUserGranted(@RequestBody OrgQueryGrantDTO orgQueryGrantDTO) {
+//	@ApiOperation(value = "查询已授权", httpMethod = "POST")
+//    @PostMapping(value = "/queryGrant")
+//    public ResultModel<List<OrgGrantedItemVO>> queryGranted(@RequestBody OrgQueryGrantDTO orgQueryGrantDTO) {
 //
-//        ResultModel<List<OrgUserGrantedVO>> msgReturn = new ResultModel<List<OrgUserGrantedVO>>();
-//        Page<OrgUserGrantedVO> orgGrantedItemVOs = roleService.queryOrgUserGranted(orgQueryGrantDTO);
+//        ResultModel<List<OrgGrantedItemVO>> msgReturn = new ResultModel<List<OrgGrantedItemVO>>();
+//        Page<OrgGrantedItemVO> orgGrantedItemVOs = roleService.queryGranted(orgQueryGrantDTO);
 //        log.info(JSONObject.toJSONString(orgGrantedItemVOs));
 //        if(orgGrantedItemVOs!=null)
 //        msgReturn.setData(orgGrantedItemVOs.getContent(),MsgPageInfo.loadFromPageable(orgGrantedItemVOs));

@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +21,6 @@ import com.eseasky.core.framework.AuthService.protocol.dto.QueryGroupDTO;
 import com.eseasky.core.framework.AuthService.protocol.vo.GroupQueryVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.GroupSaveVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.OrgGraItemForUserGroupVO;
-import com.eseasky.core.framework.AuthService.protocol.vo.ResoureQueryVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.UserGrantInfoVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.VRInfoVO;
 import com.eseasky.core.starters.organization.persistence.IOrganizeService;
@@ -88,7 +85,8 @@ public class GroupServiceImpl implements GroupService{
 	}
 
 	@Override
-	public void deleteGroup(QueryGroupDTO groupUpdateDTO) {
+	@Transactional(rollbackFor = Exception.class)
+	public void deletePowerOfGroup(QueryGroupDTO groupUpdateDTO) {
 		// TODO Auto-generated method stub
 		if(groupUpdateDTO!=null && groupUpdateDTO.getId()!=null) {
 			iOrganizeService.deletePowerGroup(groupUpdateDTO.getId());
@@ -96,6 +94,7 @@ public class GroupServiceImpl implements GroupService{
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public UserGrantInfoVO grantByGroup(GroupGrantDTO groupGrantDTO) {
 		// TODO Auto-generated method stub
 		UserGrantInfoVO userGrantInfoVO=null;
@@ -140,6 +139,7 @@ public class GroupServiceImpl implements GroupService{
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public GroupQueryVO addPowerToGroup(AddPow2GroupDTO addPow2GroupDTO) {
 		// TODO Auto-generated method stub
 		GroupQueryVO groupQueryVO=null;
@@ -154,6 +154,7 @@ public class GroupServiceImpl implements GroupService{
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public GroupQueryVO deletePowerGroup(AddPow2GroupDTO deleteGroupDTO) {
 		// TODO Auto-generated method stub
 		GroupQueryVO groupQueryVO=null;

@@ -69,17 +69,6 @@ public class OrgController {
 		return msgReturn;
 	}
 	
-//	@ApiOperation(value = "添加多个组织", httpMethod = "POST")
-//	@PostMapping(value = "/saveMoreOrg")
-//	public ResultModel<Set<OrgSaveVO>> saveMoreOrg(@RequestBody @Validated OrgSaveMoreDTO orgSaveDTO) {
-//
-//		ResultModel<Set<OrgSaveVO>> msgReturn = new ResultModel<Set<OrgSaveVO>>();
-//		Set<OrgSaveVO> orgSaveVOs = orgService.saveMoreOrg(orgSaveDTO);
-//		log.info(JSONObject.toJSONString(orgSaveVOs));
-//		msgReturn.setData(orgSaveVOs);
-//		return msgReturn;
-//	}
-	
 	@ApiOperation(value = "更新组织", httpMethod = "POST")
 	@PostMapping(value = "/updateOrg")
 	public ResultModel<OrgSaveVO> updateOrg(@RequestBody @Validated OrgUpdateDTO orgUpdateDTO) {

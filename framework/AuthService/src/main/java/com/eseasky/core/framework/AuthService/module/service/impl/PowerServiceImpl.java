@@ -234,7 +234,4 @@ public class PowerServiceImpl implements PowerService{
 		}
 		return null;
 	}
-
-	
-	
 }
