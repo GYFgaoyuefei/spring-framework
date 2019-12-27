@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 @Feign(serviceName="SystemService")
 public interface SystemServiceFeign {
 
-    @RequestLine("POST /dict/queryByKeyAndDictId")
+    /*@RequestLine("POST /dict/queryByKeyAndDictId")
     @Headers({"Content-Type: application/json","Accept: application/json"})
-    public ResponseEntity<MsgReturn<DictItemVO>> queryByKeyAndDictId(@RequestBody DictiCondiDTO dictiCondiDTO);
+    public ResponseEntity<MsgReturn<DictItemVO>> queryByKeyAndDictId(@RequestBody DictiCondiDTO dictiCondiDTO);*/
 
 
     @RequestLine("POST /dict/queryByTypeAndGroup")
