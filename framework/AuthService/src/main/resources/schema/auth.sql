@@ -75,22 +75,19 @@ CREATE TABLE IF NOT EXISTS `serv_client_details` (
 
 
 CREATE TABLE IF NOT EXISTS `serv_user_info` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '唯一标识(自增长)',
-  `user_name` varchar(40) NOT NULL COMMENT '账号',
-  `pass_word` varchar(50) NOT NULL COMMENT '密码',
-  `mobile` varchar(30) DEFAULT NULL COMMENT '手机号码',
-  `state` varchar(255) DEFAULT NULL,
-  `org_code` varchar(255) DEFAULT NULL,
-  `org_name` varchar(255) DEFAULT NULL,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `mobile` varchar(255) DEFAULT NULL,
   `nick_name` varchar(255) DEFAULT NULL,
+  `org_code` varchar(255) DEFAULT NULL,
+  `pass_word` varchar(255) DEFAULT NULL,
+  `state` varchar(255) DEFAULT NULL,
+  `user_name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uniq_user_name` (`user_name`),
   UNIQUE KEY `serv_user_info_index_userName` (`user_name`),
   UNIQUE KEY `serv_user_info_index_mobile` (`mobile`),
   KEY `serv_user_info_index_orgCode` (`org_code`),
-  KEY `serv_user_info_index_nikeName` (`nike_name`),
   KEY `serv_user_info_index_nickName` (`nick_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='操作员信息表';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 
 CREATE TABLE IF NOT EXISTS `org_resource_defined` (
@@ -146,12 +143,13 @@ CREATE TABLE IF NOT EXISTS `org_power_item` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `action` int(11) NOT NULL,
   `res_id` bigint(20) NOT NULL,
-  `res_name` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `res_type` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `res_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `res_type` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   `group_id` bigint(20) DEFAULT NULL,
-  `target` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `target` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `grant_code` varchar(255) COLLATE utf8_bin DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UKplenwry0nbkfr72rbv3vkdo9l` (`res_id`,`group_id`),
   KEY `org_power_group_item_name` (`res_name`),
   KEY `org_power_group_item_group` (`group_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
