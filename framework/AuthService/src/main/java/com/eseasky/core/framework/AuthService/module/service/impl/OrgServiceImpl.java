@@ -163,7 +163,7 @@ public class OrgServiceImpl implements OrgService {
     public OrgSaveVO getOrgNameByOrgCode(String orgCode) {
         // TODO Auto-generated method stub
         OrgSaveVO orgSaveVO = null;
-        if (orgCode != null) {
+        if (!Strings.isNullOrEmpty(orgCode)) {
             int level = SequeceHelper.getLevel(orgCode);
             orgSaveVO = new OrgSaveVO();
             orgSaveVO.setLevel(level);

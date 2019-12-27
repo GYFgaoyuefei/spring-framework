@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.eseasky.core.framework.AuthService.module.model.ServUserInfo;
+import com.eseasky.core.framework.AuthService.module.service.OrgService;
 import com.eseasky.core.framework.AuthService.module.service.ServUserInfoService;
 import com.eseasky.core.starters.auth.server.core.entity.FrontEndAuthConfig;
 import com.eseasky.core.starters.auth.server.core.interfaces.UserService;
@@ -38,6 +39,9 @@ public class DomainUserDetailsService implements UserService {
     @Autowired
     private SystemServiceFeign systemServiceFeign;
     
+    @Autowired
+	private OrgService orgService; // 组织数据操作接口
+    
 	@Override
 	public UserViews getUserByName(String name) {
 		// TODO Auto-generated method stub
@@ -51,6 +55,7 @@ public class DomainUserDetailsService implements UserService {
 				userViews.setMobile(account.getMobile());
 				userViews.setState(account.getState());
 				userViews.setNickName(account.getNickName());
+				userViews.setOrgName(Strings.isNullOrEmpty(account.getOrgCode())?null:orgService.getOrgNameByOrgCode(account.getOrgCode()).getName());
 				return userViews;
 			}
 		}
