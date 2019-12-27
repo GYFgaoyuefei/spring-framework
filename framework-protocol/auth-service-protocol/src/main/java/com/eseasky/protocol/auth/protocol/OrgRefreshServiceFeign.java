@@ -7,8 +7,6 @@ import com.eseasky.protocol.auth.entity.VO.OrgSaveVO;
 import feign.Headers;
 import feign.RequestLine;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * @author admin_z by 2019/12/25

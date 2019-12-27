@@ -19,31 +19,31 @@ public class OrgServiceFeignHystrix implements OrgServiceFeign , IHystrix {
 	@Override
 	public ResultModel<List<OrgQueryVO>> queryOrg(OrgQueryDTO orgQueryDTO) {
 		// TODO Auto-generated method stub
-		throw new BaseHandlerException(500, "error");
+		throw new BaseHandlerException(500, throwable == null ? "未知异常" : throwable.getMessage());
 	}
 
 	@Override
 	public OrgSaveVO saveOrg(OrgSaveDTO orgSaveDTO) {
 		// TODO Auto-generated method stub
-		throw new BaseHandlerException(500, "error");
+		throw new BaseHandlerException(500, throwable == null ? "未知异常" : throwable.getMessage());
 	}
 
 	@Override
 	public OrgSaveVO updateOrg(OrgUpByCodeDTO OrgUpdateDTO) {
 		// TODO Auto-generated method stub
-		throw new BaseHandlerException(500, "error");
+		throw new BaseHandlerException(500, throwable == null ? "未知异常" : throwable.getMessage());
 	}
 
 	@Override
 	public OrgSaveVO disableOrg(OrgQueryDTO orgUpdateDTO) {
 		// TODO Auto-generated method stub
-		throw new BaseHandlerException(500, "error");
+		throw new BaseHandlerException(500, throwable == null ? "未知异常" : throwable.getMessage());
 	}
 
 	@Override
 	public OrgSaveVO getOrgNameByOrgCode(OrgQueryDTO orgQueryDTO) {
 		// TODO Auto-generated method stub
-		throw new BaseHandlerException(500, "error");
+		throw new BaseHandlerException(500, throwable == null ? "未知异常" : throwable.getMessage());
 	}
 
 	@Override
@@ -55,7 +55,7 @@ public class OrgServiceFeignHystrix implements OrgServiceFeign , IHystrix {
 	
 	@Override
 	public ResultModel<List<OrgQueryVO>> queryAndSaveOrg(List<OrgQueryDTO> orgQueryDTOList) {
-		throw new BaseHandlerException(500, "error");
+		throw new BaseHandlerException(500, throwable == null ? "未知异常" : throwable.getMessage());
 	}
 
 	@Override
