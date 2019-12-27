@@ -3,11 +3,19 @@ INSERT INTO `serv_client_details` (`id`, `access_token_validity`, `additional_in
 INSERT INTO `serv_client_details` (`id`, `access_token_validity`, `additional_information`, `authorities`, `auto_approve_scopes`, `client_id`, `grant_types`, `redirect`, `refresh_token_validity`, `resource_ids`, `scope`, `secret`) VALUES (3, 1800, NULL, NULL, 'quickapp', 'quickapp', 'password,authorization_code', NULL, 1800, NULL, 'quickapp', '123456');
 INSERT INTO `serv_client_details` (`id`, `access_token_validity`, `additional_information`, `authorities`, `auto_approve_scopes`, `client_id`, `grant_types`, `redirect`, `refresh_token_validity`, `resource_ids`, `scope`, `secret`) VALUES (4, 1800, NULL, NULL, 'tpmanager', 'tpmanager', 'password,authorization_code', NULL, 1800, NULL, 'tpmanager', '123456');
 
-
-insert into `serv_user_info` (`id`, `mobile`, `nick_name`, `org_code`, `pass_word`, `state`, `user_name`) values('1',NULL,NULL,'000','mont@35441','1','admin');
-insert into `serv_user_info` (`id`, `mobile`, `nick_name`, `org_code`, `pass_word`, `state`, `user_name`) values('2',NULL,NULL,'000','mont@callback','1','callback');
-
 insert into `org_code_defined` (`id`, `level`, `name`, `note`, `org_code`, `parent_org_code`, `status`) values('1','1','中国','中国','001',NULL,'1');
+
+insert into `serv_user_info` (`id`, `user_name`, `pass_word`, `mobile`, `state`, `nick_name`, `org_code`) values('2','yunying1','mont@39341',NULL,'0',NULL,NULL);
+insert into `serv_user_info` (`id`, `user_name`, `pass_word`, `mobile`, `state`, `nick_name`, `org_code`) values('3','yunying2','mont@355441','12345','0',NULL,NULL);
+insert into `serv_user_info` (`id`, `user_name`, `pass_word`, `mobile`, `state`, `nick_name`, `org_code`) values('4','yunying3','mont@396441',NULL,'0',NULL,NULL);
+insert into `serv_user_info` (`id`, `user_name`, `pass_word`, `mobile`, `state`, `nick_name`, `org_code`) values('5','yunying4','mont@38811','111','0',NULL,NULL);
+insert into `serv_user_info` (`id`, `user_name`, `pass_word`, `mobile`, `state`, `nick_name`, `org_code`) values('6','yunying5','mont@33521','33333','1',NULL,NULL);
+insert into `serv_user_info` (`id`, `user_name`, `pass_word`, `mobile`, `state`, `nick_name`, `org_code`) values('7','yunying6','mont@379441',NULL,'0',NULL,NULL);
+insert into `serv_user_info` (`id`, `user_name`, `pass_word`, `mobile`, `state`, `nick_name`, `org_code`) values('8','yunying7','mont@3588241',NULL,'0',NULL,NULL);
+insert into `serv_user_info` (`id`, `user_name`, `pass_word`, `mobile`, `state`, `nick_name`, `org_code`) values('9','callback','mont@callback',NULL,'1',NULL,NULL);
+insert into `serv_user_info` (`id`, `user_name`, `pass_word`, `mobile`, `state`, `nick_name`, `org_code`) values('45','admin','mont@35441','12345678910','1',NULL,NULL);
+update serv_user_info set  org_code = '001' where  user_name in ('yunying1','yunying2','yunying3','yunying4','yunying5','yunying6','yunying7');
+update serv_user_info set  org_code = '000' where  user_name in ('callback','admin');
 
 insert into `org_resource_defined` (`id`, `note`, `resource_group`, `resource_name`, `resource_type`, `status`, `org_code`) values('2','商家日志表','商家','serv_merchant_log','mysql','1','000');
 insert into `org_resource_defined` (`id`, `note`, `resource_group`, `resource_name`, `resource_type`, `status`, `org_code`) values('3','端口主表','端口','serv_port','mysql','1','000');
@@ -186,8 +194,13 @@ insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `po
 insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('86','admin','admin','000','组织更新','组织更新','1','42');
 insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('87','admin','admin','000','基础权限','基础权限','1','43');
 insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('88','admin','admin','000','商家删除','商家删除','1','44');
-
-
+insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('89','yunying1','admin','000','基础权限','基础权限','1','43');
+insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('90','yunying2','admin','000','基础权限','基础权限','1','43');
+insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('100','yunying3','admin','000','基础权限','基础权限','1','43');
+insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('101','yunying4','admin','000','基础权限','基础权限','1','43');
+insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('102','yunying5','admin','000','基础权限','基础权限','1','43');
+insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('103','yunying6','admin','000','基础权限','基础权限','1','43');
+insert into `org_user_power` (`id`, `account`, `create_account`, `org_code`, `power_name`, `power_note`, `status`, `power_id`) values('104','yunying7','admin','000','基础权限','基础权限','1','43');
 
 
 
