@@ -4,8 +4,11 @@ INSERT INTO `serv_client_details` (`id`, `access_token_validity`, `additional_in
 INSERT INTO `serv_client_details` (`id`, `access_token_validity`, `additional_information`, `authorities`, `auto_approve_scopes`, `client_id`, `grant_types`, `redirect`, `refresh_token_validity`, `resource_ids`, `scope`, `secret`) VALUES (4, 1800, NULL, NULL, 'tpmanager', 'tpmanager', 'password,authorization_code', NULL, 1800, NULL, 'tpmanager', '123456');
 
 
-insert into `serv_user_info` (`id`, `mobile`, `nike_name`, `org_code`, `pass_word`, `state`, `user_name`) values ('9',NULL,NULL,'000','mont@callback','1','callback');
-insert into `serv_user_info` (`id`, `mobile`, `nike_name`, `org_code`, `pass_word`, `state`, `user_name`) values ('45','12345678910',NULL,'000','mont@35441','0','admin');
+delete from `serv_user_info` where user_name = 'admin' or user_name = 'callback' ;
+INSERT INTO `serv_user_info` (`id`,`nick_name`,`org_code`,`state`) VALUES ('1',NULL,'000','1');
+INSERT INTO `serv_user_info` (`id`,`nick_name`,`org_code`,`state`) VALUES ('2',NULL,'000','1');
+update `serv_user_info`  set  user_name = 'admin' ,pass_word = 	'mont@35441' where id = 1;
+UPDATE `serv_user_info`  SET  user_name = 'callback' ,pass_word = 'mont@callback' WHERE id = 2;
 
 insert into `org_resource_defined` (`id`, `note`, `resource_group`, `resource_name`, `resource_type`, `status`, `org_code`) values('2','商家日志表','商家','serv_merchant_log','mysql','1','000');
 insert into `org_resource_defined` (`id`, `note`, `resource_group`, `resource_name`, `resource_type`, `status`, `org_code`) values('3','端口主表','端口','serv_port','mysql','1','000');
