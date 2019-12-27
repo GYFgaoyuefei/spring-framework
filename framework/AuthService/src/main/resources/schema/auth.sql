@@ -72,3 +72,86 @@ CREATE TABLE IF NOT EXISTS `serv_client_details` (
   PRIMARY KEY (`id`),
   KEY `serv_client_details_clientId` (`client_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `serv_user_info` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '唯一标识(自增长)',
+  `user_name` varchar(40) NOT NULL COMMENT '账号',
+  `pass_word` varchar(50) NOT NULL COMMENT '密码',
+  `mobile` varchar(30) DEFAULT NULL COMMENT '手机号码',
+  `state` varchar(255) DEFAULT NULL,
+  `org_code` varchar(255) DEFAULT NULL,
+  `org_name` varchar(255) DEFAULT NULL,
+  `nick_name` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uniq_user_name` (`user_name`),
+  UNIQUE KEY `serv_user_info_index_userName` (`user_name`),
+  UNIQUE KEY `serv_user_info_index_mobile` (`mobile`),
+  KEY `serv_user_info_index_orgCode` (`org_code`),
+  KEY `serv_user_info_index_nikeName` (`nike_name`),
+  KEY `serv_user_info_index_nickName` (`nick_name`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='操作员信息表';
+
+
+CREATE TABLE IF NOT EXISTS `org_resource_defined` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `note` varchar(255) DEFAULT NULL,
+  `resource_group` varchar(255) DEFAULT NULL,
+  `resource_name` varchar(255) DEFAULT NULL,
+  `resource_type` varchar(255) DEFAULT NULL,
+  `status` int(11) NOT NULL,
+  `org_code` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `org_resource_action_defined_uni` (`resource_type`,`resource_name`),
+  UNIQUE KEY `org_resource_action_defined_note` (`note`),
+  KEY `org_resource_action_defined_group` (`resource_group`),
+  KEY `org_resource_action_defined_orgCode` (`org_code`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `org_power` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `auth_code` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `group_name` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `note` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `status` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `org_power_group_uni_name` (`group_name`),
+  KEY `org_power_group_status` (`status`),
+  KEY `org_power_group_name` (`group_name`),
+  KEY `org_power_group_orgCode` (`auth_code`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+
+CREATE TABLE IF NOT EXISTS `org_user_power` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `account` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `create_account` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `org_code` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `power_name` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `power_note` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `status` int(11) NOT NULL,
+  `power_id` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `org_user_power_uni_power` (`account`,`org_code`,`power_id`),
+  KEY `org_user_power_status` (`status`),
+  KEY `org_user_power_name` (`power_name`),
+  KEY `org_user_power_orgCode` (`org_code`),
+  KEY `org_user_power_account` (`account`),
+  KEY `FKhylanc1i99k1pmfl2x4gkk4j4` (`power_id`),
+  CONSTRAINT `FKhylanc1i99k1pmfl2x4gkk4j4` FOREIGN KEY (`power_id`) REFERENCES `org_power` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+CREATE TABLE IF NOT EXISTS `org_power_item` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `action` int(11) NOT NULL,
+  `res_id` bigint(20) NOT NULL,
+  `res_name` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `res_type` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `group_id` bigint(20) DEFAULT NULL,
+  `target` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `UKplenwry0nbkfr72rbv3vkdo9l` (`res_id`,`group_id`),
+  KEY `org_power_group_item_name` (`res_name`),
+  KEY `org_power_group_item_group` (`group_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
