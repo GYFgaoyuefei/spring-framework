@@ -30,7 +30,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.log4j.Log4j2;
 
-@Api(value = "角色管理", tags = "角色管理服务")
+@Api(value = "授权管理", tags = "授权管理服务")
 @RestController
 @Log4j2
 @RequestMapping("/GrantManage")
@@ -62,7 +62,7 @@ public class GrantController {
         return msgReturn;
     }
 	
-	@ApiOperation(value = "授权", httpMethod = "POST")
+	@ApiOperation(value = "授权多个资源", httpMethod = "POST")
     @PostMapping(value = "/grantMore")
     public ResultModel<List<GrantInfoVO>> grant(@Valid @RequestBody OrgGrantInfosDTO orgGrantInfoDTOs) {
         ResultModel<List<GrantInfoVO>> msgReturn = new ResultModel<List<GrantInfoVO>>();

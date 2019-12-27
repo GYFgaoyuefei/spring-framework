@@ -26,7 +26,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.log4j.Log4j2;
 
-@Api(value = "角色管理", tags = "角色管理服务")
+@Api(value = "权限分组管理", tags = "权限分组管理服务")
 @RestController
 @Log4j2
 @RequestMapping("/GroupManage")

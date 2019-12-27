@@ -58,7 +58,7 @@ public class OrgController {
 		return msgReturn;
 	}
 	
-	@ApiOperation(value = "添加组织", httpMethod = "POST")
+	@ApiOperation(value = "添加组织通过Excel", httpMethod = "POST")
 	@PostMapping(value = "/saveOrgByExcel")
 	public ResultModel<OrgSaveByExcelVO> saveOrgByExcel( OrgSaveMoreDTO orgSaveMoreDTO) {
 
@@ -102,7 +102,7 @@ public class OrgController {
 		return msgReturn;
 	}
 
-	@ApiOperation(value = "打开组织", httpMethod = "POST")
+	@ApiOperation(value = "解禁组织", httpMethod = "POST")
 	@PostMapping(value = "/openOrg")
 	public ResultModel<OrgSaveVO> openOrg(@RequestBody  @Validated OrgQueryDTO orgUpdateDTO) {
 
@@ -113,7 +113,7 @@ public class OrgController {
 		return msgReturn;
 	}
 	
-	@ApiOperation(value = "打开组织", httpMethod = "POST")
+	@ApiOperation(value = "查询多级组织", httpMethod = "POST")
 	@PostMapping(value = "/queryMulOrgs")
 	public ResultModel<List<MulOrgsVO>>queryMulOrgs(@RequestBody OrgQueryDTO orgQueryDTO) {
 

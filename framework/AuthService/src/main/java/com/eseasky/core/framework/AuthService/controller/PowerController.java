@@ -106,7 +106,7 @@ public class PowerController {
         return msgReturn;
     }
 	
-	@ApiOperation(value = "查询授权资源", httpMethod = "POST")
+	@ApiOperation(value = "vr授权删除", httpMethod = "POST")
     @PostMapping(value = "/reject")
     public ResultModel<VRInfoVO> reject(@RequestBody @Validated VRInfoDTO vRInfoDTO ) {
 
