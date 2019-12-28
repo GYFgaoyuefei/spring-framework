@@ -16,9 +16,9 @@ public class DatabaseProperties {
     private String databaseName = "mnetbak";
     private String savePath = "/home/mnet/mysqlbak";
 
-    @Value("${database.backup}")
-    private String backupCommand = "/home/mnet/mariadb/bin/mysqldump --defaults-file=/home/mnet/mariadb/my.cnf -h192.168.1.232 -umnet_business -p'mnet@123'";
-
-    @Value("${database.restore}")
-    private String restoreCommand = "/home/mnet/mariadb/bin/mysql --defaults-file=/home/mnet/mariadb/my.cnf -h192.168.1.232 -umnet_business -p'mnet@123'";
+//    @Value("${database.backup}")
+//    private String backupCommand = "/home/mnet/mariadb/bin/mysqldump --defaults-file=/home/mnet/mariadb/my.cnf -h192.168.1.232 -umnet_business -p'mnet@123'";
+//
+//    @Value("${database.restore}")
+//    private String restoreCommand = "/home/mnet/mariadb/bin/mysql --defaults-file=/home/mnet/mariadb/my.cnf -h192.168.1.232 -umnet_business -p'mnet@123'";
 }
