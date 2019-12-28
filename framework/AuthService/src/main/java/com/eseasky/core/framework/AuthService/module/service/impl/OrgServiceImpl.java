@@ -37,6 +37,7 @@ import com.eseasky.core.starters.organization.persistence.entity.OrganizeQuery;
 import com.eseasky.core.starters.organization.persistence.entity.OrganizeUpdateInfo;
 import com.eseasky.core.starters.organization.persistence.model.OrganizeDefined;
 import com.eseasky.global.utils.SequeceHelper;
+import com.eseasky.global.utils.security.OrgCodeHelper;
 import com.eseasky.protocol.auth.entity.DTO.OrgQueryDTO;
 import com.eseasky.protocol.auth.entity.DTO.OrgSaveDTO;
 import com.eseasky.protocol.auth.entity.DTO.OrgUpByCodeDTO;
@@ -65,7 +66,7 @@ public class OrgServiceImpl implements OrgService {
                     OrgQueryVO orgQueryVO = new OrgQueryVO();
                     BeanUtils.copyProperties(item, orgQueryVO);
                     if(orgQueryVO.getLevel()!=null && orgQueryVO.getLevel()==3) {
-                    	orgQueryVO.setLevel1OrgCode(orgQueryVO.getParentOrgCode().substring(0, SequeceHelper.SEQUECE_LEVEL_LENGTH[0]));
+                    	orgQueryVO.setLevel1OrgCode(orgQueryVO.getParentOrgCode().substring(0, OrgCodeHelper.SEQUECE_LEVEL_LENGTH[0]));
                     	orgQueryVO.setLevel2OrgCode(orgQueryVO.getParentOrgCode());
                     	orgQueryVO.setParentOrgName(getOrgNameByOrgCode(orgQueryVO.getParentOrgCode()).getName());
                     }                 	
@@ -169,10 +170,10 @@ public class OrgServiceImpl implements OrgService {
             orgSaveVO.setLevel(level);
             int length = 0;
             for (int i = 0; i < level; i++) {
-                if (i >= SequeceHelper.SEQUECE_LEVEL_LENGTH.length)
+                if (i >= OrgCodeHelper.SEQUECE_LEVEL_LENGTH.length)
                     length = length + 3;
                 else
-                    length = length + SequeceHelper.SEQUECE_LEVEL_LENGTH[i];
+                    length = length + OrgCodeHelper.SEQUECE_LEVEL_LENGTH[i];
                 OrganizeQuery organizeQuery = new OrganizeQuery();
                 organizeQuery.setOrgCode(orgCode.substring(0, length));
                 Page<OrganizeDefined> organizeDefineds = iOrganizeService.queryOrganize(organizeQuery);
