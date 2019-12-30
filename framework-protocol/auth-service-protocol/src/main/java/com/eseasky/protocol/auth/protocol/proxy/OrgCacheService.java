@@ -3,7 +3,6 @@ package com.eseasky.protocol.auth.protocol.proxy;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
