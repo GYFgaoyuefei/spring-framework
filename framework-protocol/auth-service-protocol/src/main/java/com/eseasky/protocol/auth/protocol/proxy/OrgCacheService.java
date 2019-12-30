@@ -32,7 +32,7 @@ public class OrgCacheService implements OrgServiceFeign {
 	}
 
 	@Override
-	@CachePut(value = {"org_code_defined_top"}, key="'OrgSaveVO'#result.orgCode")
+	@CachePut(value = {"org_code_defined_top"}, key="'OrgSaveVO'+#result.orgCode")
 	@CacheEvict(value = {"org_code_defined_list"}, allEntries = true)
 	public OrgSaveVO saveOrg(OrgSaveDTO orgSaveDTO) {
 		// TODO Auto-generated method stub
@@ -40,7 +40,7 @@ public class OrgCacheService implements OrgServiceFeign {
 	}
 
 	@Override
-	@CachePut(value = {"org_code_defined_top"}, key="'OrgSaveVO'#result.orgCode")
+	@CachePut(value = {"org_code_defined_top"}, key="'OrgSaveVO'+#result.orgCode")
 	@CacheEvict(value = {"org_code_defined_list"}, allEntries = true)
 	public OrgSaveVO updateOrg(OrgUpByCodeDTO OrgUpdateDTO) {
 		// TODO Auto-generated method stub
@@ -48,7 +48,7 @@ public class OrgCacheService implements OrgServiceFeign {
 	}
 
 	@Override
-	@CachePut(value = {"org_code_defined_top"}, key="'OrgSaveVO'#result.orgCode")
+	@CachePut(value = {"org_code_defined_top"}, key="'OrgSaveVO'+#result.orgCode")
 	@CacheEvict(value = {"org_code_defined_list"}, allEntries = true)
 	public OrgSaveVO disableOrg(OrgQueryDTO orgUpdateDTO) {
 		// TODO Auto-generated method stub
@@ -56,7 +56,7 @@ public class OrgCacheService implements OrgServiceFeign {
 	}
 
 	@Override
-	@Cacheable(value = {"org_code_defined_top"}, key="'OrgSaveVO'#orgQueryDTO.orgCode")
+	@Cacheable(value = {"org_code_defined_top"}, key="'OrgSaveVO'+#orgQueryDTO.orgCode")
 	@CacheEvict(value = {"org_code_defined_list"}, allEntries = true)
 	public OrgSaveVO getOrgNameByOrgCode(OrgQueryDTO orgQueryDTO) {
 		// TODO Auto-generated method stub
