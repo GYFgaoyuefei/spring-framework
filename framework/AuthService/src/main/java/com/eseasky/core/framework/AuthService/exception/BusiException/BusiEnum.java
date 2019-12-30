@@ -26,7 +26,7 @@ public enum  BusiEnum {
     
     USERINFO_ORGIDNOTNULL(500,"组织不能未null"),
     
-    USERINFO_GROUPGRANT(500,"无法为该用户授权该权限分组下的权限"),
+    USERINFO_GROUPGRANT(500,"无法为该用户授权该权限"),
 
     NOTDELETE(500,"管理员不可删除"),
 

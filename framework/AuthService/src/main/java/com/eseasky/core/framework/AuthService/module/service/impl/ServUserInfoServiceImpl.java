@@ -321,7 +321,7 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 						orgUserGranteds.add(orgUserGranted);
 					}
 				} catch (Exception e) {
-					throw new BusiException(BusiEnum.USERINFO_GROUPGRANT);
+					throw new BusiException(BusiEnum.USERINFO_GROUPGRANT,e.getMessage());
 				}
 			}
 		}
@@ -390,7 +390,7 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 					try {
 						iOrganizeService.grant(userGrantByGroup);
 					} catch (Exception e) {
-						throw new BusiException(BusiEnum.USERINFO_GROUPGRANT);
+						throw new BusiException(BusiEnum.USERINFO_GROUPGRANT,e.getMessage());
 					}
 				}
 			}
