@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import com.eseasky.core.starters.feign.wrapper.FeignClientFactory;
 import com.eseasky.protocol.auth.protocol.AuthServiceFeign;
 import com.eseasky.protocol.auth.protocol.OrgServiceFeign;
+import com.eseasky.protocol.auth.protocol.proxy.OrgCacheService;
 
 @ConditionalOnBean(FeignClientFactory.class)
 @Configuration
@@ -23,7 +24,7 @@ public class AuthServiceConfig {
 	
 	@Bean
 	public OrgServiceFeign orgServiceFeign() {
-		return factory.client(OrgServiceFeign.class);
+		return new OrgCacheService(factory.client(OrgServiceFeign.class));
 	}
 
 	@Bean
