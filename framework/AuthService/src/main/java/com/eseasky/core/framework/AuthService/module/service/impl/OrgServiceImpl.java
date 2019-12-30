@@ -110,7 +110,7 @@ public class OrgServiceImpl implements OrgService {
 		// TODO Auto-generated method stub
 		OrgSaveVO orgSaveVO = null;
 		if (orgUpdateDTO != null) {
-			if (orgUpdateDTO.getName() != null && orgUpdateDTO.getLevel() != null && orgUpdateDTO.getLevel() != 3) {
+			if (!Strings.isNullOrEmpty(orgUpdateDTO.getName()) && orgUpdateDTO.getLevel() != null && orgUpdateDTO.getLevel() != 3) {
 				OrgSaveDTO orgSaveDTO = new OrgSaveDTO();
 				BeanUtils.copyProperties(orgUpdateDTO, orgSaveDTO);
 				orgSaveVO = checkOrgName(orgSaveDTO);
