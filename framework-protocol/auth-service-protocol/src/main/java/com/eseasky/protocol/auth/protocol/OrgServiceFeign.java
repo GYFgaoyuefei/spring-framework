@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.eseasky.core.starters.feign.wrapper.config.Feign;
 import com.eseasky.global.entity.ResultModel;
+import com.eseasky.protocol.auth.entity.DTO.OrgNameQueryDTO;
 import com.eseasky.protocol.auth.entity.DTO.OrgQueryDTO;
 import com.eseasky.protocol.auth.entity.DTO.OrgSaveDTO;
 import com.eseasky.protocol.auth.entity.DTO.OrgUpByCodeDTO;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 
 @Feign(serviceName="AuthService")
@@ -42,6 +45,10 @@ public interface OrgServiceFeign {
 	@RequestMapping(value="/getOrgNameByOrgCode",method= RequestMethod.POST,consumes = "application/json")
 	@Headers({"Content-Type: application/json","Accept: application/json"})
 	public OrgSaveVO getOrgNameByOrgCode(@RequestBody OrgQueryDTO orgQueryDTO);
+	
+	@RequestMapping(value="/getOrgNamesByOrgCodes",method= RequestMethod.POST,consumes = "application/json")
+	@Headers({"Content-Type: application/json","Accept: application/json"})
+	public Map<String, String> getOrgNamesByOrgCodes(OrgNameQueryDTO orgNameQueryDTO);
 
 	
 	@RequestMapping(value="/queryOrgsByMerCode",method= RequestMethod.POST,consumes = "application/json")

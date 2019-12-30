@@ -4,6 +4,7 @@ import com.eseasky.core.starters.feign.wrapper.fallbacks.IHystrix;
 
 import com.eseasky.core.starters.system.exception.errors.BaseHandlerException;
 import com.eseasky.global.entity.ResultModel;
+import com.eseasky.protocol.auth.entity.DTO.OrgNameQueryDTO;
 import com.eseasky.protocol.auth.entity.DTO.OrgQueryDTO;
 import com.eseasky.protocol.auth.entity.DTO.OrgSaveDTO;
 import com.eseasky.protocol.auth.entity.DTO.OrgUpByCodeDTO;
@@ -13,6 +14,7 @@ import com.eseasky.protocol.auth.entity.VO.OrgSaveVO;
 import com.eseasky.protocol.auth.protocol.OrgServiceFeign;
 
 import java.util.List;
+import java.util.Map;
 
 public class OrgServiceFeignHystrix implements OrgServiceFeign , IHystrix {
 
@@ -48,7 +50,7 @@ public class OrgServiceFeignHystrix implements OrgServiceFeign , IHystrix {
 
 	@Override
 	public ResultModel<List<MulOrgsVO>> queryOrgsByMerCode(List<OrgQueryDTO> orgQueryDTOList) {
-		return null;
+		throw new BaseHandlerException(500, throwable == null ? "未知异常" : throwable.getMessage());
 	}
 
 	private Throwable throwable;
@@ -62,6 +64,12 @@ public class OrgServiceFeignHystrix implements OrgServiceFeign , IHystrix {
 	public Throwable setThrowable(Throwable throwable) {
 		this.throwable = throwable;
 		return null;
+	}
+
+	@Override
+	public Map<String, String> getOrgNamesByOrgCodes(OrgNameQueryDTO orgNameQueryDTO) {
+		// TODO Auto-generated method stub
+		throw new BaseHandlerException(500, throwable == null ? "未知异常" : throwable.getMessage());
 	}
 
 }
