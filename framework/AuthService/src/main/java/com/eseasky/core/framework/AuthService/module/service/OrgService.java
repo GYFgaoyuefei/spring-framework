@@ -12,6 +12,7 @@ import com.eseasky.protocol.auth.entity.VO.OrgSaveVO;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 
@@ -42,4 +43,6 @@ public interface OrgService {
 	List<MulOrgsVO> queryOrgsByMerCode(Set<String> orgCodeList);
 
 	List<OrgQueryVO> queryAndSaveOrg(List<OrgQueryDTO> orgQueryDTOList);
+
+	Map<String, String> getOrgNamesByOrgCodes(Set<String> orgCodes);
 }

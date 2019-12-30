@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
 import com.eseasky.core.framework.AuthService.module.service.OrgService;
+import com.eseasky.protocol.auth.entity.DTO.OrgNameQueryDTO;
 import com.eseasky.protocol.auth.entity.DTO.OrgQueryDTO;
 import com.eseasky.protocol.auth.entity.DTO.OrgSaveDTO;
 import com.eseasky.protocol.auth.entity.DTO.OrgUpByCodeDTO;
@@ -27,6 +28,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.log4j.Log4j2;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -121,4 +123,14 @@ public class OrgFeignController implements OrgServiceFeign {
     public ResultModel<OrgSaveVO> refresh(@RequestBody OrgRefreshDTO orgRefreshDTO) {
         return orgRefreshServiceFeign.orgRefresh(orgRefreshDTO);
     }
+
+
+	@Override
+	public Map<String, String> getOrgNamesByOrgCodes(OrgNameQueryDTO orgNameQueryDTO) {
+		// TODO Auto-generated method stub
+		if(orgNameQueryDTO!=null && orgNameQueryDTO.getOrgCodes()!=null) {
+			return orgService.getOrgNamesByOrgCodes(orgNameQueryDTO.getOrgCodes());
+		}
+		return null;
+	}
 }
