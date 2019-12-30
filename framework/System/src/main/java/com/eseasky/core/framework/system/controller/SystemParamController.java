@@ -1,8 +1,6 @@
 package com.eseasky.core.framework.system.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.eseasky.protocol.system.SystemServiceConfig;
@@ -252,6 +250,26 @@ public class SystemParamController  implements SystemParamPro {
 			msgReturn.fail("缺少入参type或者group");
 		}
 		return new ResponseEntity<MsgReturn<DictionaryVO>>(msgReturn, HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<MsgReturn<Map<DictiCondiDTO,String>>> queryListByTypeAndGroup(@RequestBody Set<DictiCondiDTO> dictiCondiDTOS){
+		MsgReturn<Map<DictiCondiDTO,String>> msgReturn = new MsgReturn<Map<DictiCondiDTO,String>>();
+		if (dictiCondiDTOS!=null&&dictiCondiDTOS.size()>0){
+			Map<DictiCondiDTO,String> map = new HashMap<DictiCondiDTO,String>();
+			for (DictiCondiDTO dictiCondiDTO : dictiCondiDTOS) {
+				try {
+					DictiCondiDto dictiCondiDto = new DictiCondiDto();
+					BeanUtils.copyProperties(dictiCondiDTO,dictiCondiDto);
+					DictItemVO dictItemVO = systemDictService.queryByKeyAndDictId(dictiCondiDto);
+					map.put(dictiCondiDTO,dictItemVO!=null?dictItemVO.getValue():null);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			msgReturn.setData(map);
+		}
+		return new ResponseEntity<MsgReturn<Map<DictiCondiDTO,String>>>(msgReturn, HttpStatus.OK);
 	}
 	
 	@ApiOperation(value="系统参数模块表Model",notes="此接口不使用，只做输出Model数据结构")

@@ -2,6 +2,7 @@ package com.eseasky.core.framework.system.protocol;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.eseasky.protocol.system.entity.DTO.DictiCondiDTO;
 import com.eseasky.protocol.system.entity.VO.DictItemVO;
@@ -66,4 +67,7 @@ public interface SystemParamPro {
 	@PostMapping(value="/dict/queryByKeyAndDictId")
 	public ResponseEntity<MsgReturn<DictItemVO>> queryByKeyAndDictId(@RequestBody DictiCondiDTO dictiCondiDTO);
 
+	@ApiOperation(value="根据类型和分组查询有效的字典参数List", notes="根据类型和分组查询有效的字典参数List")
+	@PostMapping(value="/dict/queryListByTypeAndGroup")
+	public ResponseEntity<MsgReturn<Map<DictiCondiDTO,String>>> queryListByTypeAndGroup(@RequestBody Set<DictiCondiDTO> dictiCondiDTOS);
 }

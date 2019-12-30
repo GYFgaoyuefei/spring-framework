@@ -2,6 +2,7 @@ package com.eseasky.protocol.system.entity.DTO;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -36,4 +37,23 @@ public class DictiCondiDTO implements Serializable {
     private int page = 0;
     @ApiModelProperty(value="每页条数")
     private int pageSize = 1000;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        DictiCondiDTO that = (DictiCondiDTO) o;
+        return group.equals(that.group) &&
+                type.equals(that.type) &&
+                itemKey.equals(that.itemKey);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(group, type, itemKey);
+    }
 }

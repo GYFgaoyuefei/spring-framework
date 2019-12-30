@@ -3,12 +3,14 @@ package com.eseasky.protocol.system.protocol;
 import com.eseasky.core.starters.feign.wrapper.config.Feign;
 import com.eseasky.global.entity.MsgReturn;
 import com.eseasky.protocol.system.entity.DTO.DictiCondiDTO;
-import com.eseasky.protocol.system.entity.VO.DictItemVO;
 import com.eseasky.protocol.system.entity.VO.DictionaryVO;
 import feign.Headers;
 import feign.RequestLine;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
+
+import java.util.Map;
+import java.util.Set;
 
 @Feign(serviceName="SystemService")
 public interface SystemServiceFeign {
@@ -21,5 +23,9 @@ public interface SystemServiceFeign {
     @RequestLine("POST /dict/queryByTypeAndGroup")
     @Headers({"Content-Type: application/json","Accept: application/json"})
 	public ResponseEntity<MsgReturn<DictionaryVO>> queryByTypeAndGroup(@RequestBody DictiCondiDTO dictiCondiDTO);
+
+    @RequestLine("POST /dict/queryListByTypeAndGroup")
+    @Headers({"Content-Type: application/json","Accept: application/json"})
+    public ResponseEntity<MsgReturn<Map<DictiCondiDTO,String>>> queryListByTypeAndGroup(@RequestBody Set<DictiCondiDTO> dictiCondiDTOS);
 
 }
