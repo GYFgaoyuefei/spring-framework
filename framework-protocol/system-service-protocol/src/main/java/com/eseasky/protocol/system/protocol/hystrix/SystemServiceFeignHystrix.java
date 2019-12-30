@@ -37,7 +37,7 @@ public class SystemServiceFeignHystrix implements SystemServiceFeign, IHystrix {
     }
 
     @Override
-    public ResponseEntity<MsgReturn<Map<DictiCondiDTO,String>>> queryListByTypeAndGroup(@RequestBody Set<DictiCondiDTO> dictiCondiDTOS){
+    public ResponseEntity<MsgReturn<Map<String,String>>> queryListByTypeAndGroup(@RequestBody Set<DictiCondiDTO> dictiCondiDTOS){
         throw new BaseHandlerException(500, throwable == null ? "未知异常" : throwable.getMessage());
     }
 }

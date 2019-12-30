@@ -69,5 +69,5 @@ public interface SystemParamPro {
 
 	@ApiOperation(value="根据类型和分组查询有效的字典参数List", notes="根据类型和分组查询有效的字典参数List")
 	@PostMapping(value="/dict/queryListByTypeAndGroup")
-	public ResponseEntity<MsgReturn<Map<DictiCondiDTO,String>>> queryListByTypeAndGroup(@RequestBody Set<DictiCondiDTO> dictiCondiDTOS);
+	public ResponseEntity<MsgReturn<Map<String,String>>> queryListByTypeAndGroup(@RequestBody Set<DictiCondiDTO> dictiCondiDTOS);
 }

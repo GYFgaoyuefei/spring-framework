@@ -3,6 +3,7 @@ package com.eseasky.core.framework.system.controller;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.alibaba.fastjson.JSON;
 import com.eseasky.protocol.system.SystemServiceConfig;
 import com.eseasky.protocol.system.entity.DTO.DictiCondiDTO;
 import com.eseasky.protocol.system.entity.VO.DictItemVO;
@@ -253,23 +254,23 @@ public class SystemParamController  implements SystemParamPro {
 	}
 
 	@Override
-	public ResponseEntity<MsgReturn<Map<DictiCondiDTO,String>>> queryListByTypeAndGroup(@RequestBody Set<DictiCondiDTO> dictiCondiDTOS){
-		MsgReturn<Map<DictiCondiDTO,String>> msgReturn = new MsgReturn<Map<DictiCondiDTO,String>>();
+	public ResponseEntity<MsgReturn<Map<String,String>>> queryListByTypeAndGroup(@RequestBody Set<DictiCondiDTO> dictiCondiDTOS){
+		MsgReturn<Map<String,String>> msgReturn = new MsgReturn<Map<String,String>>();
 		if (dictiCondiDTOS!=null&&dictiCondiDTOS.size()>0){
-			Map<DictiCondiDTO,String> map = new HashMap<DictiCondiDTO,String>();
+			Map<String, String> map = new HashMap<>();
 			for (DictiCondiDTO dictiCondiDTO : dictiCondiDTOS) {
 				try {
 					DictiCondiDto dictiCondiDto = new DictiCondiDto();
 					BeanUtils.copyProperties(dictiCondiDTO,dictiCondiDto);
 					DictItemVO dictItemVO = systemDictService.queryByKeyAndDictId(dictiCondiDto);
-					map.put(dictiCondiDTO,dictItemVO!=null?dictItemVO.getValue():null);
+					map.put(JSON.toJSONString(dictiCondiDTO),dictItemVO!=null?dictItemVO.getValue():null);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 			msgReturn.setData(map);
 		}
-		return new ResponseEntity<MsgReturn<Map<DictiCondiDTO,String>>>(msgReturn, HttpStatus.OK);
+		return new ResponseEntity<MsgReturn<Map<String,String>>>(msgReturn, HttpStatus.OK);
 	}
 	
 	@ApiOperation(value="系统参数模块表Model",notes="此接口不使用，只做输出Model数据结构")

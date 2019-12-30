@@ -26,6 +26,6 @@ public interface SystemServiceFeign {
 
     @RequestLine("POST /dict/queryListByTypeAndGroup")
     @Headers({"Content-Type: application/json","Accept: application/json"})
-    public ResponseEntity<MsgReturn<Map<DictiCondiDTO,String>>> queryListByTypeAndGroup(@RequestBody Set<DictiCondiDTO> dictiCondiDTOS);
+    public ResponseEntity<MsgReturn<Map<String,String>>> queryListByTypeAndGroup(@RequestBody Set<DictiCondiDTO> dictiCondiDTOS);
 
 }
