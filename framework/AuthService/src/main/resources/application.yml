@@ -139,15 +139,15 @@ management:
 #      filter-order: 3
 
 #数据库备份与恢复
-database:
-  com:
-    ip: ${databasecom.ip}
-    user: ${databasecom.user}
-    password: ${databasecom.password}
-    databaseName: ${databasecom.databaseName}
-    savePath: ${databasecom.savePath}
-  backup: ${datasource.backupcmd}
-  restore: ${datasource.restorecmd}
+#database:
+#  com:
+#    ip: ${databasecom.ip}
+#    user: ${databasecom.user}
+#    password: ${databasecom.password}
+#    databaseName: ${databasecom.databaseName}
+#    savePath: ${databasecom.savePath}
+#  backup: ${datasource.backupcmd}
+#  restore: ${datasource.restorecmd}
 
 #加密
 #jasypt:

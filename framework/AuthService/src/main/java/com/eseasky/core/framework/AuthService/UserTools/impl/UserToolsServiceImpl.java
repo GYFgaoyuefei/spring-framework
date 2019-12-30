@@ -129,8 +129,8 @@ public class UserToolsServiceImpl implements UserToolsService {
         databaseEntity.setPassword(databaseProperties.getPassword());
         databaseEntity.setDatabaseName(databaseProperties.getDatabaseName());
         databaseEntity.setSavePath(databaseProperties.getSavePath());
-        databaseEntity.setRestoreCommand(databaseProperties.getRestoreCommand());
-        databaseEntity.setBackupCommand(databaseProperties.getBackupCommand());
+//        databaseEntity.setRestoreCommand(databaseProperties.getRestoreCommand());
+//        databaseEntity.setBackupCommand(databaseProperties.getBackupCommand());
         databaseEntity.setFileName(getSqlFileName(databaseProperties.getDatabaseName()));
 
         if (!databaseEntity.getSavePath().endsWith(File.separator)) {
