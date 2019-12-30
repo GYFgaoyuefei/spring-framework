@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 
 @Feign(serviceName="AuthService")
@@ -48,7 +47,7 @@ public interface OrgServiceFeign {
 	
 	@RequestMapping(value="/getOrgNamesByOrgCodes",method= RequestMethod.POST,consumes = "application/json")
 	@Headers({"Content-Type: application/json","Accept: application/json"})
-	public Map<String, String> getOrgNamesByOrgCodes(OrgNameQueryDTO orgNameQueryDTO);
+	public Map<String, String> getOrgNamesByOrgCodes(@RequestBody OrgNameQueryDTO orgNameQueryDTO);
 
 	
 	@RequestMapping(value="/queryOrgsByMerCode",method= RequestMethod.POST,consumes = "application/json")
