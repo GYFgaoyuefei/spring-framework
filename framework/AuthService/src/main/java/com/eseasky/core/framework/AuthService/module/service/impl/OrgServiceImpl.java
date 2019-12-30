@@ -186,6 +186,7 @@ public class OrgServiceImpl implements OrgService {
 					String orgName = orgSaveVO.getName() == null ? organizeDefineds.getContent().get(0).getName()
 							: orgSaveVO.getName() + ">" + organizeDefineds.getContent().get(0).getName();
 					orgSaveVO.setName(orgName);
+					orgSaveVO.setOrgCode(organizeQuery.getOrgCode());
 				}
 			}
 		}

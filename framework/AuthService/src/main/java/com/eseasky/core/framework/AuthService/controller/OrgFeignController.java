@@ -9,6 +9,7 @@ import com.eseasky.protocol.auth.protocol.OrgRefreshServiceFeign;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -126,7 +127,8 @@ public class OrgFeignController implements OrgServiceFeign {
 
 
 	@Override
-	public Map<String, String> getOrgNamesByOrgCodes(OrgNameQueryDTO orgNameQueryDTO) {
+	@PostMapping(value = "/queryMulOrgs")
+	public Map<String, String> getOrgNamesByOrgCodes(@RequestBody OrgNameQueryDTO orgNameQueryDTO) {
 		// TODO Auto-generated method stub
 		if(orgNameQueryDTO!=null && orgNameQueryDTO.getOrgCodes()!=null) {
 			return orgService.getOrgNamesByOrgCodes(orgNameQueryDTO.getOrgCodes());
