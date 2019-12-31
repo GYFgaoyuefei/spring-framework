@@ -20,7 +20,7 @@ public class OrgQueryGrantDTO implements Serializable {
     
     private String keyWords;
     
-    private String type = "mysql";
+    private String type;
     
     private int size = 10;
     

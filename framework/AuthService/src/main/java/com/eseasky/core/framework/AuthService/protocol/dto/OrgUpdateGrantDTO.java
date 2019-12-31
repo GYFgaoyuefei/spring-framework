@@ -20,6 +20,6 @@ public class OrgUpdateGrantDTO implements Serializable {
     private String orgCode;
     
     @NotEmpty(message = "grantType不能为空")
-    private String grantType="accept";
+    private String grantType="ACCEPT";
     
 }
