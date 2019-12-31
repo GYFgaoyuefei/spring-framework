@@ -32,24 +32,24 @@ public class OrgCacheService implements OrgServiceFeign {
 	}
 
 	@Override
-	@CachePut(value = {"org_code_defined_top"}, key="'OrgSaveVO'+#result.orgCode")
-	@CacheEvict(value = {"org_code_defined_list"}, allEntries = true)
+//	@CachePut(value = {"org_code_defined_top"}, key="'OrgSaveVO'+#result.orgCode")
+	@CacheEvict(value = {"org_code_defined_list","org_code_defined_top"}, allEntries = true)
 	public OrgSaveVO saveOrg(OrgSaveDTO orgSaveDTO) {
 		// TODO Auto-generated method stub
 		return feign.saveOrg(orgSaveDTO);
 	}
 
 	@Override
-	@CachePut(value = {"org_code_defined_top"}, key="'OrgSaveVO'+#result.orgCode")
-	@CacheEvict(value = {"org_code_defined_list"}, allEntries = true)
+//	@CachePut(value = {"org_code_defined_top"}, key="'OrgSaveVO'+#result.orgCode")
+	@CacheEvict(value = {"org_code_defined_list","org_code_defined_top"}, allEntries = true)
 	public OrgSaveVO updateOrg(OrgUpByCodeDTO OrgUpdateDTO) {
 		// TODO Auto-generated method stub
 		return feign.updateOrg(OrgUpdateDTO);
 	}
 
 	@Override
-	@CachePut(value = {"org_code_defined_top"}, key="'OrgSaveVO'+#result.orgCode")
-	@CacheEvict(value = {"org_code_defined_list"}, allEntries = true)
+//	@CachePut(value = {"org_code_defined_top"}, key="'OrgSaveVO'+#result.orgCode")
+	@CacheEvict(value = {"org_code_defined_list","org_code_defined_top"}, allEntries = true)
 	public OrgSaveVO disableOrg(OrgQueryDTO orgUpdateDTO) {
 		// TODO Auto-generated method stub
 		return feign.disableOrg(orgUpdateDTO);
