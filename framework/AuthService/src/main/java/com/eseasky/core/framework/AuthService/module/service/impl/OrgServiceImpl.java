@@ -18,6 +18,7 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -82,7 +83,8 @@ public class OrgServiceImpl implements OrgService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	@CacheEvict(value = { "org_code_defined" }, allEntries = true)
+	@CachePut(value = {"org_code_defined_top"}, key="'OrgSaveVO'+#orgSaveDTO.orgCode")
+	@CacheEvict(value = {"org_code_defined_list"}, allEntries = true)
 	public OrgSaveVO saveOrg(OrgSaveDTO orgSaveDTO) {
 		OrgSaveVO orgSaveVO = null;
 		if (orgSaveDTO != null) {
@@ -105,7 +107,8 @@ public class OrgServiceImpl implements OrgService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	@CacheEvict(value = { "org_code_defined" }, allEntries = true)
+	@CachePut(value = {"org_code_defined_top"}, key="'OrgSaveVO'+#orgUpdateDTO.orgCode")
+	@CacheEvict(value = {"org_code_defined_list"}, allEntries = true)
 	public OrgSaveVO updateOrg(OrgUpdateDTO orgUpdateDTO) {
 		// TODO Auto-generated method stub
 		OrgSaveVO orgSaveVO = null;
@@ -133,7 +136,8 @@ public class OrgServiceImpl implements OrgService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	@CacheEvict(value = { "org_code_defined" }, allEntries = true)
+	@CachePut(value = {"org_code_defined_top"}, key="'OrgSaveVO'+#orgUpdateDTO.orgCode")
+	@CacheEvict(value = {"org_code_defined_list"}, allEntries = true)
 	public OrgSaveVO disableOrg(OrgQueryDTO orgUpdateDTO) {
 		// TODO Auto-generated method stub
 		OrgSaveVO orgSaveVO = null;
@@ -149,7 +153,8 @@ public class OrgServiceImpl implements OrgService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	@CacheEvict(value = { "org_code_defined" }, allEntries = true)
+	@CachePut(value = {"org_code_defined_top"}, key="'OrgSaveVO'+#orgUpdateDTO.orgCode")
+	@CacheEvict(value = {"org_code_defined_list"}, allEntries = true)
 	public OrgSaveVO openOrg(OrgQueryDTO orgUpdateDTO) {
 		// TODO Auto-generated method stub
 		OrgSaveVO orgSaveVO = null;
@@ -164,7 +169,9 @@ public class OrgServiceImpl implements OrgService {
 	}
 
 	@Override
-	@Cacheable(value = { "org_code_defined" }, key = "'getOrgNameByOrgCode'+#orgCode", unless = "#result == null")
+//	@Cacheable(value = { "org_code_defined" }, key = "'getOrgNameByOrgCode'+#orgCode", unless = "#result == null")
+	@Cacheable(value = {"org_code_defined_top"}, key="'OrgSaveVO'+#orgCode",unless = "#result == null")
+    @CacheEvict(value = {"org_code_defined_list"}, allEntries = true)
 	public OrgSaveVO getOrgNameByOrgCode(String orgCode) {
 		// TODO Auto-generated method stub
 		OrgSaveVO orgSaveVO = null;
@@ -229,7 +236,7 @@ public class OrgServiceImpl implements OrgService {
 //	}
 
 	@Override
-	@Cacheable(value = { "org_code_defined" }, key = "'getOrgNamesByOrgCodes'+#orgCodes", unless = "#result == null")
+//	@Cacheable(value = { "org_code_defined_top" }, key = "'getOrgNamesByOrgCodes'+#orgCodes", unless = "#result == null")
 	public Map<String, String> getOrgNamesByOrgCodes(Set<String> orgCodes) {
 		// TODO Auto-generated method stub
 		Map<String, String> orgNames = null;
@@ -344,7 +351,8 @@ public class OrgServiceImpl implements OrgService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	@CacheEvict(value = { "org_code_defined" }, allEntries = true)
+	@CachePut(value = {"org_code_defined_top"}, key="'OrgSaveVO'+#orgUpdateDTO.orgCode")
+	@CacheEvict(value = {"org_code_defined_list"}, allEntries = true)
 	public OrgSaveVO updateOrgByCode(OrgUpByCodeDTO orgUpdateDTO) {
 		// TODO Auto-generated method stub
 		OrgSaveVO orgSaveVO = null;
@@ -371,7 +379,7 @@ public class OrgServiceImpl implements OrgService {
 	}
 
 	@Override
-	@CacheEvict(value = { "org_code_defined" }, allEntries = true)
+	@CacheEvict(value = {"org_code_defined_top,org_code_defined_list"}, allEntries = true)
 	public OrgSaveByExcelVO saveByExcel(OrgSaveMoreDTO orgSaveMoreDTO) {
 		OrgSaveByExcelVO orgSaveByExcelVO = null;
 		if (orgSaveMoreDTO != null) {
@@ -455,7 +463,8 @@ public class OrgServiceImpl implements OrgService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	@CacheEvict(value = { "org_code_defined" }, allEntries = true)
+	@CachePut(value = {"org_code_defined_top"}, key="'OrgSaveVO'+#orgSaveDTO.orgCode")
+	@CacheEvict(value = {"org_code_defined_list"}, allEntries = true)
 	public OrgSaveVO saveForApp(OrgSaveDTO orgSaveDTO) {
 		// TODO Auto-generated method stub
 		OrgSaveVO orgSaveVO = null;
