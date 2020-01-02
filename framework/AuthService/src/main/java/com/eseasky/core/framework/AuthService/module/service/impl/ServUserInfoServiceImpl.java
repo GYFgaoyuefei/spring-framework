@@ -56,7 +56,7 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 
 	@Autowired
 	private ServUserInfoRepository servUserInfoRepository;
-	
+
 	@Autowired
 	private AuthAccessTokenRepository authAccessTokenRepository;
 
@@ -74,7 +74,7 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 
 	@Autowired
 	private GroupService groupService;
-	
+
 	@Autowired
 	private OrgService orgService;
 
@@ -134,6 +134,7 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 				}
 				roleService.deleteByUser(userInfo.get().getUserName());
 				servUserInfoRepository.deleteById(userInfo.get().getId());
+				deleteTokenByUserName(userInfo.get().getUserName());
 				servUserInfoVO = new ServUserInfoVO();
 				BeanUtils.copyProperties(userInfo.get(), servUserInfoVO);
 			} else {
@@ -152,14 +153,14 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 		if (servUserInfoDTO == null || servUserInfoDTO.getId() == null) {
 			ServUserInfo servUserInfo = new ServUserInfo();
 			BeanUtils.copyProperties(servUserInfoDTO, servUserInfo);
-			servUserInfo=saveUserInfo(servUserInfo);
+			servUserInfo = saveUserInfo(servUserInfo);
 			grantBasePower(servUserInfoDTO);
-			grantByGroups(servUserInfoDTO);				
+			grantByGroups(servUserInfoDTO);
 			if (servUserInfo != null) {
 				servUserInfoVO = new ServUserInfoVO();
 				BeanUtils.copyProperties(servUserInfo, servUserInfoVO);
 			}
-			
+
 		} else {
 			throw new BusiException(BusiEnum.USERINFO_NOID);
 		}
@@ -275,16 +276,7 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 	public ServUserInfoVO forceOffLine(ServUserInfoDTO servUserInfoDTO) {
 		ServUserInfoVO servUserInfoVO = null;
 		if (servUserInfoDTO.getUserName() != null && !"".equals(servUserInfoDTO.getUserName())) {
-			List<AuthAccessToken> authUser = authAccessTokenRepository.findByUserName(servUserInfoDTO.getUserName());
-			if (authUser.size() == 0)
-				throw new BusiException(BusiEnum.USER_INVALID);
-			else if (authUser.size() >= 1) {
-				for (int i = 0; i < authUser.size(); i++) {
-					authAccessTokenRepository.deleteById(authUser.get(i).getTokenId());
-				}
-			} else
-				throw new BusiException(BusiEnum.NOTDELETE);
-
+			deleteTokenByUserName(servUserInfoDTO.getUserName());
 			Optional<ServUserInfo> userInfo = servUserInfoRepository.findByUserName(servUserInfoDTO.getUserName());
 			if (userInfo.isPresent()) {
 				ServUserInfo info = userInfo.get();
@@ -321,7 +313,7 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 						orgUserGranteds.add(orgUserGranted);
 					}
 				} catch (Exception e) {
-					throw new BusiException(BusiEnum.USERINFO_GROUPGRANT,e.getMessage());
+					throw new BusiException(BusiEnum.USERINFO_GROUPGRANT, e.getMessage());
 				}
 			}
 		}
@@ -375,13 +367,14 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 //	}
 
 	private void grantBasePower(ServUserInfoDTO servUserInfoDTO) {
-		if(servUserInfoDTO!=null){
-			PowerGroupQuery powerGroupQuery=new PowerGroupQuery();
+		if (servUserInfoDTO != null) {
+			PowerGroupQuery powerGroupQuery = new PowerGroupQuery();
 			powerGroupQuery.setGroupName("基础权限");
 			Page<PowerGroupInfo> groups = iOrganizeService.queryPower(powerGroupQuery);
 			if (groups != null && groups.getContent() != null) {
-				PowerGroupInfo group=groups.stream().filter(item -> item.getGroupName().equals("基础权限")).limit(1).collect(Collectors.toList()).get(0);
-				if(group!=null) {
+				PowerGroupInfo group = groups.stream().filter(item -> item.getGroupName().equals("基础权限")).limit(1)
+						.collect(Collectors.toList()).get(0);
+				if (group != null) {
 					PowerGrantDTO userGrantByGroup = new PowerGrantDTO();
 					userGrantByGroup.setPowerId(group.getId());
 					userGrantByGroup.setCreateUser(servUserInfoDTO.getCreaterUser());
@@ -390,13 +383,13 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 					try {
 						iOrganizeService.grant(userGrantByGroup);
 					} catch (Exception e) {
-						throw new BusiException(BusiEnum.USERINFO_GROUPGRANT,e.getMessage());
+						throw new BusiException(BusiEnum.USERINFO_GROUPGRANT, e.getMessage());
 					}
 				}
 			}
 		}
 	}
-	
+
 	@Override
 	public ServUserInfo findByPhone(String phone) {
 		// TODO Auto-generated method stub
@@ -451,5 +444,22 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 			}
 		}
 		return servUserInfo;
+	}
+
+	private void deleteTokenByUserName(String userName) {
+		if (!Strings.isNullOrEmpty(userName)) {
+			List<AuthAccessToken> authUser = authAccessTokenRepository.findByUserName(userName);
+			if (authUser.size() == 0) {
+				throw new BusiException(BusiEnum.USER_INVALID);
+			} else if (authUser.size() >= 1) {
+				for (int i = 0; i < authUser.size(); i++) {
+					authAccessTokenRepository.deleteById(authUser.get(i).getTokenId());
+				}
+			} else {
+				throw new BusiException(BusiEnum.NOTDELETE);
+			}
+
+		}
+
 	}
 }
