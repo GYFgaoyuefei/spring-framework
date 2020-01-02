@@ -193,6 +193,8 @@ public class OrgServiceImpl implements OrgService {
 							: orgSaveVO.getName() + ">" + organizeDefineds.getContent().get(0).getName();
 					orgSaveVO.setName(orgName);
 					orgSaveVO.setOrgCode(organizeQuery.getOrgCode());
+				}else {
+					throw new BusiException(BusiEnum.NO_ORGOFCODE);
 				}
 			}
 		}
