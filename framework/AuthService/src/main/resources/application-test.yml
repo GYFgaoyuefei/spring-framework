@@ -1,3 +1,9 @@
+spring:
+  application:
+    name: AuthServiceDemo
+server:
+  servlet:
+    context-path: /AuthServiceDemo
 custom:
   app:
     token:
@@ -47,7 +53,12 @@ token:
   expire:
     seconds: 86400
 
-
+databasecom:
+  ip: 192.168.1.232
+  user: mnet
+  password: ENC(RMx5+VSDmn6fcprDUX6ygFHpw9SLfSH2)
+  databaseName: mnetbak
+  savePath: /home/mnet/mysqlbak
 
 swagger:
   enable: true

@@ -27,6 +27,10 @@
         <groupId>com.eseasky.core.starters</groupId>
         <artifactId>system-exception</artifactId>
     </dependency>
+    <dependency>
+        <groupId>com.eseasky.core.starters</groupId>
+        <artifactId>cache</artifactId>
+    </dependency>
   </dependencies>
   <build>
   	<plugins>

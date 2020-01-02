@@ -78,6 +78,7 @@
 			<groupId>com.eseasky.core.starters</groupId>
 			<artifactId>auth-server</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>com.eseasky.core.starters</groupId>
 			<artifactId>system-exception</artifactId>
