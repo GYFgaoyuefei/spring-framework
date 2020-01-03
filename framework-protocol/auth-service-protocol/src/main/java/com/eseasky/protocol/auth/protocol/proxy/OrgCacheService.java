@@ -1,5 +1,6 @@
 package com.eseasky.protocol.auth.protocol.proxy;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -7,7 +8,6 @@ import com.eseasky.core.starters.cache.annotation.SCacheRemove;
 import com.eseasky.core.starters.cache.annotation.SCacheable;
 import com.eseasky.core.starters.cache.annotation.SRemoveItem;
 import com.eseasky.global.entity.ResultModel;
-import com.eseasky.protocol.auth.entity.DTO.CacheRemoveDTO;
 import com.eseasky.protocol.auth.entity.DTO.OrgNameQueryDTO;
 import com.eseasky.protocol.auth.entity.DTO.OrgQueryDTO;
 import com.eseasky.protocol.auth.entity.DTO.OrgSaveDTO;
@@ -81,12 +81,6 @@ public class OrgCacheService implements OrgServiceFeign {
 	public ResultModel<List<OrgQueryVO>> queryAndSaveOrg(List<OrgQueryDTO> orgQueryDTOList) {
 		// TODO Auto-generated method stub
 		return feign.queryAndSaveOrg(orgQueryDTOList);
-	}
-
-	@Override
-	public void removeCache(CacheRemoveDTO cacheRemoveDTO) {
-		// TODO Auto-generated method stub
-		feign.removeCache(cacheRemoveDTO);
 	}
 
 }

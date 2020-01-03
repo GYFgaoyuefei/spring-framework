@@ -4,7 +4,6 @@ import com.eseasky.core.starters.feign.wrapper.fallbacks.IHystrix;
 
 import com.eseasky.core.starters.system.exception.errors.BaseHandlerException;
 import com.eseasky.global.entity.ResultModel;
-import com.eseasky.protocol.auth.entity.DTO.CacheRemoveDTO;
 import com.eseasky.protocol.auth.entity.DTO.OrgNameQueryDTO;
 import com.eseasky.protocol.auth.entity.DTO.OrgQueryDTO;
 import com.eseasky.protocol.auth.entity.DTO.OrgSaveDTO;
@@ -73,11 +72,5 @@ public class OrgServiceFeignHystrix implements OrgServiceFeign , IHystrix {
 		throw new BaseHandlerException(500, throwable == null ? "未知异常" : throwable.getMessage());
 	}
 
-	@Override
-	public void removeCache(CacheRemoveDTO cacheRemoveDTO) {
-		// TODO Auto-generated method stub
-		throw new BaseHandlerException(500, throwable == null ? "未知异常" : throwable.getMessage());
-
-	}
 
 }
