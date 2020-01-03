@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.eseasky.core.starters.feign.wrapper.config.Feign;
 import com.eseasky.global.entity.ResultModel;
+import com.eseasky.protocol.auth.entity.DTO.CacheRemoveDTO;
 import com.eseasky.protocol.auth.entity.DTO.OrgNameQueryDTO;
 import com.eseasky.protocol.auth.entity.DTO.OrgQueryDTO;
 import com.eseasky.protocol.auth.entity.DTO.OrgSaveDTO;
@@ -62,4 +63,8 @@ public interface OrgServiceFeign {
 	@RequestMapping(value="/queryAndSaveOrg",method= RequestMethod.POST,consumes = "application/json")
 	@Headers({"Content-Type: application/json","Accept: application/json"})
 	public ResultModel<List<OrgQueryVO>> queryAndSaveOrg(@RequestBody List<OrgQueryDTO> orgQueryDTOList);
+	
+	@RequestMapping(value="/removeCache",method= RequestMethod.POST,consumes = "application/json")
+	@Headers({"Content-Type: application/json","Accept: application/json"})
+    public void removeCache(@RequestBody  CacheRemoveDTO cacheRemoveDTO);
 }
