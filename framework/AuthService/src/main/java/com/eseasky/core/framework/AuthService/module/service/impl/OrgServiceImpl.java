@@ -17,7 +17,6 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
@@ -84,7 +83,6 @@ public class OrgServiceImpl implements OrgService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-//	@CachePut(value = {"org_code_defined_top"}, key="'OrgSaveVO'+#result.orgCode")
 	@SCacheRemove({@SRemoveItem(value = "org_code_defined_list")})
 	public OrgSaveVO saveOrg(OrgSaveDTO orgSaveDTO) {
 		OrgSaveVO orgSaveVO = null;
@@ -108,7 +106,6 @@ public class OrgServiceImpl implements OrgService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-//	@CachePut(value = {"org_code_defined_top"}, key="'OrgSaveVO'+#result.orgCode")
 	@SCacheRemove({@SRemoveItem(value = "org_code_defined_list"),@SRemoveItem(value = "org_code_defined_top", key = "'OrgSaveVO'+#result.orgCode", matchStart = true)})
 	public OrgSaveVO updateOrg(OrgUpdateDTO orgUpdateDTO) {
 		// TODO Auto-generated method stub
@@ -137,7 +134,6 @@ public class OrgServiceImpl implements OrgService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-//	@CachePut(value = {"org_code_defined_top"}, key="'OrgSaveVO'+#result.orgCode")
 	@SCacheRemove({@SRemoveItem(value = "org_code_defined_list"),@SRemoveItem(value = "org_code_defined_top", key = "'OrgSaveVO'+#result.orgCode", matchStart = true)})
 	public OrgSaveVO disableOrg(OrgQueryDTO orgUpdateDTO) {
 		// TODO Auto-generated method stub
@@ -170,7 +166,6 @@ public class OrgServiceImpl implements OrgService {
 	}
 
 	@Override
-//	@Cacheable(value = { "org_code_defined" }, key = "'getOrgNameByOrgCode'+#orgCode", unless = "#result == null")
 	@SCacheable(value = "org_code_defined_top", key="'OrgSaveVO'+#orgCode", tables = {"org_code_defined"})
 	public OrgSaveVO getOrgNameByOrgCode(String orgCode) {
 		// TODO Auto-generated method stub
@@ -238,7 +233,6 @@ public class OrgServiceImpl implements OrgService {
 //	}
 
 	@Override
-//	@Cacheable(value = { "org_code_defined_top" }, key = "'getOrgNamesByOrgCodes'+#orgCodes", unless = "#result == null")
 	public Map<String, String> getOrgNamesByOrgCodes(Set<String> orgCodes) {
 		// TODO Auto-generated method stub
 		Map<String, String> orgNames = null;
@@ -353,7 +347,6 @@ public class OrgServiceImpl implements OrgService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-//	@CachePut(value = {"org_code_defined_top"}, key="'OrgSaveVO'+#result.orgCode")
 	@SCacheRemove({@SRemoveItem(value = "org_code_defined_list"),@SRemoveItem(value = "org_code_defined_top", key = "'OrgSaveVO'+#result.orgCode", matchStart = true)})
 	public OrgSaveVO updateOrgByCode(OrgUpByCodeDTO orgUpdateDTO) {
 		// TODO Auto-generated method stub
@@ -465,8 +458,7 @@ public class OrgServiceImpl implements OrgService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-//	@CachePut(value = {"org_code_defined_top"}, key="'OrgSaveVO'+#result.orgCode")
-	@CacheEvict(value = {"org_code_defined_list","org_code_defined_top"}, allEntries = true)
+	@SCacheRemove({@SRemoveItem(value = "org_code_defined_list")})
 	public OrgSaveVO saveForApp(OrgSaveDTO orgSaveDTO) {
 		// TODO Auto-generated method stub
 		OrgSaveVO orgSaveVO = null;
