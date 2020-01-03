@@ -14,7 +14,7 @@ import com.eseasky.core.framework.AuthService.module.service.OrgService;
 import com.eseasky.core.framework.AuthService.module.service.ServUserInfoService;
 import com.eseasky.core.starters.auth.server.core.entity.FrontEndAuthConfig;
 import com.eseasky.core.starters.auth.server.core.interfaces.UserService;
-import com.eseasky.core.starters.security.tools.TokenUtils;
+import com.eseasky.core.starters.auth.utils.TokenUtils;
 import com.eseasky.global.entity.MsgReturn;
 import com.eseasky.global.entity.UserViews;
 import com.eseasky.protocol.system.SystemServiceConfig;

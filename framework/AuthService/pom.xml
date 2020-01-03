@@ -83,10 +83,6 @@
 			<groupId>com.eseasky.core.starters</groupId>
 			<artifactId>system-exception</artifactId>
 		</dependency>
-	    <dependency>
-			<groupId>com.eseasky.core.starters</groupId>
-			<artifactId>security-tools</artifactId>
-		</dependency>
 		
 		<dependency>
 			<groupId>com.eseasky.core.starters</groupId>
