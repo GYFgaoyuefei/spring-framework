@@ -52,7 +52,10 @@ token:
 #调用华为接口相关配置项
 remote:
   server:
+    grantType: client_credentials
     appid: 101080723
-    baseUrl: http://218.17.39.34:7915
+    #baseUrl: http://218.17.39.34:7915
+    baseUrl: https://lfa2ptest01.hwcloudtest.cn:18443/dev-napi
     clientSecret: 24043e04d9a087b7ade2ecaa826f8471
-    tokenUrl: http://218.17.39.34:7915/oauth2/v2/token
+    #tokenUrl: http://218.17.39.34:7915/oauth2/v2/token
+    tokenUrl: http://logintestlf.hwcloudtest.cn:8000/oauth2/v2/token
