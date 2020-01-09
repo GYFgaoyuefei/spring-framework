@@ -18,6 +18,8 @@ public enum  BusiEnum {
 	
 	ORGNAME_REPEATABLE(500,"系统提示：组织名重复"),
 	
+	NO_ORGNAME(500,"系统提示：组织名称不能为空"),
+	
 	NO_ORGOFCODE(500,"系统提示：不存在该组织编码的组织"),
 	
 	USERINFO_IDNOTNULL(500,"系统提示：id不能为null"),

@@ -37,4 +37,5 @@ public class ServUserInfo {
 //    private String organCode="000";
 //    private String orgName;
     private String nickName;
+    private String loginAvailable;
 }

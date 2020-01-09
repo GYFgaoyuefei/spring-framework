@@ -13,7 +13,7 @@ import com.eseasky.core.framework.AuthService.protocol.vo.PowerQueryVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.PowerSaveVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.OrgGrantInfoVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.ResoureQueryVO;
-import com.eseasky.core.framework.AuthService.protocol.vo.VRInfoVO;
+import com.eseasky.protocol.auth.entity.VO.VRInfoVO;
 
 
 public interface PowerService {

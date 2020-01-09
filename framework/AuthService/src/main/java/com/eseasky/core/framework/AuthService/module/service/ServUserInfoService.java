@@ -6,9 +6,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import com.eseasky.core.framework.AuthService.module.model.ServUserInfo;
-import com.eseasky.core.framework.AuthService.protocol.dto.ServUserInfoDTO;
-import com.eseasky.core.framework.AuthService.protocol.vo.ServUserInfoVO;
-import com.eseasky.core.framework.AuthService.protocol.vo.UserGrantInfoVO;
+import com.eseasky.protocol.auth.entity.DTO.ServUserInfoDTO;
+import com.eseasky.protocol.auth.entity.VO.ServUserInfoVO;
+import com.eseasky.protocol.auth.entity.VO.UserGrantInfoVO;
 
 @Service
 public interface ServUserInfoService {

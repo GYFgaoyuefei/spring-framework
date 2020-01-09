@@ -25,7 +25,6 @@ import com.eseasky.core.framework.AuthService.protocol.vo.PowerQueryVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.PowerSaveVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.OrgGrantInfoVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.ResoureQueryVO;
-import com.eseasky.core.framework.AuthService.protocol.vo.VRInfoVO;
 import com.eseasky.core.framework.AuthService.utils.BinOrListUtil;
 import com.eseasky.core.starters.organization.persistence.IOrganizeService;
 import com.eseasky.core.starters.organization.persistence.entity.OrgUserGranted;
@@ -39,6 +38,7 @@ import com.eseasky.core.starters.organization.persistence.entity.ResourceQuery;
 import com.eseasky.core.starters.organization.persistence.entity.dto.PowerGrantDTO;
 import com.eseasky.core.starters.organization.persistence.model.OrgPowerDefined;
 import com.eseasky.core.starters.organization.persistence.model.OrganizeResourceDefined;
+import com.eseasky.protocol.auth.entity.VO.VRInfoVO;
 import com.google.common.base.Strings;
 
 
@@ -148,7 +148,7 @@ public class PowerServiceImpl implements PowerService{
 			}
 			PowerGrantDTO userGrantByGroup=new PowerGrantDTO();
 			BeanUtils.copyProperties(groupGrantDTO, userGrantByGroup);
-			OrgUserGranted orgUserGranted=iOrganizeService.grant(userGrantByGroup);
+			OrgUserGranted orgUserGranted=iOrganizeService.grantByVr(userGrantByGroup);
 			if(orgUserGranted!=null) {
 				orgGrantInfoVO=new OrgGrantInfoVO();
 				BeanUtils.copyProperties(orgUserGranted, orgGrantInfoVO);

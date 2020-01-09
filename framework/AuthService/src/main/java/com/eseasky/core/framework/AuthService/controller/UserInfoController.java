@@ -16,12 +16,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.eseasky.core.framework.AuthService.module.model.ServUserInfo;
 import com.eseasky.core.framework.AuthService.module.service.OrgService;
 import com.eseasky.core.framework.AuthService.module.service.ServUserInfoService;
-import com.eseasky.core.framework.AuthService.protocol.dto.ServUserInfoDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.VRInfoDTO;
-import com.eseasky.core.framework.AuthService.protocol.vo.ServUserInfoVO;
-import com.eseasky.core.framework.AuthService.protocol.vo.UserGrantInfoVO;
 import com.eseasky.global.entity.MsgPageInfo;
 import com.eseasky.global.entity.ResultModel;
+import com.eseasky.protocol.auth.entity.DTO.ServUserInfoDTO;
+import com.eseasky.protocol.auth.entity.VO.ServUserInfoVO;
+import com.eseasky.protocol.auth.entity.VO.UserGrantInfoVO;
 import com.google.common.base.Strings;
 
 import io.swagger.annotations.Api;
@@ -127,6 +127,15 @@ public class UserInfoController {
         msgReturn.setData(servUserInfoVO);
         return msgReturn;
     }
+    
+    @ApiOperation(value = "退出登录", httpMethod = "POST")
+    @PostMapping(value = "/loginOut")
+    public ResultModel<ServUserInfoVO> loginOut(@RequestBody ServUserInfoDTO servUserInfoDTO) {
+        ResultModel<ServUserInfoVO> msgReturn = new ResultModel<>();
+        ServUserInfoVO servUserInfoVO = servUserInfoService.forceOffLine(servUserInfoDTO);
+        msgReturn.setData(servUserInfoVO);
+        return msgReturn;
+    }
 
 
     @ApiOperation(value = "用户授权信息", httpMethod = "POST")
@@ -137,6 +146,7 @@ public class UserInfoController {
         if(vRInfoDTO!=null && !Strings.isNullOrEmpty(vRInfoDTO.getAccount()))
         	userGrantInfoVO = servUserInfoService.getUserGranted(vRInfoDTO.getAccount());
         msgReturn.setData(userGrantInfoVO);
+        log.info(System.currentTimeMillis());
         return msgReturn;
     }
 }

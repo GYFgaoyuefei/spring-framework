@@ -37,10 +37,7 @@ import com.eseasky.core.framework.AuthService.module.service.GroupService;
 import com.eseasky.core.framework.AuthService.module.service.PowerService;
 import com.eseasky.core.framework.AuthService.module.service.OrgService;
 import com.eseasky.core.framework.AuthService.module.service.ServUserInfoService;
-import com.eseasky.core.framework.AuthService.protocol.dto.ServUserInfoDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.VRInfoDTO;
-import com.eseasky.core.framework.AuthService.protocol.vo.ServUserInfoVO;
-import com.eseasky.core.framework.AuthService.protocol.vo.UserGrantInfoVO;
 import com.eseasky.core.starters.organization.persistence.IOrganizeService;
 import com.eseasky.core.starters.organization.persistence.entity.OrgUserGranted;
 import com.eseasky.core.starters.organization.persistence.entity.PowerGroupInfo;
@@ -48,6 +45,9 @@ import com.eseasky.core.starters.organization.persistence.entity.PowerGroupQuery
 import com.eseasky.core.starters.organization.persistence.entity.VRInfo;
 import com.eseasky.core.starters.organization.persistence.entity.dto.GrantByGroupDTO;
 import com.eseasky.core.starters.organization.persistence.entity.dto.PowerGrantDTO;
+import com.eseasky.protocol.auth.entity.DTO.ServUserInfoDTO;
+import com.eseasky.protocol.auth.entity.VO.ServUserInfoVO;
+import com.eseasky.protocol.auth.entity.VO.UserGrantInfoVO;
 
 import static com.eseasky.core.framework.AuthService.exception.BusiException.BusiEnum.NOT_FOUND_USER;
 
@@ -102,6 +102,9 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 				ServUserInfo servUserInfo = optional.get();
 				BeanUtils.copyProperties(servUserInfoDTO, servUserInfo);
 				grantByGroups(servUserInfoDTO);
+				if(servUserInfoDTO.getLoginAvaliable()!=null && servUserInfoDTO.getLoginAvaliable().size()>0) {
+					servUserInfo.setLoginAvailable(String.join(",", servUserInfoDTO.getLoginAvaliable()));
+				}
 				servUserInfo = saveUserInfo(servUserInfo);
 				if (servUserInfo != null) {
 					servUserInfoVO = new ServUserInfoVO();
@@ -133,6 +136,7 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 					}
 				}
 				roleService.deleteByUser(userInfo.get().getUserName());
+				deleteTokenByUserName(userInfo.get().getUserName(),1);
 				servUserInfoRepository.deleteById(userInfo.get().getId());
 				servUserInfoVO = new ServUserInfoVO();
 				BeanUtils.copyProperties(userInfo.get(), servUserInfoVO);
@@ -152,6 +156,9 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 		if (servUserInfoDTO == null || servUserInfoDTO.getId() == null) {
 			ServUserInfo servUserInfo = new ServUserInfo();
 			BeanUtils.copyProperties(servUserInfoDTO, servUserInfo);
+			if(servUserInfoDTO.getLoginAvaliable()!=null && servUserInfoDTO.getLoginAvaliable().size()>0) {
+				servUserInfo.setLoginAvailable(String.join(",", servUserInfoDTO.getLoginAvaliable()));
+			}
 			servUserInfo=saveUserInfo(servUserInfo);
 			grantBasePower(servUserInfoDTO);
 			grantByGroups(servUserInfoDTO);				
@@ -275,16 +282,7 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 	public ServUserInfoVO forceOffLine(ServUserInfoDTO servUserInfoDTO) {
 		ServUserInfoVO servUserInfoVO = null;
 		if (servUserInfoDTO.getUserName() != null && !"".equals(servUserInfoDTO.getUserName())) {
-			List<AuthAccessToken> authUser = authAccessTokenRepository.findByUserName(servUserInfoDTO.getUserName());
-			if (authUser.size() == 0)
-				throw new BusiException(BusiEnum.USER_INVALID);
-			else if (authUser.size() >= 1) {
-				for (int i = 0; i < authUser.size(); i++) {
-					authAccessTokenRepository.deleteById(authUser.get(i).getTokenId());
-				}
-			} else
-				throw new BusiException(BusiEnum.NOTDELETE);
-
+			deleteTokenByUserName(servUserInfoDTO.getUserName(),0);
 			Optional<ServUserInfo> userInfo = servUserInfoRepository.findByUserName(servUserInfoDTO.getUserName());
 			if (userInfo.isPresent()) {
 				ServUserInfo info = userInfo.get();
@@ -314,7 +312,7 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 				groupGrantDTO.setGroupName(groupName);
 				groupGrantDTO.setOrgCode(servUserInfoDTO.getOrgCode());
 				try {
-					OrgUserGranted orgUserGranted = iOrganizeService.grant(groupGrantDTO);
+					OrgUserGranted orgUserGranted = iOrganizeService.grantByGroup(groupGrantDTO);
 					if (orgUserGranted != null) {
 						if (orgUserGranteds == null)
 							orgUserGranteds = new ArrayList<OrgUserGranted>();
@@ -382,13 +380,13 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 			if (groups != null && groups.getContent() != null) {
 				PowerGroupInfo group=groups.stream().filter(item -> item.getGroupName().equals("基础权限")).limit(1).collect(Collectors.toList()).get(0);
 				if(group!=null) {
-					PowerGrantDTO userGrantByGroup = new PowerGrantDTO();
-					userGrantByGroup.setPowerId(group.getId());
-					userGrantByGroup.setCreateUser(servUserInfoDTO.getCreaterUser());
-					userGrantByGroup.setOrgCode(servUserInfoDTO.getOrgCode());
-					userGrantByGroup.setUser(servUserInfoDTO.getUserName());
+					PowerGrantDTO userGrantByVr = new PowerGrantDTO();
+					userGrantByVr.setPowerId(group.getId());
+					userGrantByVr.setCreateUser(servUserInfoDTO.getCreaterUser());
+					userGrantByVr.setOrgCode(servUserInfoDTO.getOrgCode());
+					userGrantByVr.setUser(servUserInfoDTO.getUserName());
 					try {
-						iOrganizeService.grant(userGrantByGroup);
+						iOrganizeService.grantByVr(userGrantByVr);
 					} catch (Exception e) {
 						throw new BusiException(BusiEnum.USERINFO_GROUPGRANT,e.getMessage());
 					}
@@ -452,4 +450,23 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 		}
 		return servUserInfo;
 	}
+	
+	public void deleteTokenByUserName(String userName,int type) {
+		if(!Strings.isNullOrEmpty(userName)) {
+			List<AuthAccessToken> authUser = authAccessTokenRepository.findByUserName(userName);
+			if (authUser.size() == 0) {
+				if(type==0) {
+					throw new BusiException(BusiEnum.USER_INVALID);
+				}
+			}			
+			else if (authUser.size() >= 1) {
+				for (int i = 0; i < authUser.size(); i++) {
+					authAccessTokenRepository.deleteById(authUser.get(i).getTokenId());
+				}
+			} else {
+				throw new BusiException(BusiEnum.NOTDELETE);
+			}
+		}		
+	}
+
 }

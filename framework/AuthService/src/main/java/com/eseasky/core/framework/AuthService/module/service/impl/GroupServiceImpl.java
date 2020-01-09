@@ -20,9 +20,7 @@ import com.eseasky.core.framework.AuthService.protocol.dto.GroupSaveDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.QueryGroupDTO;
 import com.eseasky.core.framework.AuthService.protocol.vo.GroupQueryVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.GroupSaveVO;
-import com.eseasky.core.framework.AuthService.protocol.vo.OrgGraItemForUserGroupVO;
-import com.eseasky.core.framework.AuthService.protocol.vo.UserGrantInfoVO;
-import com.eseasky.core.framework.AuthService.protocol.vo.VRInfoVO;
+
 import com.eseasky.core.starters.organization.persistence.IOrganizeService;
 import com.eseasky.core.starters.organization.persistence.entity.OrgGrantedItemForUserGroup;
 import com.eseasky.core.starters.organization.persistence.entity.OrgUserGranted;
@@ -31,6 +29,9 @@ import com.eseasky.core.starters.organization.persistence.entity.dto.GrantByGrou
 import com.eseasky.core.starters.organization.persistence.entity.dto.GroupAddDTO;
 import com.eseasky.core.starters.organization.persistence.entity.dto.GroupQueryDTO;
 import com.eseasky.core.starters.organization.persistence.entity.vo.GroupVO;
+import com.eseasky.protocol.auth.entity.VO.OrgGraItemForUserGroupVO;
+import com.eseasky.protocol.auth.entity.VO.UserGrantInfoVO;
+import com.eseasky.protocol.auth.entity.VO.VRInfoVO;
 import com.google.common.base.Strings;
 
 
@@ -101,7 +102,7 @@ public class GroupServiceImpl implements GroupService{
 		if(groupGrantDTO!=null) {
 			GrantByGroupDTO grantByGroupDTO=new GrantByGroupDTO();
 			BeanUtils.copyProperties(groupGrantDTO, grantByGroupDTO);
-			OrgUserGranted orgUserGranted=iOrganizeService.grant(grantByGroupDTO);
+			OrgUserGranted orgUserGranted=iOrganizeService.grantByGroup(grantByGroupDTO);
 			userGrantInfoVO=transOUGToUGIVO(orgUserGranted);
 		}
 		return userGrantInfoVO;
@@ -162,6 +163,19 @@ public class GroupServiceImpl implements GroupService{
 			iOrganizeService.deletePowerGroup(deleteGroupDTO.getGroupName());
 		}
 		return groupQueryVO;
+	}
+
+	@Override
+	public UserGrantInfoVO rejectByGroup(GroupGrantDTO groupGrantDTO) {
+		// TODO Auto-generated method stub
+		UserGrantInfoVO userGrantInfoVO=null;
+		if(groupGrantDTO!=null) {
+			GrantByGroupDTO grantByGroupDTO=new GrantByGroupDTO();
+			BeanUtils.copyProperties(groupGrantDTO, grantByGroupDTO);
+			OrgUserGranted orgUserGranted=iOrganizeService.rejectByGroup(grantByGroupDTO);
+			userGrantInfoVO=transOUGToUGIVO(orgUserGranted);
+		}
+		return userGrantInfoVO;
 	}
 	
 }

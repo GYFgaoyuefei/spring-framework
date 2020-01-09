@@ -22,9 +22,9 @@ import com.eseasky.core.framework.AuthService.protocol.vo.PowerQueryVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.PowerSaveVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.OrgGrantInfoVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.ResoureQueryVO;
-import com.eseasky.core.framework.AuthService.protocol.vo.VRInfoVO;
 import com.eseasky.global.entity.MsgPageInfo;
 import com.eseasky.global.entity.ResultModel;
+import com.eseasky.protocol.auth.entity.VO.VRInfoVO;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -115,6 +115,7 @@ public class PowerController {
         log.info(JSONObject.toJSONString(vRInfoVO));
         if(vRInfoVO!=null)
         	msgReturn.setData(vRInfoVO);
+        log.info(System.currentTimeMillis());
         return msgReturn;
     }
 

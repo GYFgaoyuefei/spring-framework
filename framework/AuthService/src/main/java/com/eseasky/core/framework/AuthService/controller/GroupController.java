@@ -18,9 +18,9 @@ import com.eseasky.core.framework.AuthService.protocol.dto.QueryGroupDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.GroupSaveDTO;
 import com.eseasky.core.framework.AuthService.protocol.vo.GroupQueryVO;
 import com.eseasky.core.framework.AuthService.protocol.vo.GroupSaveVO;
-import com.eseasky.core.framework.AuthService.protocol.vo.UserGrantInfoVO;
 import com.eseasky.global.entity.MsgPageInfo;
 import com.eseasky.global.entity.ResultModel;
+import com.eseasky.protocol.auth.entity.VO.UserGrantInfoVO;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -86,6 +86,17 @@ public class GroupController {
 
 		ResultModel<UserGrantInfoVO> msgReturn = new ResultModel<UserGrantInfoVO>();
 		UserGrantInfoVO orgGrantInfoVO = groupService.grantByGroup(groupGrantDTO);
+		log.info(JSONObject.toJSONString(orgGrantInfoVO));
+		msgReturn.setData(orgGrantInfoVO);
+		return msgReturn;
+	}
+	
+	@ApiOperation(value = "通过分组驳权", httpMethod = "POST")
+	@PostMapping(value = "/rejectByGroup")
+	public ResultModel<UserGrantInfoVO> rejectByGroup(@RequestBody @Validated GroupGrantDTO groupGrantDTO) {
+
+		ResultModel<UserGrantInfoVO> msgReturn = new ResultModel<UserGrantInfoVO>();
+		UserGrantInfoVO orgGrantInfoVO = groupService.rejectByGroup(groupGrantDTO);
 		log.info(JSONObject.toJSONString(orgGrantInfoVO));
 		msgReturn.setData(orgGrantInfoVO);
 		return msgReturn;

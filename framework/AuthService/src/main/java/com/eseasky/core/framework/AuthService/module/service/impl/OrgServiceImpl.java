@@ -121,7 +121,6 @@ public class OrgServiceImpl implements OrgService {
 			}
 			OrganizeUpdateInfo orgInsertInfo = new OrganizeUpdateInfo();
 			BeanUtils.copyProperties(orgUpdateDTO, orgInsertInfo);
-
 			OrganizeDefined organizeDefined = iOrganizeService.updateOrganize(orgInsertInfo);
 			if (organizeDefined != null) {
 				orgSaveVO = new OrgSaveVO();
@@ -306,7 +305,7 @@ public class OrgServiceImpl implements OrgService {
 	@Override
 	public OrgSaveVO checkOrgName(OrgSaveDTO orgSaveDTO) {
 		OrgSaveVO orgSaveVO = null;
-		if (orgSaveDTO != null) {
+		if (orgSaveDTO != null && !Strings.isNullOrEmpty(orgSaveDTO.getName())) {
 			int page = 0;
 			while (true) {
 				OrganizeQuery organizeQuery = new OrganizeQuery();
@@ -535,8 +534,11 @@ public class OrgServiceImpl implements OrgService {
 		}
 		for (MulOrgsVO item : resultList) {
 			if (target.getLevelFirOrg().getName().equals(item.getLevelFirOrg().getName())) {
-				item.getLevelSecOrgs().removeAll(target.getLevelSecOrgs());
-				item.getLevelSecOrgs().addAll(target.getLevelSecOrgs());
+				//合并去重
+				List<OrgQueryVO> list = new ArrayList<>(item.getLevelSecOrgs());
+				list.removeAll(target.getLevelSecOrgs());
+				list.addAll(target.getLevelSecOrgs());
+				item.setLevelSecOrgs(list);				
 				return mergeOrgCode(targetList, resultList);
 			}
 		}
@@ -577,6 +579,7 @@ public class OrgServiceImpl implements OrgService {
 	}
 
 	@Override
+	@SCacheRemove({@SRemoveItem(value = "org_code_defined_list")})
 	public List<OrgQueryVO> queryAndSaveOrg(List<OrgQueryDTO> orgQueryDTOList) {
 		List<OrgQueryVO> result = new ArrayList<>();
 		for (OrgQueryDTO queryDTO : orgQueryDTOList) {
@@ -587,9 +590,11 @@ public class OrgServiceImpl implements OrgService {
 
 	private OrgQueryVO queryOrGenGenerateOrgCode(OrgQueryDTO orgQueryDTO) {
 		OrgSaveDTO orgSaveDTO = new OrgSaveDTO();
+		if(Strings.isNullOrEmpty(orgQueryDTO.getKeyWords())) {
+			throw new BusiException(BusiEnum.NO_ORGNAME);
+		}
 		orgSaveDTO.setName(orgQueryDTO.getKeyWords());
 		orgSaveDTO.setParentOrgCode(orgQueryDTO.getParentCode());
-
 		OrgSaveVO orgSaveVO = checkOrgName(orgSaveDTO);
 		OrgQueryVO orgQueryVO = new OrgQueryVO();
 
@@ -606,7 +611,9 @@ public class OrgServiceImpl implements OrgService {
 		// 生成code
 		OrgInsertInfo orgInsertInfo = new OrgInsertInfo();
 		orgInsertInfo.setName(orgQueryDTO.getKeyWords());
-		orgInsertInfo.setNote(orgQueryDTO.getNote());
+//		orgInsertInfo.setNote(orgQueryDTO.getNote());
+		//没有组织描述就默认为组织名称
+		orgInsertInfo.setNote(Strings.isNullOrEmpty(orgQueryDTO.getNote())?orgInsertInfo.getName():orgQueryDTO.getNote());
 		orgInsertInfo.setParentOrgCode(orgQueryDTO.getParentCode());
 		OrganizeDefined organize = iOrganizeService.addOrganize(orgInsertInfo);
 		if (organize != null) {
