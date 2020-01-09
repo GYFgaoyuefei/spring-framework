@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 
 import com.eseasky.core.starters.feign.wrapper.FeignClientFactory;
 import com.eseasky.protocol.auth.protocol.AuthServiceFeign;
+import com.eseasky.protocol.auth.protocol.GrantAndUserFeign;
 import com.eseasky.protocol.auth.protocol.OrgServiceFeign;
 import com.eseasky.protocol.auth.protocol.proxy.OrgCacheService;
 
@@ -30,5 +31,10 @@ public class AuthServiceConfig {
 	@Bean
 	public OrgRefreshServiceFeign orgRefreshServiceFeign() {
 		return factory.clientFeignContract(OrgRefreshServiceFeign.class);
+	}
+	
+	@Bean
+	public GrantAndUserFeign grantAndUserFeign() {
+		return factory.clientFeignContract(GrantAndUserFeign.class);
 	}
 }

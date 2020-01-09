@@ -1,6 +1,5 @@
 package com.eseasky.protocol.auth.protocol.proxy;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -78,6 +77,7 @@ public class OrgCacheService implements OrgServiceFeign {
 	}
 
 	@Override
+	@SCacheRemove({@SRemoveItem(value = "org_code_defined_list")})
 	public ResultModel<List<OrgQueryVO>> queryAndSaveOrg(List<OrgQueryDTO> orgQueryDTOList) {
 		// TODO Auto-generated method stub
 		return feign.queryAndSaveOrg(orgQueryDTOList);
