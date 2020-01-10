@@ -29,6 +29,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.log4j.Log4j2;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -97,6 +98,52 @@ public class GrantAndUserFeignController implements GrantAndUserFeign{
 		log.info(JSONObject.toJSONString(userGrantInfoVO));
 		msgReturn.setData(userGrantInfoVO);
 		return msgReturn;
+	}
+
+	@Override
+	@RequestMapping(value="/grantsByGroup",method= RequestMethod.POST,consumes = "application/json")
+	public ResultModel<List<UserGrantInfoVO>> grantsByGroup(@RequestBody List<GrantByGroupDTO> needGrant) {
+		// TODO Auto-generated method stub
+		ResultModel<List<UserGrantInfoVO>> results=new ResultModel<List<UserGrantInfoVO>>();
+		if(needGrant!=null) {
+			List<UserGrantInfoVO> UserGrantInfoVOs=new ArrayList<UserGrantInfoVO>();
+			for(GrantByGroupDTO grantByGroupDTO:needGrant) {
+				UserGrantInfoVO userGrantInfoVO=null;
+				if(grantByGroupDTO!=null) {
+					GroupGrantDTO groupGrantDTO=new GroupGrantDTO();
+					BeanUtils.copyProperties(grantByGroupDTO, groupGrantDTO);
+					userGrantInfoVO=groupService.grantByGroup(groupGrantDTO);			
+				}	
+				if(userGrantInfoVO!=null) {
+					UserGrantInfoVOs.add(userGrantInfoVO);
+				} 
+			}
+			results.setData(UserGrantInfoVOs);
+		}
+		return results;
+	}
+
+	@Override
+	@RequestMapping(value="/rejectsByGroup",method= RequestMethod.POST,consumes = "application/json")
+	public ResultModel<List<UserGrantInfoVO>> rejectsByGroup(@RequestBody List<GrantByGroupDTO> needReject) {
+		// TODO Auto-generated method stub
+		ResultModel<List<UserGrantInfoVO>> results=new ResultModel<List<UserGrantInfoVO>>();
+		if(needReject!=null) {
+			List<UserGrantInfoVO> UserGrantInfoVOs=new ArrayList<UserGrantInfoVO>();
+			for(GrantByGroupDTO grantByGroupDTO:needReject) {
+				UserGrantInfoVO userGrantInfoVO=null;
+				if(grantByGroupDTO!=null) {
+					GroupGrantDTO groupGrantDTO=new GroupGrantDTO();
+					BeanUtils.copyProperties(grantByGroupDTO, groupGrantDTO);
+					userGrantInfoVO=groupService.rejectByGroup(groupGrantDTO);			
+				}	
+				if(userGrantInfoVO!=null) {
+					UserGrantInfoVOs.add(userGrantInfoVO);
+				} 
+			}
+			results.setData(UserGrantInfoVOs);
+		}
+		return results;
 	}
 
 

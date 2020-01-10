@@ -12,13 +12,13 @@ custom:
       username: mnet
       password: mnet
   db:
-    url: jdbc:mysql://192.168.1.232:3306/mnet?useUnicode=true&characterEncoding=UTF-8
+    url: jdbc:mysql://192.168.1.232:3308/mnet?useUnicode=true&characterEncoding=UTF-8
     username: mnet_business
     password: mnet@123
     driver-class-name: com.mysql.jdbc.Driver
     database-platform: org.hibernate.dialect.MySQL5Dialect
   db1:
-    url: jdbc:mysql://192.168.1.232:3306/mnet?useUnicode=true&characterEncoding=UTF-8
+    url: jdbc:mysql://192.168.1.232:3308/mnet?useUnicode=true&characterEncoding=UTF-8
     username: mnet_business
     password: mnet@123
     driver-class-name: com.mysql.jdbc.Driver

@@ -31,4 +31,12 @@ public interface GrantAndUserFeign {
 	@RequestLine("POST /rejectByGroup")
 	@Headers({"Content-Type: application/json","Accept: application/json"})
 	public ResultModel<UserGrantInfoVO> rejectByGroup(@RequestBody @Validated GrantByGroupDTO groupRejectDTO);
+
+	@RequestLine("POST /grantsByGroup")
+	@Headers({"Content-Type: application/json","Accept: application/json"})
+	public ResultModel<List<UserGrantInfoVO>> grantsByGroup(@RequestBody List<GrantByGroupDTO> needGrant);
+	
+	@RequestLine("POST /rejectsByGroup")
+	@Headers({"Content-Type: application/json","Accept: application/json"})
+	public ResultModel<List<UserGrantInfoVO>> rejectsByGroup(@RequestBody List<GrantByGroupDTO> needReject);
 }

@@ -40,6 +40,18 @@ public class GrantAndUserFeignHystrix implements GrantAndUserFeign , IHystrix {
 		throw new BaseHandlerException(500, throwable == null ? "未知异常" : throwable.getMessage());
 	}
 
+	@Override
+	public ResultModel<List<UserGrantInfoVO>> grantsByGroup(List<GrantByGroupDTO> needGrant) {
+		// TODO Auto-generated method stub
+		throw new BaseHandlerException(500, throwable == null ? "未知异常" : throwable.getMessage());
+	}
+
+	@Override
+	public ResultModel<List<UserGrantInfoVO>> rejectsByGroup(List<GrantByGroupDTO> needReject) {
+		// TODO Auto-generated method stub
+		throw new BaseHandlerException(500, throwable == null ? "未知异常" : throwable.getMessage());
+	}
+
 
 
 }
