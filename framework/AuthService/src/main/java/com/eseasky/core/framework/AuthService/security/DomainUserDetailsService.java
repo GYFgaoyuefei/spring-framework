@@ -56,6 +56,7 @@ public class DomainUserDetailsService implements UserService {
 				userViews.setState(account.getState());
 				userViews.setNickName(account.getNickName());
 				userViews.setOrgName(Strings.isNullOrEmpty(account.getOrgCode())?null:orgService.getOrgNameByOrgCode(account.getOrgCode()).getName());
+				userViews.setLoginClientId(account.getLoginAvailable());
 				return userViews;
 			}
 		}

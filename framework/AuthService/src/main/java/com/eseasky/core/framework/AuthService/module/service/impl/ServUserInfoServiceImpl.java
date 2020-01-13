@@ -37,6 +37,7 @@ import com.eseasky.core.framework.AuthService.module.service.GroupService;
 import com.eseasky.core.framework.AuthService.module.service.PowerService;
 import com.eseasky.core.framework.AuthService.module.service.OrgService;
 import com.eseasky.core.framework.AuthService.module.service.ServUserInfoService;
+import com.eseasky.core.framework.AuthService.protocol.dto.ServUserInfoUpdateDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.VRInfoDTO;
 import com.eseasky.core.starters.organization.persistence.IOrganizeService;
 import com.eseasky.core.starters.organization.persistence.entity.OrgUserGranted;
@@ -93,7 +94,7 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public ServUserInfoVO updateServUserInfo(ServUserInfoDTO servUserInfoDTO) {
+	public ServUserInfoVO updateServUserInfo(ServUserInfoUpdateDTO servUserInfoDTO) {
 		// TODO Auto-generated method stub
 		ServUserInfoVO servUserInfoVO = null;
 		if (servUserInfoDTO.getId() != null) {
@@ -101,9 +102,13 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 			if (optional.isPresent()) {
 				ServUserInfo servUserInfo = optional.get();
 				BeanUtils.copyProperties(servUserInfoDTO, servUserInfo);
-				grantByGroups(servUserInfoDTO);
-				if(servUserInfoDTO.getLoginAvaliable()!=null && servUserInfoDTO.getLoginAvaliable().size()>0) {
-					servUserInfo.setLoginAvailable(String.join(",", servUserInfoDTO.getLoginAvaliable()));
+				ServUserInfoDTO servUserDTO=new ServUserInfoDTO ();
+				BeanUtils.copyProperties(servUserInfoDTO, servUserDTO);
+				grantByGroups(servUserDTO);
+				if(servUserInfoDTO.getLoginAvailable()!=null && servUserInfoDTO.getLoginAvailable().size()>0) {
+					servUserInfo.setLoginAvailable(String.join(",", servUserInfoDTO.getLoginAvailable()));
+				}else {
+					servUserInfo.setLoginAvailable(null);
 				}
 				servUserInfo = saveUserInfo(servUserInfo);
 				if (servUserInfo != null) {
@@ -156,8 +161,10 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 		if (servUserInfoDTO == null || servUserInfoDTO.getId() == null) {
 			ServUserInfo servUserInfo = new ServUserInfo();
 			BeanUtils.copyProperties(servUserInfoDTO, servUserInfo);
-			if(servUserInfoDTO.getLoginAvaliable()!=null && servUserInfoDTO.getLoginAvaliable().size()>0) {
-				servUserInfo.setLoginAvailable(String.join(",", servUserInfoDTO.getLoginAvaliable()));
+			if(servUserInfoDTO.getLoginAvailable()!=null && servUserInfoDTO.getLoginAvailable().size()>0) {
+				servUserInfo.setLoginAvailable(String.join(",", servUserInfoDTO.getLoginAvailable()));
+			}else {
+				throw new BusiException(BusiEnum.NOTNULL_LOGINAVAILABLE); 
 			}
 			servUserInfo=saveUserInfo(servUserInfo);
 			grantBasePower(servUserInfoDTO);

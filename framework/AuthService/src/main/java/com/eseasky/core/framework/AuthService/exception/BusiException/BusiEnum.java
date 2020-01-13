@@ -34,7 +34,9 @@ public enum  BusiEnum {
 
     GET_ORGCODE_ERROR(500,"组织编码生成失败"),
 	
-	GROUP_NOID(500, "系统提示：授权分组id为空");
+	GROUP_NOID(500, "系统提示：授权分组id为空"),
+	
+	NOTNULL_LOGINAVAILABLE(500, "系统提示：允许登录的平台不允许为null");
 
     private Integer code;
 

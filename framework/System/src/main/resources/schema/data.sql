@@ -12,7 +12,7 @@ insert into `sys_dictionary` (`id`, `desc`, `editable`, `group`, `name`, `status
 insert into `sys_dictionary` (`id`, `desc`, `editable`, `group`, `name`, `status`, `type`) values('23','信用代码最多使用商家数','Y','CREDITNUMBER_MAX','信用代码最多使用商家数','valid','System');
 insert into `sys_dictionary` (`id`, `desc`, `editable`, `group`, `name`, `status`, `type`) values('24','华为与系统的操作类型映射','Y','HW_OPERATE_TYPE','华为与系统的操作类型映射','valid','HuaWei');
 insert into `sys_dictionary` (`id`, `desc`, `editable`, `group`, `name`, `status`, `type`) values('25','用于控制前端元素与VR的关联关系','Y','AUTH_FRONTEND','前端权限配置','valid','System');
-
+insert into `sys_dictionary` (`id`, `desc`, `editable`, `group`, `name`, `status`, `type`) values('26','用户允许登陆平台','Y','LOGIN_PLATFORM','登录平台','valid','System');
 
 --sys_dict_item
 insert into `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) values('22','1','未生效','valid','未生效','13');
@@ -123,3 +123,5 @@ insert into `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) 
 insert into `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) values('129','PORT_Delete','端口号删除','valid','端口号删除','25');
 insert into `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) values('130','SERVICENUM_CREATE','服务号创建','valid','服务号创建','25');
 insert into `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) values('131','SERVICENUM_MODIFY','服务号修改','valid','服务号修改','25');
+insert into `sys_dict_item` (`key`, `name`, `status`, `value`, `dict_id`) values('EC','服务号EC平台','valid','EC','26');
+insert into `sys_dict_item` (`key`, `name`, `status`, `value`, `dict_id`) values('MANAGER','服务号管理平台','valid','MANAGER','26');

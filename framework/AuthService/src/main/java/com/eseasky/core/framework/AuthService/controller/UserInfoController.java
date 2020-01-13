@@ -16,6 +16,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.eseasky.core.framework.AuthService.module.model.ServUserInfo;
 import com.eseasky.core.framework.AuthService.module.service.OrgService;
 import com.eseasky.core.framework.AuthService.module.service.ServUserInfoService;
+import com.eseasky.core.framework.AuthService.protocol.dto.ServUserInfoUpdateDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.VRInfoDTO;
 import com.eseasky.global.entity.MsgPageInfo;
 import com.eseasky.global.entity.ResultModel;
@@ -71,7 +72,7 @@ public class UserInfoController {
     
     @ApiOperation(value = "修改用户", httpMethod = "POST")
     @PostMapping(value = "/updateUserInfo", consumes = "application/json")
-    public ResultModel<ServUserInfoVO> updateUserInfo(@RequestBody @Validated ServUserInfoDTO servUserInfoDTO) {
+    public ResultModel<ServUserInfoVO> updateUserInfo(@RequestBody @Validated ServUserInfoUpdateDTO servUserInfoDTO) {
         ResultModel<ServUserInfoVO> msgReturn = new ResultModel<>();
         ServUserInfoVO servUserInfoVO = servUserInfoService.updateServUserInfo(servUserInfoDTO);
         msgReturn.setData(servUserInfoVO);
