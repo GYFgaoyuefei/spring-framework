@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import lombok.Data;
 
@@ -41,7 +42,10 @@ public class ServUserInfoDTO implements Serializable{
 	
 	private String nickName;
 	
-	private List<String> loginAvaliable;
+	@NotNull(
+	        message = "允许登录平台不能为空"
+	    )
+	private List<String> loginAvailable;
 	
 	private Integer page = 0;
 	private Integer size = 10;
