@@ -123,5 +123,5 @@ insert into `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) 
 insert into `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) values('129','PORT_Delete','端口号删除','valid','端口号删除','25');
 insert into `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) values('130','SERVICENUM_CREATE','服务号创建','valid','服务号创建','25');
 insert into `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) values('131','SERVICENUM_MODIFY','服务号修改','valid','服务号修改','25');
-insert into `sys_dict_item` (`key`, `name`, `status`, `value`, `dict_id`) values('EC','服务号EC平台','valid','EC','26');
-insert into `sys_dict_item` (`key`, `name`, `status`, `value`, `dict_id`) values('MANAGER','服务号管理平台','valid','MANAGER','26');
+insert into `sys_dict_item` (`id`,`key`, `name`, `status`, `value`, `dict_id`) values('233','EC','服务号EC平台','valid','EC','26');
+insert into `sys_dict_item` (`id`,`key`, `name`, `status`, `value`, `dict_id`) values('234','MANAGER','服务号管理平台','valid','MANAGER','26');
