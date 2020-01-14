@@ -4,4 +4,3 @@ INSERT INTO `serv_client_details` (`id`, `access_token_validity`, `additional_in
 INSERT INTO `serv_client_details` (`id`, `access_token_validity`, `additional_information`, `authorities`, `auto_approve_scopes`, `client_id`, `grant_types`, `redirect`, `refresh_token_validity`, `resource_ids`, `scope`, `secret`) VALUES (4, 1800, NULL, NULL, 'tpmanager', 'tpmanager', 'password,authorization_code', NULL, 1800, NULL, 'tpmanager', '123456');
 
 UPDATE serv_client_details SET client_id='MANAGER',auto_approve_scopes='MANAGER',scope='MANAGER' WHERE id=1;
-update serv_user_info set  login_available = 'EC,MANAGER' where  user_name in ('yunying1','yunying2','yunying3','yunying4','yunying5','yunying6','yunying7','admin','callback');
