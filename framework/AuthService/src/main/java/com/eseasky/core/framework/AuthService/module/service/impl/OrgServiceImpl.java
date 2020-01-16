@@ -3,6 +3,7 @@ package com.eseasky.core.framework.AuthService.module.service.impl;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -19,12 +20,15 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.eseasky.core.framework.AuthService.exception.BusiException.BusiEnum;
 import com.eseasky.core.framework.AuthService.exception.BusiException.BusiException;
+import com.eseasky.core.framework.AuthService.module.service.OrgRefreshService;
 import com.eseasky.core.framework.AuthService.module.service.OrgService;
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgSaveMoreDTO;
 import com.eseasky.core.framework.AuthService.protocol.dto.OrgUpdateDTO;
@@ -40,18 +44,22 @@ import com.eseasky.core.starters.organization.persistence.entity.OrganizeUpdateI
 import com.eseasky.core.starters.organization.persistence.model.OrganizeDefined;
 import com.eseasky.global.utils.security.OrgCodeHelper;
 import com.eseasky.protocol.auth.entity.DTO.OrgQueryDTO;
+import com.eseasky.protocol.auth.entity.DTO.OrgRefreshDTO;
 import com.eseasky.protocol.auth.entity.DTO.OrgSaveDTO;
 import com.eseasky.protocol.auth.entity.DTO.OrgUpByCodeDTO;
 import com.eseasky.protocol.auth.entity.VO.MulOrgsVO;
 import com.eseasky.protocol.auth.entity.VO.OrgQueryVO;
 import com.eseasky.protocol.auth.entity.VO.OrgSaveVO;
+import com.eseasky.protocol.auth.protocol.OrgRefreshServiceFeign;
 import com.google.common.base.Strings;
 
 @Service
 public class OrgServiceImpl implements OrgService {
 	@Autowired
 	private IOrganizeService iOrganizeService;
-
+	@Autowired
+	private OrgRefreshService orgRefreshService;
+	
 	@Override
 	public Page<OrgQueryVO> queryOrg(OrgQueryDTO orgQueryDTO) {
 		// TODO Auto-generated method stub
@@ -357,6 +365,26 @@ public class OrgServiceImpl implements OrgService {
 			if (organizeDefineds != null && organizeDefineds.getContent() != null
 					&& organizeDefineds.getContent().size() > 0) {
 				OrganizeDefined organizeDefined = organizeDefineds.getContent().get(0);
+				OrgSaveDTO orgSaveDTO = new OrgSaveDTO();
+				orgSaveDTO.setName(orgUpdateDTO.getName());
+				orgSaveDTO.setParentOrgCode(organizeDefined.getParentOrgCode());
+				orgSaveDTO.setLevel(organizeDefined.getLevel());
+				orgSaveVO = checkOrgName(orgSaveDTO);
+				if (orgSaveVO != null && orgSaveVO.getId() != null
+						&& organizeDefined.getId().longValue() != orgSaveVO.getId().longValue()) {
+					OrgRefreshDTO orgRefreshDTO=new OrgRefreshDTO();
+					if(orgSaveVO.getLevel().equals(3)) {					
+						BeanUtils.copyProperties(orgSaveVO, orgRefreshDTO);	
+					}else {
+						organizeQuery = new OrganizeQuery();
+						organizeQuery.setOrgCode(orgSaveVO.getParentOrgCode());
+						organizeDefineds = iOrganizeService.queryOrganize(organizeQuery);	
+						BeanUtils.copyProperties(organizeDefineds.getContent().get(0), orgRefreshDTO);	
+					}
+					OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
+					orgRefreshService.orgRefresh(orgRefreshDTO,details.getTokenType() + " " + details.getTokenValue());
+					return orgSaveVO;
+				}				
 				OrganizeUpdateInfo orgInsertInfo = new OrganizeUpdateInfo();
 				orgInsertInfo.setId(organizeDefined.getId());
 				orgInsertInfo.setName(orgUpdateDTO.getName());
