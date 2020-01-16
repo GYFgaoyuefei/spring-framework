@@ -7,6 +7,8 @@ import com.eseasky.protocol.auth.entity.VO.OrgSaveVO;
 import feign.Headers;
 import feign.RequestLine;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * @author admin_z by 2019/12/25
@@ -15,7 +17,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 @Feign(serviceName = "AppService")
 public interface OrgRefreshServiceFeign {
 
-    @RequestLine("POST /orgRefresh")
+//    @RequestLine("POST /refreshOrg")
+    @RequestMapping(value="/refreshOrg",method= RequestMethod.POST,consumes = "application/json")
     @Headers({"Content-Type: application/json","Accept: application/json"})
     public ResultModel<OrgSaveVO> orgRefresh(@RequestBody OrgRefreshDTO orgRefreshDTO);
 }
