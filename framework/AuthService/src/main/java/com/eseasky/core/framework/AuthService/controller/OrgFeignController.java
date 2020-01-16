@@ -70,6 +70,7 @@ public class OrgFeignController implements OrgServiceFeign {
 
     @Override
     @ApiOperation(value = "更新组织", httpMethod = "POST")
+//    @PostMapping(value = "/updateOrgBy")
     public OrgSaveVO updateOrg(@RequestBody @Validated OrgUpByCodeDTO OrgUpdateDTO) {
         // TODO Auto-generated method stub
         OrgSaveVO orgSaveVO = orgService.updateOrgByCode(OrgUpdateDTO);

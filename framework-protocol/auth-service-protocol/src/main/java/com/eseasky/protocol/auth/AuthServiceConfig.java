@@ -11,6 +11,7 @@ import com.eseasky.protocol.auth.protocol.AuthServiceFeign;
 import com.eseasky.protocol.auth.protocol.GrantAndUserFeign;
 import com.eseasky.protocol.auth.protocol.OrgServiceFeign;
 import com.eseasky.protocol.auth.protocol.proxy.OrgCacheService;
+import com.eseasky.protocol.auth.protocol.proxy.OrgRefreshService;
 
 @ConditionalOnBean(FeignClientFactory.class)
 @Configuration
@@ -30,7 +31,7 @@ public class AuthServiceConfig {
 
 	@Bean
 	public OrgRefreshServiceFeign orgRefreshServiceFeign() {
-		return factory.clientFeignContract(OrgRefreshServiceFeign.class);
+		return new OrgRefreshService(factory.client(OrgRefreshServiceFeign.class));
 	}
 	
 	@Bean
