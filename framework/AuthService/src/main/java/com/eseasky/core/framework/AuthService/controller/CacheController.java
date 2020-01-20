@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.eseasky.core.framework.AuthService.module.service.CacheService;
 import com.eseasky.core.framework.AuthService.protocol.dto.CacheRemoveDTO;
-import com.eseasky.core.framework.AuthService.protocol.vo.CacheRemoveVO;import com.eseasky.global.entity.ResultModel;
+import com.eseasky.core.framework.AuthService.protocol.vo.CacheRemoveVO;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -30,13 +30,22 @@ public class CacheController{
 
 	@ApiOperation(value = "模糊查询缓存key值", httpMethod = "POST")
 	@PostMapping(value = "/getKey")
-	public ResultModel<CacheRemoveVO> getKey(@RequestBody CacheRemoveDTO cacheRemoveDTO) {
+	public CacheRemoveVO getKey(@RequestBody CacheRemoveDTO cacheRemoveDTO) {
 		// TODO Auto-generated method stub
-        ResultModel<CacheRemoveVO> msgReturn = new ResultModel<CacheRemoveVO>();
-        CacheRemoveVO cacheRemoveVO=cacheService.getKey(cacheRemoveDTO);
-        if(cacheRemoveVO!=null) {
-        	msgReturn.setData(cacheRemoveVO);
-        }
-		return  msgReturn;
+		return  cacheService.getKey(cacheRemoveDTO);
+	}
+	
+	@ApiOperation(value = "清除缓存(带固定前缀)", httpMethod = "POST")
+    @PostMapping(value = "/removeCacheByCacheModule")
+    public void removeCacheByCacheModule(@RequestBody  CacheRemoveDTO cacheRemoveDTO) {       
+        cacheService.removeCacheByCacheModule(cacheRemoveDTO);
+    }
+
+
+	@ApiOperation(value = "模糊查询缓存key值(带固定前缀)", httpMethod = "POST")
+	@PostMapping(value = "/getKeyByCacheModule")
+	public CacheRemoveVO getKeyByCacheModule(@RequestBody CacheRemoveDTO cacheRemoveDTO) {
+		// TODO Auto-generated method stub
+		return  cacheService.getKeyByCacheModule(cacheRemoveDTO);
 	}
 }
