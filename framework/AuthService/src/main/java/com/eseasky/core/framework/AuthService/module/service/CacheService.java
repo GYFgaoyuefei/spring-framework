@@ -9,6 +9,10 @@ public interface CacheService {
 
 	public CacheRemoveVO getKey(CacheRemoveDTO cacheRemoveDTO);
 
+	public CacheRemoveVO getKeyByCacheModule(CacheRemoveDTO cacheRemoveDTO);
+
+	public void removeCacheByCacheModule(CacheRemoveDTO cacheRemoveDTO);
+
 	
 
 }
