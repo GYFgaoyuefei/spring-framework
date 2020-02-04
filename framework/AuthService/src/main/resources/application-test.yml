@@ -1,37 +1,37 @@
-spring:
-  application:
-    name: AuthServiceDemo
-server:
-  servlet:
-    context-path: /AuthServiceDemo
+#spring:
+#  application:
+#    name: AuthServiceDemo
+#server:
+#  servlet:
+#    context-path: /AuthServiceDemo
 custom:
   app:
     token:
       timeout: 86400
   nosql:
     redis:
-      host: 192.168.1.232
-      port: 9209
+      host: 218.17.39.34
+      port: 8209
     rabbitmq:
-      addresses: 192.168.1.232:9715
-      port: 9715
+      addresses: 218.17.39.34:8672
+      port: 8672
       username: mnet
       password: mnet
   db:
-    url: jdbc:mysql://192.168.1.232:3306/mnet?useUnicode=true&characterEncoding=UTF-8
+    url: jdbc:mysql://218.17.39.34:3306/testmnet?useUnicode=true&characterEncoding=UTF-8
     username: mnet_business
     password: mnet@123
     driver-class-name: com.mysql.jdbc.Driver
     database-platform: org.hibernate.dialect.MySQL5Dialect
   db1:
-    url: jdbc:mysql://192.168.1.232:3306/mnet?useUnicode=true&characterEncoding=UTF-8
+    url: jdbc:mysql://218.17.39.34:3306/testmnet?useUnicode=true&characterEncoding=UTF-8
     username: mnet_business
     password: mnet@123
     driver-class-name: com.mysql.jdbc.Driver
     database-platform: org.hibernate.dialect.MySQL5Dialect
   oauth:
-    ip: 192.168.1.233:9710
-    clientId: test
+    ip: localhost:9710
+    clientId: MANAGER
     clientSecret: 123456
   #文件上传配置，保存的路径
   upload:
@@ -41,7 +41,7 @@ custom:
 
 
 eurekaserver:
-  ip: 192.168.1.233
+  ip: localhost
   port: 9709
 
 
@@ -52,13 +52,6 @@ logging:
 token:
   expire:
     seconds: 86400
-
-databasecom:
-  ip: 192.168.1.232
-  user: mnet
-  password: ENC(RMx5+VSDmn6fcprDUX6ygFHpw9SLfSH2)
-  databaseName: mnetbak
-  savePath: /home/mnet/mysqlbak
 
 swagger:
   enable: true

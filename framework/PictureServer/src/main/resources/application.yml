@@ -2,6 +2,8 @@ server:
   port: 9718
   servlet:
     context-path: /PictureServer
+  tomcat:
+    basedir: /home/mnet/montnets/images
 
 logging: 
   config: classpath:log4j2.yml   # 配置log4j2读取的配置文件 
