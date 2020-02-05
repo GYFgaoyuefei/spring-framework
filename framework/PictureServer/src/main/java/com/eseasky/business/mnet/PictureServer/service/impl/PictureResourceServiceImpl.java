@@ -1,18 +1,22 @@
 package com.eseasky.business.mnet.PictureServer.service.impl;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.util.HashMap;
 import java.util.UUID;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
 
+import com.eseasky.global.utils.SpringUtils;
+import com.sun.image.codec.jpeg.JPEGCodec;
+import com.sun.image.codec.jpeg.JPEGEncodeParam;
+import com.sun.image.codec.jpeg.JPEGImageEncoder;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
@@ -41,7 +45,7 @@ public class PictureResourceServiceImpl implements PictureResourceService {
     private String savaPath;
 
     @Override
-    public FileResourceInfo uploadSingle(String resourceType, MultipartFile file, String organization, String published) {
+    public FileResourceInfo uploadSingle(String resourceType, MultipartFile file, String organization, String published, int width, int height) {
         InputStream in = null;
         FileOutputStream out = null;
         try {
@@ -66,21 +70,33 @@ public class PictureResourceServiceImpl implements PictureResourceService {
             // 用uuid作为文件名，防止生成的临时文件重复
             String uuid = UUID.randomUUID().toString().replaceAll("-", "");
             String imageName = uuid + prefix;
-//            String absPath = savaPath +File.separator+ imageName;
-
+            // 指定要写入的图片路径
+            String newFilePath = savaPath + File.separator + imageName;
             //上传文件流写入服务中
             in = file.getInputStream();
-            out = new FileOutputStream(savaPath + File.separator + imageName);// 指定要写入的图片路径
-            int n = 0;
-            byte[] bb = new byte[1024];// 存储每次读取的内容
-            while ((n = in.read(bb)) != -1) {
-                out.write(bb, 0, n);// 将读取的内容，写入到输出流当中
+            out = new FileOutputStream(newFilePath);
+
+            String newFileMd5 = "";
+            if ("1".equals(resourceType)){
+                //规范图片尺寸
+                resizeImage(in,out, width,height,prefix.replace(".",""));
+                //获取新的MD5值
+                File newFile = new File(newFilePath);
+                byte[] newFileBytes = FileUtils.readFileToByteArray(newFile);
+                byte[] newDigest = md5.digest(newFileBytes);
+                newFileMd5 = new BigInteger(1, newDigest).toString(16);
+            }else {
+                int n = 0;
+                byte[] bb = new byte[1024];// 存储每次读取的内容
+                while ((n = in.read(bb)) != -1) {
+                    out.write(bb, 0, n);// 将读取的内容，写入到输出流当中
+                }
             }
 
             FileResourceInfo pictureResource = new FileResourceInfo();
             pictureResource.setFileId(uuid);
             pictureResource.setFileName(imageName);
-            pictureResource.setFileMd5(hashString);
+            pictureResource.setFileMd5(StringUtils.isBlank(newFileMd5) ? hashString : newFileMd5);
             pictureResource.setResourceType(resourceType);
             pictureResource.setResourcePath(savaPath);
             pictureResource.setOrganization(organization);
@@ -101,8 +117,23 @@ public class PictureResourceServiceImpl implements PictureResourceService {
                 e.printStackTrace();
             }
         }
-
         return null;
+    }
+
+    public void resizeImage(InputStream is, OutputStream os, int newWidth,int newHeight, String format) throws IOException {
+        Image prevImage = ImageIO.read(is);
+        if (newWidth == 0 || newHeight == 0){
+            newWidth = ((BufferedImage) prevImage).getWidth();
+            newHeight = ((BufferedImage) prevImage).getHeight();
+        }
+        BufferedImage tag= new BufferedImage(newWidth, newHeight,
+                BufferedImage.TYPE_INT_RGB);
+        tag.getGraphics().drawImage(prevImage.getScaledInstance(newWidth, newHeight,  Image.SCALE_SMOOTH ), 0, 0,  null);
+        JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(os);
+        JPEGEncodeParam jep = JPEGCodec.getDefaultJPEGEncodeParam(tag);
+        /** 压缩质量 */
+        jep.setQuality(0.9f, true);
+        encoder.encode(tag, jep);
     }
 
     @Override

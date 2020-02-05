@@ -11,7 +11,7 @@ import com.eseasky.business.mnet.PictureServer.module.model.FileResourceInfo;
 @Service
 public interface PictureResourceService {
 
-	public FileResourceInfo uploadSingle(String resourceType,  MultipartFile file, String organization, String published);
+	public FileResourceInfo uploadSingle(String resourceType,  MultipartFile file, String organization, String published,int width,int height);
 
 	public void getPictureResourceByFilename(String fileName, HttpServletResponse response);
 
