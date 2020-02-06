@@ -92,9 +92,9 @@ insert into `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) 
 insert into `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) values('96','10','运营商','valid','运营商','20');
 insert into `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) values('97','11','其他','valid','其他','20');
 insert into `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) values('98','1','端口号批量申请最大数量','valid','500','21');
-insert into `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) values('100','1','核心线程数','valid','6','22');
+insert into `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) values('100','1','核心线程数','valid','5','22');
 insert into `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) values('101','2','最大线程数','valid','8','22');
-insert into `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) values('102','1','信用代码最多使用商家数','valid','5','23');
+insert into `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) values('102','1','信用代码最多使用商家数','valid','6','23');
 insert into `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) values('103','1','创建','valid','1','24');
 insert into `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) values('104','2','修改','valid','2','24');
 insert into `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) values('105','3','运营冻结','valid','8','24');
@@ -157,5 +157,12 @@ insert into `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) 
 insert into `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) values('225','SERVICENUM_DELETE','服务号删除','valid','服务号删除','25');
 insert into `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) values('228','MERCHANT_FREEZE','商家冻结','valid','商家冻结','25');
 insert into `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) values('231','ORG_REFRESH','组织刷新','valid','组织刷新','25');
-insert into `sys_dict_item` (`id`,`key`, `name`, `status`, `value`, `dict_id`) values('233','EC','服务号EC平台','valid','EC','26');
-insert into `sys_dict_item` (`id`,`key`, `name`, `status`, `value`, `dict_id`) values('234','MANAGER','服务号管理平台','valid','MANAGER','26');
+insert into `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) values('233','EC','服务号EC平台','valid','EC','26');
+insert into `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) values('234','MANAGER','服务号管理平台','valid','MANAGER','26');
+insert into `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) values('235','PORT_BINDING','端口号绑定','valid','端口号绑定','25');
+insert into `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) values('236','RULE_CREATE','绑定规则创建','valid','绑定规则创建','25');
+insert into `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) values('237','RULE_MODIFY','绑定规则修改','valid','绑定规则修改','25');
+insert into `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) values('238','RULE_RUN','绑定规则执行','valid','绑定规则执行','25');
+insert into `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) values('239','RULE_DELETE','绑定规则删除','valid','绑定规则删除','25');
+insert into `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) values('240','RULE_QUERY','绑定规则查看','valid','绑定规则查看','25');
+insert into `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) values('241','BINDLOG_QUERY','绑定记录查看','valid','绑定记录查看','25');
