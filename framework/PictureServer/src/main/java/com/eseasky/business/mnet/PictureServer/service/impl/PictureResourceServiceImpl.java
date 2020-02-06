@@ -79,7 +79,7 @@ public class PictureResourceServiceImpl implements PictureResourceService {
             String newFileMd5 = "";
             if ("1".equals(resourceType)){
                 //规范图片尺寸
-                resizeImage(in,out, width,height,prefix.replace(".",""));
+                resizeImage(in,out, width,height);
                 //获取新的MD5值
                 File newFile = new File(newFilePath);
                 byte[] newFileBytes = FileUtils.readFileToByteArray(newFile);
@@ -120,7 +120,7 @@ public class PictureResourceServiceImpl implements PictureResourceService {
         return null;
     }
 
-    public void resizeImage(InputStream is, OutputStream os, int newWidth,int newHeight, String format) throws IOException {
+    public void resizeImage(InputStream is, OutputStream os, int newWidth,int newHeight) throws IOException {
         Image prevImage = ImageIO.read(is);
         if (newWidth == 0 || newHeight == 0){
             newWidth = ((BufferedImage) prevImage).getWidth();
