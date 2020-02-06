@@ -11,7 +11,6 @@ import java.util.UUID;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
 
-import com.eseasky.global.utils.SpringUtils;
 import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGEncodeParam;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
@@ -45,7 +44,7 @@ public class PictureResourceServiceImpl implements PictureResourceService {
     private String savaPath;
 
     @Override
-    public FileResourceInfo uploadSingle(String resourceType, MultipartFile file, String organization, String published, int width, int height) {
+    public FileResourceInfo uploadSingle(String resourceType, MultipartFile file, String organization, String published, String width, String height) {
         InputStream in = null;
         FileOutputStream out = null;
         try {
@@ -120,15 +119,21 @@ public class PictureResourceServiceImpl implements PictureResourceService {
         return null;
     }
 
-    public void resizeImage(InputStream is, OutputStream os, int newWidth,int newHeight) throws IOException {
+    public void resizeImage(InputStream is, OutputStream os, String newWidth,String newHeight) throws IOException {
         Image prevImage = ImageIO.read(is);
-        if (newWidth == 0 || newHeight == 0){
-            newWidth = ((BufferedImage) prevImage).getWidth();
-            newHeight = ((BufferedImage) prevImage).getHeight();
+        int width = 0;
+        int height = 0;
+        try {
+            width = Integer.parseInt(newWidth);
+            height = Integer.parseInt(newHeight);
+        } catch (NumberFormatException e) {
+            width = ((BufferedImage) prevImage).getWidth();
+            height = ((BufferedImage) prevImage).getHeight();
+            log.error("图片尺寸设置不规范");
         }
-        BufferedImage tag= new BufferedImage(newWidth, newHeight,
+        BufferedImage tag= new BufferedImage(width, height,
                 BufferedImage.TYPE_INT_RGB);
-        tag.getGraphics().drawImage(prevImage.getScaledInstance(newWidth, newHeight,  Image.SCALE_SMOOTH ), 0, 0,  null);
+        tag.getGraphics().drawImage(prevImage.getScaledInstance(width, height,  Image.SCALE_SMOOTH ), 0, 0,  null);
         JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(os);
         JPEGEncodeParam jep = JPEGCodec.getDefaultJPEGEncodeParam(tag);
         /** 压缩质量 */

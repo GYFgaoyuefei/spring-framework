@@ -25,8 +25,8 @@ public interface PictureServiceFeign {
 			@Param("published") String published,
 			@Param("organization") String organization, 
 			@Param("file") MultipartFile file,
-			@Param("width") int width,
-			@Param("height") int height);
+			@Param("width") String width,
+			@Param("height") String height);
 
 	@RequestLine("GET /getImagesByFileId")
 	@Headers({"Content-Type: application/json","Accept: application/json"})
