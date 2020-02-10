@@ -77,8 +77,11 @@ public class PictureResourceServiceImpl implements PictureResourceService {
 
             String newFileMd5 = "";
             if ("1".equals(resourceType)){
-                //规范图片尺寸
-                resizeImage(in,out, width,height);
+                if (StringUtils.isNotEmpty(width)&&StringUtils.isNotEmpty(height)) {
+                    //规范图片尺寸
+                    resizeImage(in,out, width,height);
+                }
+
                 //获取新的MD5值
                 File newFile = new File(newFilePath);
                 byte[] newFileBytes = FileUtils.readFileToByteArray(newFile);
