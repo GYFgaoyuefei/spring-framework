@@ -77,16 +77,17 @@ public class PictureResourceServiceImpl implements PictureResourceService {
 
             String newFileMd5 = "";
             if ("1".equals(resourceType)){
-                if (StringUtils.isNotEmpty(width)&&StringUtils.isNotEmpty(height)) {
-                    //规范图片尺寸
-                    resizeImage(in,out, width,height);
-                }
-
+                //规范图片尺寸
+                resizeImage(in,out, width,height);
                 //获取新的MD5值
                 File newFile = new File(newFilePath);
                 byte[] newFileBytes = FileUtils.readFileToByteArray(newFile);
                 byte[] newDigest = md5.digest(newFileBytes);
                 newFileMd5 = new BigInteger(1, newDigest).toString(16);
+                pictureResourceOld = pictureResourceRepository.findByFileMd5AndResourceType(newFileMd5, resourceType);
+                if (pictureResourceOld != null) {
+                    return pictureResourceOld;
+                }
             }else {
                 int n = 0;
                 byte[] bb = new byte[1024];// 存储每次读取的内容

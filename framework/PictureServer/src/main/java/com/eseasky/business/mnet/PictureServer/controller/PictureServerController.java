@@ -25,7 +25,7 @@ public class PictureServerController {
 
 
     @PostMapping(value = "/uploadSingle")
-    public ResultModel<PictureInfoVO> uploadSingle(@RequestParam String resourceType, @RequestParam String published, @RequestParam String organization, @RequestPart MultipartFile file, @RequestParam String width, @RequestParam String height) {
+    public ResultModel<PictureInfoVO> uploadSingle(@RequestParam String resourceType, @RequestParam String published, @RequestParam String organization, @RequestPart MultipartFile file, @RequestParam(required = false) String width, @RequestParam(required = false) String height) {
         ResultModel<PictureInfoVO> msgReturn = new ResultModel<>();
         try {
             log.info("请求参数[resourceType={}, organization={}]", resourceType, organization);
