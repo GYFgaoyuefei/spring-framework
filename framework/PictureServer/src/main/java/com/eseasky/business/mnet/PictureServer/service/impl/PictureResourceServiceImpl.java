@@ -2,6 +2,7 @@ package com.eseasky.business.mnet.PictureServer.service.impl;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
 import java.io.*;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -11,9 +12,6 @@ import java.util.UUID;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
 
-import com.sun.image.codec.jpeg.JPEGCodec;
-import com.sun.image.codec.jpeg.JPEGEncodeParam;
-import com.sun.image.codec.jpeg.JPEGImageEncoder;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,7 +76,7 @@ public class PictureResourceServiceImpl implements PictureResourceService {
             String newFileMd5 = "";
             if ("1".equals(resourceType)){
                 //规范图片尺寸
-                resizeImage(in,out, width,height);
+                resizeImage(in,out,prefix.replace(".",""), width,height);
                 //获取新的MD5值
                 File newFile = new File(newFilePath);
                 byte[] newFileBytes = FileUtils.readFileToByteArray(newFile);
@@ -123,7 +121,7 @@ public class PictureResourceServiceImpl implements PictureResourceService {
         return null;
     }
 
-    public void resizeImage(InputStream is, OutputStream os, String newWidth,String newHeight) throws IOException {
+    public void resizeImage(InputStream is, OutputStream os,String formatName, String newWidth,String newHeight) throws IOException {
         Image prevImage = ImageIO.read(is);
         int width = 0;
         int height = 0;
@@ -133,16 +131,17 @@ public class PictureResourceServiceImpl implements PictureResourceService {
         } catch (NumberFormatException e) {
             width = ((BufferedImage) prevImage).getWidth();
             height = ((BufferedImage) prevImage).getHeight();
-            log.error("图片尺寸设置不规范");
+//            log.error("图片尺寸设置不规范");
         }
         BufferedImage tag= new BufferedImage(width, height,
                 BufferedImage.TYPE_INT_RGB);
         tag.getGraphics().drawImage(prevImage.getScaledInstance(width, height,  Image.SCALE_SMOOTH ), 0, 0,  null);
-        JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(os);
-        JPEGEncodeParam jep = JPEGCodec.getDefaultJPEGEncodeParam(tag);
-        /** 压缩质量 */
-        jep.setQuality(0.9f, true);
-        encoder.encode(tag, jep);
+//        JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(os);
+//        JPEGEncodeParam jep = JPEGCodec.getDefaultJPEGEncodeParam(tag);
+//        /** 压缩质量 */
+//        jep.setQuality(0.9f, true);
+//        encoder.encode(tag, jep);
+        ImageIO.write((RenderedImage) prevImage, formatName, os);
     }
 
     @Override
