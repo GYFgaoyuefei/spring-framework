@@ -141,7 +141,8 @@ public class PictureResourceServiceImpl implements PictureResourceService {
 //        /** 压缩质量 */
 //        jep.setQuality(0.9f, true);
 //        encoder.encode(tag, jep);
-        ImageIO.write((RenderedImage) prevImage, formatName, os);
+        ImageIO.write(tag, formatName, os);
+        os.flush();
     }
 
     @Override
