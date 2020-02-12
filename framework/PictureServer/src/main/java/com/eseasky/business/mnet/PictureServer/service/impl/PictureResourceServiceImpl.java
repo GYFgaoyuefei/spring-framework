@@ -84,6 +84,8 @@ public class PictureResourceServiceImpl implements PictureResourceService {
                 newFileMd5 = new BigInteger(1, newDigest).toString(16);
                 pictureResourceOld = pictureResourceRepository.findByFileMd5AndResourceType(newFileMd5, resourceType);
                 if (pictureResourceOld != null) {
+                    out.close();
+                    newFile.delete();
                     return pictureResourceOld;
                 }
             }else {
