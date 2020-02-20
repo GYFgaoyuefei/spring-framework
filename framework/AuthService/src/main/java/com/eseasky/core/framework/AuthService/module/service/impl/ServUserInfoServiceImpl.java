@@ -447,7 +447,7 @@ public class ServUserInfoServiceImpl implements ServUserInfoService {
 			try {
 				servUserInfo = servUserInfoRepository.save(servUserInfo);
 			} catch (DataIntegrityViolationException e) {
-				if (e.getLocalizedMessage().contains("uniq_user_name")) {
+				if (e.getLocalizedMessage().contains("serv_user_info_index_userName")) {
 					throw new BusiException(BusiEnum.USERNAME_REPEATABLE);
 				}
 				if (e.getLocalizedMessage().contains("serv_user_info_index_mobile")) {
