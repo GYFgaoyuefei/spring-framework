@@ -25,11 +25,11 @@ public class PictureServerController {
 
 
     @PostMapping(value = "/uploadSingle")
-    public ResultModel<PictureInfoVO> uploadSingle(@RequestParam String resourceType, @RequestParam String published, @RequestParam String organization, @RequestPart MultipartFile file) {
+    public ResultModel<PictureInfoVO> uploadSingle(@RequestParam String resourceType, @RequestParam String published, @RequestParam String organization, @RequestPart MultipartFile file, @RequestParam(required = false) String width, @RequestParam(required = false) String height) {
         ResultModel<PictureInfoVO> msgReturn = new ResultModel<>();
         try {
             log.info("请求参数[resourceType={}, organization={}]", resourceType, organization);
-            FileResourceInfo uploadSingle = pictureResourceService.uploadSingle(resourceType, file, organization, published);
+            FileResourceInfo uploadSingle = pictureResourceService.uploadSingle(resourceType, file, organization, published,width,height);
             if (uploadSingle != null) {
                 log.info("响应参数[{}]", JSON.toJSONString(uploadSingle));
                 PictureInfoVO pictureInfoVO = JSON.parseObject(JSON.toJSONString(uploadSingle), PictureInfoVO.class, Feature.OrderedField);
@@ -55,7 +55,7 @@ public class PictureServerController {
             e.printStackTrace();
         }
     }
-    
+
     @GetMapping(value = "/access/image/{fileId}")
     public void accessImage(@PathVariable String fileId, HttpServletResponse response) {
         try {

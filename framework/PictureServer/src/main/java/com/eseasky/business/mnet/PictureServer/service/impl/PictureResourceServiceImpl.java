@@ -1,18 +1,19 @@
 package com.eseasky.business.mnet.PictureServer.service.impl;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
+import java.io.*;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.util.HashMap;
 import java.util.UUID;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
@@ -41,24 +42,10 @@ public class PictureResourceServiceImpl implements PictureResourceService {
     private String savaPath;
 
     @Override
-    public FileResourceInfo uploadSingle(String resourceType, MultipartFile file, String organization, String published) {
+    public FileResourceInfo uploadSingle(String resourceType, MultipartFile file, String organization, String published, String width, String height) {
         InputStream in = null;
         FileOutputStream out = null;
         try {
-
-            //获取文件的MD5值
-            byte[] uploadBytes = file.getBytes();
-            MessageDigest md5 = MessageDigest.getInstance("MD5");
-            byte[] digest = md5.digest(uploadBytes);
-            String hashString = new BigInteger(1, digest).toString(16);
-            log.info(hashString);
-
-//			//根据文件的MD5值查询已有的数据
-            FileResourceInfo pictureResourceOld = pictureResourceRepository.findByFileMd5AndResourceType(hashString, resourceType);
-            if (pictureResourceOld != null) {
-                return pictureResourceOld;
-            }
-
             //将文件写入本地
             String fileName = file.getOriginalFilename();
             // 获取文件后缀
@@ -66,15 +53,43 @@ public class PictureResourceServiceImpl implements PictureResourceService {
             // 用uuid作为文件名，防止生成的临时文件重复
             String uuid = UUID.randomUUID().toString().replaceAll("-", "");
             String imageName = uuid + prefix;
-//            String absPath = savaPath +File.separator+ imageName;
-
+            // 指定要写入的图片路径
+            String newFilePath = savaPath + File.separator + imageName;
             //上传文件流写入服务中
             in = file.getInputStream();
-            out = new FileOutputStream(savaPath + File.separator + imageName);// 指定要写入的图片路径
-            int n = 0;
-            byte[] bb = new byte[1024];// 存储每次读取的内容
-            while ((n = in.read(bb)) != -1) {
-                out.write(bb, 0, n);// 将读取的内容，写入到输出流当中
+            out = new FileOutputStream(newFilePath);
+            MessageDigest md5 = MessageDigest.getInstance("MD5");
+            String hashString = "";
+            if ("1".equals(resourceType)){
+                //规范图片尺寸
+                resizeImage(in,out,prefix.replace(".",""), width,height);
+                //获取新的MD5值
+                File newFile = new File(newFilePath);
+                byte[] newFileBytes = FileUtils.readFileToByteArray(newFile);
+                byte[] newDigest = md5.digest(newFileBytes);
+                hashString = new BigInteger(1, newDigest).toString(16);
+                FileResourceInfo pictureResourceOld = pictureResourceRepository.findByFileMd5AndResourceType(hashString, resourceType);
+                if (pictureResourceOld != null) {
+                    out.close();
+                    newFile.delete();
+                    return pictureResourceOld;
+                }
+            }else {
+                //获取文件的MD5值
+                byte[] uploadBytes = file.getBytes();
+                byte[] digest = md5.digest(uploadBytes);
+                hashString = new BigInteger(1, digest).toString(16);
+                log.info(hashString);
+//			//根据文件的MD5值查询已有的数据
+                FileResourceInfo pictureResourceOld = pictureResourceRepository.findByFileMd5AndResourceType(hashString, resourceType);
+                if (pictureResourceOld != null) {
+                    return pictureResourceOld;
+                }
+                int n = 0;
+                byte[] bb = new byte[1024];// 存储每次读取的内容
+                while ((n = in.read(bb)) != -1) {
+                    out.write(bb, 0, n);// 将读取的内容，写入到输出流当中
+                }
             }
 
             FileResourceInfo pictureResource = new FileResourceInfo();
@@ -101,8 +116,31 @@ public class PictureResourceServiceImpl implements PictureResourceService {
                 e.printStackTrace();
             }
         }
-
         return null;
+    }
+
+    public void resizeImage(InputStream is, OutputStream os,String formatName, String newWidth,String newHeight) throws IOException {
+        Image prevImage = ImageIO.read(is);
+        int width = 0;
+        int height = 0;
+        try {
+            width = Integer.parseInt(newWidth);
+            height = Integer.parseInt(newHeight);
+        } catch (NumberFormatException e) {
+            width = ((BufferedImage) prevImage).getWidth();
+            height = ((BufferedImage) prevImage).getHeight();
+//            log.error("图片尺寸设置不规范");
+        }
+        BufferedImage tag= new BufferedImage(width, height,
+                BufferedImage.TYPE_INT_RGB);
+        tag.getGraphics().drawImage(prevImage.getScaledInstance(width, height,  Image.SCALE_SMOOTH ), 0, 0,  null);
+//        JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(os);
+//        JPEGEncodeParam jep = JPEGCodec.getDefaultJPEGEncodeParam(tag);
+//        /** 压缩质量 */
+//        jep.setQuality(0.9f, true);
+//        encoder.encode(tag, jep);
+        ImageIO.write(tag, formatName, os);
+        os.flush();
     }
 
     @Override
