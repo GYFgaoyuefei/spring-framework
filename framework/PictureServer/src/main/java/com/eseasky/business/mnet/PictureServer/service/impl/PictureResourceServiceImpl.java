@@ -46,20 +46,6 @@ public class PictureResourceServiceImpl implements PictureResourceService {
         InputStream in = null;
         FileOutputStream out = null;
         try {
-
-            //获取文件的MD5值
-            byte[] uploadBytes = file.getBytes();
-            MessageDigest md5 = MessageDigest.getInstance("MD5");
-            byte[] digest = md5.digest(uploadBytes);
-            String hashString = new BigInteger(1, digest).toString(16);
-            log.info(hashString);
-
-//			//根据文件的MD5值查询已有的数据
-            FileResourceInfo pictureResourceOld = pictureResourceRepository.findByFileMd5AndResourceType(hashString, resourceType);
-            if (pictureResourceOld != null) {
-                return pictureResourceOld;
-            }
-
             //将文件写入本地
             String fileName = file.getOriginalFilename();
             // 获取文件后缀
@@ -72,8 +58,8 @@ public class PictureResourceServiceImpl implements PictureResourceService {
             //上传文件流写入服务中
             in = file.getInputStream();
             out = new FileOutputStream(newFilePath);
-
-            String newFileMd5 = "";
+            MessageDigest md5 = MessageDigest.getInstance("MD5");
+            String hashString = "";
             if ("1".equals(resourceType)){
                 //规范图片尺寸
                 resizeImage(in,out,prefix.replace(".",""), width,height);
@@ -81,14 +67,24 @@ public class PictureResourceServiceImpl implements PictureResourceService {
                 File newFile = new File(newFilePath);
                 byte[] newFileBytes = FileUtils.readFileToByteArray(newFile);
                 byte[] newDigest = md5.digest(newFileBytes);
-                newFileMd5 = new BigInteger(1, newDigest).toString(16);
-                pictureResourceOld = pictureResourceRepository.findByFileMd5AndResourceType(newFileMd5, resourceType);
+                hashString = new BigInteger(1, newDigest).toString(16);
+                FileResourceInfo pictureResourceOld = pictureResourceRepository.findByFileMd5AndResourceType(hashString, resourceType);
                 if (pictureResourceOld != null) {
                     out.close();
                     newFile.delete();
                     return pictureResourceOld;
                 }
             }else {
+                //获取文件的MD5值
+                byte[] uploadBytes = file.getBytes();
+                byte[] digest = md5.digest(uploadBytes);
+                hashString = new BigInteger(1, digest).toString(16);
+                log.info(hashString);
+//			//根据文件的MD5值查询已有的数据
+                FileResourceInfo pictureResourceOld = pictureResourceRepository.findByFileMd5AndResourceType(hashString, resourceType);
+                if (pictureResourceOld != null) {
+                    return pictureResourceOld;
+                }
                 int n = 0;
                 byte[] bb = new byte[1024];// 存储每次读取的内容
                 while ((n = in.read(bb)) != -1) {
@@ -99,7 +95,7 @@ public class PictureResourceServiceImpl implements PictureResourceService {
             FileResourceInfo pictureResource = new FileResourceInfo();
             pictureResource.setFileId(uuid);
             pictureResource.setFileName(imageName);
-            pictureResource.setFileMd5(StringUtils.isBlank(newFileMd5) ? hashString : newFileMd5);
+            pictureResource.setFileMd5(hashString);
             pictureResource.setResourceType(resourceType);
             pictureResource.setResourcePath(savaPath);
             pictureResource.setOrganization(organization);
