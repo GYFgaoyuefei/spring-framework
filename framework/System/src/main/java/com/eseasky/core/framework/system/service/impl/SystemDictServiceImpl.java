@@ -233,7 +233,7 @@ public class SystemDictServiceImpl implements SystemDictService {
 	}
 
 	@Override
-	@Cacheable(value= {"sys_dictionary"}, key="getDictTypes",unless="#result == null")
+	@Cacheable(value= {"sys_dictionary"}, key="'getDictTypes'",unless="#result == null")
 	public Map<String, List<String>> getDictTypes() {
 		Map<String, List<String>> map = new HashMap<String, List<String>> ();
 		map.put("dictTypes", systemManagerService.getDictTypes());
