@@ -166,3 +166,4 @@ insert into `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) 
 insert into `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) values('239','RULE_DELETE','绑定规则删除','valid','绑定规则删除','25');
 insert into `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) values('240','RULE_QUERY','绑定规则查看','valid','绑定规则查看','25');
 insert into `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) values('241','BINDLOG_QUERY','绑定记录查看','valid','绑定记录查看','25');
+insert into `sys_dict_item` (`id`, `key`, `name`, `status`, `value`, `dict_id`) values('242','RULE_RERUN','绑定关系重跑','valid','绑定关系重跑','25');
