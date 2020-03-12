@@ -61,8 +61,16 @@ public class PictureResourceServiceImpl implements PictureResourceService {
             MessageDigest md5 = MessageDigest.getInstance("MD5");
             String hashString = "";
             if ("1".equals(resourceType)){
-                //规范图片尺寸
-                resizeImage(in,out,prefix.replace(".",""), width,height);
+                if (StringUtils.isNotBlank(width) && StringUtils.isNotBlank(height)){
+                    //规范图片尺寸
+                    resizeImage(in,out,prefix.replace(".",""), width,height);
+                }else {
+                    int n = 0;
+                    byte[] bb = new byte[1024];// 存储每次读取的内容
+                    while ((n = in.read(bb)) != -1) {
+                        out.write(bb, 0, n);// 将读取的内容，写入到输出流当中
+                    }
+                }
                 //获取新的MD5值
                 File newFile = new File(newFilePath);
                 byte[] newFileBytes = FileUtils.readFileToByteArray(newFile);
