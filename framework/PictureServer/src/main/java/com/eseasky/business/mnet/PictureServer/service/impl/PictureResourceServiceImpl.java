@@ -110,6 +110,7 @@ public class PictureResourceServiceImpl implements PictureResourceService {
             pictureResource.setPublished(published);
             return pictureResourceRepository.save(pictureResource);
         } catch (Exception e) {
+            log.error("上传图片异常:[{}]",e.getLocalizedMessage());
             e.printStackTrace();
         } finally {
             // 关闭输入输出流
@@ -141,6 +142,10 @@ public class PictureResourceServiceImpl implements PictureResourceService {
         }
         BufferedImage tag= new BufferedImage(width, height,
                 BufferedImage.TYPE_INT_ARGB);
+        if (formatName.equalsIgnoreCase("jpg") || formatName.equalsIgnoreCase("jpeg")) {
+            tag= new BufferedImage(width, height,
+                    BufferedImage.TYPE_INT_RGB);
+        }
         tag.getGraphics().drawImage(prevImage.getScaledInstance(width, height,  Image.SCALE_SMOOTH ), 0, 0,  null);
 //        JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(os);
 //        JPEGEncodeParam jep = JPEGCodec.getDefaultJPEGEncodeParam(tag);
