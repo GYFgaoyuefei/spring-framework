@@ -12,6 +12,7 @@ import java.util.UUID;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.common.base.Strings;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +51,11 @@ public class PictureResourceServiceImpl implements PictureResourceService {
             String fileName = file.getOriginalFilename();
             // 获取文件后缀
             String prefix = fileName.substring(fileName.lastIndexOf("."));
+            if (!Strings.isNullOrEmpty(width) && !Strings.isNullOrEmpty(height)) {
+                if ("png".equalsIgnoreCase(prefix)) {
+                    prefix = "jpg";
+                }
+            }
             // 用uuid作为文件名，防止生成的临时文件重复
             String uuid = UUID.randomUUID().toString().replaceAll("-", "");
             String imageName = uuid + prefix;
@@ -88,7 +94,7 @@ public class PictureResourceServiceImpl implements PictureResourceService {
                 byte[] digest = md5.digest(uploadBytes);
                 hashString = new BigInteger(1, digest).toString(16);
                 log.info(hashString);
-//			//根据文件的MD5值查询已有的数据
+    			//根据文件的MD5值查询已有的数据
                 FileResourceInfo pictureResourceOld = pictureResourceRepository.findByFileMd5AndResourceType(hashString, resourceType);
                 if (pictureResourceOld != null) {
                     return pictureResourceOld;
