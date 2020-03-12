@@ -61,8 +61,16 @@ public class PictureResourceServiceImpl implements PictureResourceService {
             MessageDigest md5 = MessageDigest.getInstance("MD5");
             String hashString = "";
             if ("1".equals(resourceType)){
-                //规范图片尺寸
-                resizeImage(in,out,prefix.replace(".",""), width,height);
+                if (StringUtils.isNotBlank(width) && StringUtils.isNotBlank(height)){
+                    //规范图片尺寸
+                    resizeImage(in,out,prefix.replace(".",""), width,height);
+                }else {
+                    int n = 0;
+                    byte[] bb = new byte[1024];// 存储每次读取的内容
+                    while ((n = in.read(bb)) != -1) {
+                        out.write(bb, 0, n);// 将读取的内容，写入到输出流当中
+                    }
+                }
                 //获取新的MD5值
                 File newFile = new File(newFilePath);
                 byte[] newFileBytes = FileUtils.readFileToByteArray(newFile);
@@ -80,7 +88,7 @@ public class PictureResourceServiceImpl implements PictureResourceService {
                 byte[] digest = md5.digest(uploadBytes);
                 hashString = new BigInteger(1, digest).toString(16);
                 log.info(hashString);
-//			//根据文件的MD5值查询已有的数据
+                //根据文件的MD5值查询已有的数据
                 FileResourceInfo pictureResourceOld = pictureResourceRepository.findByFileMd5AndResourceType(hashString, resourceType);
                 if (pictureResourceOld != null) {
                     return pictureResourceOld;
@@ -132,7 +140,7 @@ public class PictureResourceServiceImpl implements PictureResourceService {
 //            log.error("图片尺寸设置不规范");
         }
         BufferedImage tag= new BufferedImage(width, height,
-                BufferedImage.TYPE_INT_RGB);
+                BufferedImage.TYPE_INT_ARGB);
         tag.getGraphics().drawImage(prevImage.getScaledInstance(width, height,  Image.SCALE_SMOOTH ), 0, 0,  null);
 //        JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(os);
 //        JPEGEncodeParam jep = JPEGCodec.getDefaultJPEGEncodeParam(tag);
