@@ -51,11 +51,6 @@ public class PictureResourceServiceImpl implements PictureResourceService {
             String fileName = file.getOriginalFilename();
             // 获取文件后缀
             String prefix = fileName.substring(fileName.lastIndexOf("."));
-            if (!Strings.isNullOrEmpty(width) && !Strings.isNullOrEmpty(height)) {
-                if ("png".equalsIgnoreCase(prefix)) {
-                    prefix = "jpg";
-                }
-            }
             // 用uuid作为文件名，防止生成的临时文件重复
             String uuid = UUID.randomUUID().toString().replaceAll("-", "");
             String imageName = uuid + prefix;
@@ -146,7 +141,7 @@ public class PictureResourceServiceImpl implements PictureResourceService {
 //            log.error("图片尺寸设置不规范");
         }
         BufferedImage tag= new BufferedImage(width, height,
-                BufferedImage.TYPE_INT_RGB);
+                BufferedImage.TYPE_INT_ARGB);
         tag.getGraphics().drawImage(prevImage.getScaledInstance(width, height,  Image.SCALE_SMOOTH ), 0, 0,  null);
 //        JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(os);
 //        JPEGEncodeParam jep = JPEGCodec.getDefaultJPEGEncodeParam(tag);
