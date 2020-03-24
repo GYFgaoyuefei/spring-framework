@@ -89,7 +89,8 @@ public class PictureResourceServiceImpl implements PictureResourceService {
                 byte[] digest = md5.digest(uploadBytes);
                 hashString = new BigInteger(1, digest).toString(16);
                 log.info(hashString);
-    			//根据文件的MD5值查询已有的数据
+//			//根据文件的MD5值查询已有的数据
+				//根据文件的MD5值查询已有的数据
                 FileResourceInfo pictureResourceOld = pictureResourceRepository.findByFileMd5AndResourceType(hashString, resourceType);
                 if (pictureResourceOld != null) {
                     return pictureResourceOld;
@@ -111,6 +112,7 @@ public class PictureResourceServiceImpl implements PictureResourceService {
             pictureResource.setPublished(published);
             return pictureResourceRepository.save(pictureResource);
         } catch (Exception e) {
+            log.error("上传图片异常:[{}]",e.getLocalizedMessage());
             e.printStackTrace();
         } finally {
             // 关闭输入输出流
@@ -141,7 +143,19 @@ public class PictureResourceServiceImpl implements PictureResourceService {
 //            log.error("图片尺寸设置不规范");
         }
         BufferedImage tag= new BufferedImage(width, height,
+<<<<<<< .mine
                 BufferedImage.TYPE_INT_ARGB);
+
+
+
+
+=======
+                BufferedImage.TYPE_INT_ARGB);
+        if (formatName.equalsIgnoreCase("jpg") || formatName.equalsIgnoreCase("jpeg")) {
+            tag= new BufferedImage(width, height,
+                    BufferedImage.TYPE_INT_RGB);
+        }
+>>>>>>> .theirs
         tag.getGraphics().drawImage(prevImage.getScaledInstance(width, height,  Image.SCALE_SMOOTH ), 0, 0,  null);
 //        JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(os);
 //        JPEGEncodeParam jep = JPEGCodec.getDefaultJPEGEncodeParam(tag);
